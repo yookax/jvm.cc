@@ -5,4 +5,7 @@ build/
 cmake-build-debug/
 cmake-build-release/
 out/
+target/
+pom.xml
+
 

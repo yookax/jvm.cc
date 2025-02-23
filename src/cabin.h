@@ -1,22 +1,25 @@
 #ifndef CABIN_CABIN_H
 #define CABIN_CABIN_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <pthread.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstdint>
+#include <climits>
+#include <cassert>
+#include <iostream>
+#include <vector>
+#include <string>
 
 #ifndef PATH_MAX
     #ifdef MAX_PATH
         #define PATH_MAX MAX_PATH
     #else
-        #define PATH_MAX 1024
+        #define PATH_MAX 260
     #endif
 #endif
-
+ 
 #define VM_VERSION "1.0" // version of this jvm, a string.
-#define JAVA_COMPAT_VERSION "1.8.0_162"
+#define JAVA_COMPAT_VERSION "1.8.0_162" // todo
 
 // jvm 最大支持的classfile版本
 #define JVM_MUST_SUPPORT_CLASSFILE_MAJOR_VERSION 60
@@ -26,13 +29,10 @@
 #define VM_HEAP_SIZE (512*1024*1024) // 512Mb
 
 // every thread has a vm stack
-#define VM_STACK_SIZE (512*1024)     // 512Kb
+#define VM_STACK_SIZE (16*1024*1024) // 16Mb
 
 // jni 局部引用表默认最大容量 
 #define JNI_LOCAL_REFERENCE_TABLE_MAX_CAPACITY 512
-
-// jvm 最大支持的线程数量
-#define VM_THREADS_MAX_COUNT 65535
 
 /*
  * Java虚拟机中的整型类型的取值范围如下：
@@ -71,27 +71,31 @@ typedef uint16_t u2;
 typedef uint32_t u4;
 typedef uint64_t u8;
 
-#define U2_MAX 65535
-
-typedef struct object Object;
-typedef struct class  Class;
-typedef struct method Method;
-typedef struct field  Field;
+class Object;
+class Class;
+class ArrayClass;
+class Method;
+class Field;
 
 typedef Object* jref; // JVM 中的引用类型。
 typedef jref jstrRef; // java.lang.String 的引用。
 typedef jref jarrRef; // Array 的引用。
+typedef jref jobjArrRef; // java.lang.Object Array 的引用。
 typedef jref jclsRef; // java.lang.Class 的引用。
+
+template <typename T> concept JavaValueType = std::is_same_v<T, jint>
+                        || std::is_same_v<T, jbyte> || std::is_same_v<T, jbool>
+                        || std::is_same_v<T, jchar> || std::is_same_v<T, jshort>
+                        || std::is_same_v<T, jfloat> || std::is_same_v<T, jlong>
+                        || std::is_same_v<T, jdouble> || std::is_same_v<T, jref>;
 
 typedef char utf8_t;
 typedef jchar unicode_t;
 
-struct heap;
-extern struct heap *g_heap;
+class Heap;
+extern Heap *g_heap;
 
-extern pthread_mutexattr_t g_pthread_mutexattr_recursive;
-
-extern char g_java_home[];
+extern std::string g_java_home;
 
 extern u2 g_classfile_major_version;
 extern u2 g_classfile_manor_version;
@@ -99,67 +103,80 @@ extern u2 g_classfile_manor_version;
 // The system Thread group.
 extern Object *g_sys_thread_group;
 
-struct vm_thread;
-struct point_hash_map;
-struct point_hash_set;
-
-// todo 所有线程
-extern struct vm_thread *g_all_threads[];
-extern int g_all_threads_count;
-#define add_thread(t) g_all_threads[g_all_threads_count++] = t
-
-#define BOOT_CLASS_LOADER NULL
+#define BOOT_CLASS_LOADER nullptr
 extern Object *g_app_class_loader;
 extern Object *g_platform_class_loader;
 
-extern struct property {
+extern bool g_vm_initing;
+
+struct Property {
     const utf8_t *name;
     const utf8_t *value;
-} g_properties[];
+    Property(const utf8_t *name0, const utf8_t *value0): name(name0), value(value0) 
+    {
+        assert(name != nullptr);
+        assert(value != nullptr);
+    }
+};
 
-#define PROPERTIES_MAX_COUNT 128
-extern int g_properties_count;
+extern std::vector<Property> g_properties;
 
-typedef struct {
+struct InitArgs {
+    bool asyncgc = false;
+    bool verbosegc = false;
+    bool verbosedll = false;
+    bool verboseclass = false;
 
-} InitArgs;
+    // Whether compaction has been given on the command line, and the value if it has
+    bool compact_specified = false; 
+    int do_compact = false;
+    bool trace_jni_sigs = false;
 
-// jvms规定函数最多有255个参数，this也算，long和double占两个长度
-#define METHOD_PARAMETERS_MAX_COUNT 255
+    char *classpath = nullptr;
+
+    char *bootpath = nullptr;
+    char *bootpath_a = nullptr;
+    char *bootpath_p = nullptr;
+    char *bootpath_c = nullptr;
+    char *bootpath_v = nullptr;
+
+    int java_stack = VM_STACK_SIZE;
+    unsigned long min_heap = VM_HEAP_SIZE;
+    unsigned long max_heap = VM_HEAP_SIZE;
+
+    Property *commandline_props;
+    int props_count = 0;
+
+    void *main_stack_base;
+
+    /* JNI invocation API hooks */
+    
+    int (* vfprintf)(FILE *stream, const char *fmt, va_list ap) = std::vfprintf;
+    void (* exit)(int status) = std::exit;
+    void (* abort)() = std::abort;
+};
+
+/* This number, mandated by the JVM spec as 255,
+ * is the maximum number of slots 
+ * that any Java method can receive in its argument list.
+ * It limits both JVM signatures and method type objects.
+ * The longest possible invocation will look like
+ * staticMethod(arg1, arg2, ..., arg255) or
+ * x.virtualMethod(arg1, arg2, ..., arg254).
+ * 
+ * jvms规定函数最多有255个参数，this也算，long和double占两个长度
+ */
+#define MAX_JVM_ARITY 255
 
 // jvms数组最大维度为255 
 #define ARRAY_MAX_DIMENSIONS 255
 
-#define INFO_MSG_MAX_LEN 1024
-
 #define MAIN_THREAD_NAME "main" // name of main thread
 #define GC_THREAD_NAME "gc"     // name of gc thread
 
-#define vm_malloc malloc
-#define vm_calloc(len) calloc(1, len)
-#define vm_realloc realloc
+// #define ARRAY_LENGTH(arr) (sizeof(arr)/sizeof(*(arr)))
 
-// Mark a method may throw java exception.
-// The caller of this method must check the may throw java exception.
-#define TJE // Throw Java Exception
-
-#define ARRAY_LENGTH(_arr_) (sizeof(_arr_)/sizeof(*(_arr_))) 
-
-#define BUILD_ARRAY(_arr, _len, _init_func, ...) \
-do { \
-    (_arr) = vm_malloc((_len) * sizeof(*(_arr))); \
-    for (int _i = 0; _i < (_len); _i++) { \
-        _init_func((_arr) + _i, __VA_ARGS__); \
-    } \
-} while(false)
-
-#define BUILD_ARRAY0(_arr, _len, _rvalue) \
-do { \
-    (_arr) = vm_malloc((_len) * sizeof(*(_arr))); \
-    for (int _i = 0; _i < (_len); _i++) { \
-        (_arr)[_i] = _rvalue; \
-    } \
-} while(false)
+#define FILE_LINE_STR (__FILE__ + std::string(": ") + std::to_string(__LINE__))
 
 #define printvm(...) \
 do { \
@@ -167,58 +184,78 @@ do { \
     printf(__VA_ARGS__); \
 } while(false)
 
-#define println(...) do { printvm(__VA_ARGS__); printf("\n"); } while(0)
+// #define println(...) do { printvm(__VA_ARGS__); printf("\n"); } while(false)
 
-/* ------- 配置日志级别 ------ */
-// 0: ERR
-// 1: WARNING
-// 2: DEBUG
-// 3: TRACE
-// 4: VERBOSE
-#define LOG_LEVEL 0
+/* --------------------- 配置日志 -------------------- */
 
-#define ERR     println
-#define WARN    println
-#define DEBUG   println
-#define TRACE   println
-#define VERBOSE println
+#define LOG_LEVEL_ERR     0
+#define LOG_LEVEL_WARNING 1
+#define LOG_LEVEL_DEBUG   2
+#define LOG_LEVEL_TRACE   3
+#define LOG_LEVEL_VERBOSE 4 
 
-#if (LOG_LEVEL < 4)
+// 日志级别，默认为 LOG_LEVEL_ERR
+#define LOG_LEVEL LOG_LEVEL_ERR 
+
+#define ERR     printvm
+#define WARN    printvm
+#define DEBUG   printvm
+#define TRACE   printvm
+#define VERBOSE printvm
+
+#if (LOG_LEVEL < LOG_LEVEL_VERBOSE)
 #undef VERBOSE
-#define VERBOSE(...)
+#define VERBOSE(...) ((void) 0)
 #endif
 
-#if (LOG_LEVEL < 3)
+#if (LOG_LEVEL < LOG_LEVEL_TRACE)
 #undef TRACE
-#define TRACE(...)
+#define TRACE(...) ((void) 0)
 #endif
 
-#if (LOG_LEVEL < 2)
+#if (LOG_LEVEL < LOG_LEVEL_DEBUG)
 #undef DEBUG
-#define DEBUG(...)
+#define DEBUG(...) ((void) 0)
 #endif
 
-#if (LOG_LEVEL < 1)
-#undef WARNING
-#define WARNING(...)
+#if (LOG_LEVEL < LOG_LEVEL_WARNING)
+#undef WARN
+#define WARN(...) ((void) 0)
 #endif
+
+// ------------------------------------------------------------------------------------------------
+
+enum ExitCode {
+    EXIT_CODE_SUCCESS = 0,
+    EXIT_CODE_UNCAUGHT_JAVA_EXCEPTION = -1,
+    EXIT_CODE_UNREACHABLE = -2,
+    EXIT_CODE_UNIMPLEMENTED = -3,
+    EXIT_CODE_UNKNOWN_ERROR = -4,
+};
 
 // 出现异常，退出jvm
-#define JVM_PANIC(...) \
+#define panic(...) \
 do { \
-    printvm("fatal error! "); \
+    printvm("JVM panic! "); \
     printf(__VA_ARGS__); \
-    exit(-1); \
+    exit(EXIT_CODE_UNKNOWN_ERROR); \
 } while(false)
 
-#define SHOULD_NEVER_REACH_HERE(...) \
+// 代码出现致命错误，
+// 打印信息，退出JVM
+#define UNREACHABLE(...) \
 do { \
-    printvm("should never reach here. "); \
+    printvm("Unreachable.\n"); \
     printf(__VA_ARGS__); \
-    exit(-1); \
+    exit(EXIT_CODE_UNREACHABLE); \
 } while(false)
 
-// 退出jvm
-#define JVM_EXIT exit(0);
+// 未实现的接口、功能等
+// 打印位置，退出JVM
+#define unimplemented \
+{ \
+    printf("Unimplemented. %s: %d. %s\n", __FILE__, __LINE__, __func__); \
+    exit(EXIT_CODE_UNIMPLEMENTED); \
+}
 
 #endif //CABIN_CABIN_H
