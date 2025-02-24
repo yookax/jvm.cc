@@ -16,7 +16,6 @@ using namespace slot;
 
 static void test_sys_info() {
     printf("test_sys_info ---->\n");
-    //JNI_CreateJavaVM(nullptr, nullptr, nullptr);
     printf("processor number: %d\n", processor_number());
     printf("page size: %d\n", page_size());
     printf("os name: %s\n", os_name());
@@ -26,7 +25,6 @@ static void test_sys_info() {
 
 static void test_properties() {
     printf("test_properties ---->\n");
-    //JNI_CreateJavaVM(nullptr, nullptr, nullptr);
     for (Property &p: g_properties) {
         printf("%s: %s\n", p.name, p.value);
     }
@@ -48,7 +46,6 @@ static const char *method_descriptors[] = {
 
 static void test_method_descriptor() {
     printf("test_method_descriptor ---->\n");
-    //JNI_CreateJavaVM(nullptr, nullptr, nullptr);
 
 #define PRINT_PTYPES(ptypes) \
     for (int i = 0; i < (ptypes)->arr_len; i++) { \
@@ -80,7 +77,6 @@ static void test_method_descriptor() {
 
 static void test_inject_field() {
     printf("test_inject_field ---->\n");
-    //JNI_CreateJavaVM(nullptr, nullptr, nullptr);
     // const char *class_names[] = {
     //     "java/lang/Object",
     //     "java/lang/Class",
@@ -210,7 +206,6 @@ void test_heap() {
     test_alloc_continuously();
     test_heap1();
 }
-
 
 // ------------------------------------------------------------------------------------------------
 
@@ -404,15 +399,15 @@ int main() {
     JNI_CreateJavaVM(nullptr, nullptr, nullptr);
 
     test_heap();
-    // test_classloader();
-    // test_box();
-    // test_string();
-    // test_array();
-    //
-    // test_properties();
-    // test_sys_info();
-    // test_method_descriptor();
-    // test_inject_field();
+    test_classloader();
+    test_box();
+    test_string();
+    test_array();
+
+    test_properties();
+    test_sys_info();
+    test_method_descriptor();
+    test_inject_field();
 
     cout << endl << "Testing is over." << endl;
 }
