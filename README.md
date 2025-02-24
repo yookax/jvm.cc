@@ -1,8 +1,8 @@
 # JVMCC
-A toy JVM written in C+++.
+A tiny JVM written in C++.
 
 ## Development environment
-* Win10 64 bit
+* Win10
 * MinGW64
 * g++
 * jdk17
