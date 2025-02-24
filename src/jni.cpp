@@ -843,22 +843,6 @@ template<typename T>
 void JNICALL Jvmcc_ReleaseTypeArrayElements(JNIEnv *env, jarray array, T *elems, jint mode) {
     deleteJNIGlobalRef((jref) array);
 }
-// #define RELEASE_TYPE_ARRAY_ELEMENTS(Type, raw_type) \
-// void JNICALL Jvmcc_Release##Type##ArrayElements(JNIEnv *env, jarray array, raw_type *elems, jint mode) \
-// { \
-//     deleteJNIGlobalRef((jref) array); \
-// }
-//
-// RELEASE_TYPE_ARRAY_ELEMENTS(Boolean, jboolean)
-// RELEASE_TYPE_ARRAY_ELEMENTS(Byte, jbyte)
-// RELEASE_TYPE_ARRAY_ELEMENTS(Char, jchar)
-// RELEASE_TYPE_ARRAY_ELEMENTS(Short, jshort)
-// RELEASE_TYPE_ARRAY_ELEMENTS(Int, jint)
-// RELEASE_TYPE_ARRAY_ELEMENTS(Long, jlong)
-// RELEASE_TYPE_ARRAY_ELEMENTS(Float, jfloat)
-// RELEASE_TYPE_ARRAY_ELEMENTS(Double, jdouble)
-//
-// #undef RELEASE_TYPE_ARRAY_ELEMENTS
 
 #define GET_AND_SET_TYPE_ARRAY_REGION(Type, raw_type) \
 void JNICALL Jvmcc_Get##Type##ArrayRegion(JNIEnv *env, jarray array, jsize start, jsize len, raw_type *buf) \

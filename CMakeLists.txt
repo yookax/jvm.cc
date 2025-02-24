@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.30)
 project(jvmcc)
 
-set(CMAKE_CXX_FLAGS "-std=c++23 -m64 -pedantic \
-        -Wall -Wcomment -Wshadow -Wwrite-strings -Wpointer-arith \
+set(CMAKE_CXX_FLAGS "-std=c++23 -m64 -pedantic -Wfatal-errors\
+        -Wall -Wextra -Wcomment -Wshadow -Wwrite-strings -Wpointer-arith \
         -Wunreachable-code -Wreturn-type -Wcast-qual \
         -Wswitch-default -Wswitch-enum -Wuninitialized -Winit-self \
         -Wparentheses -Wunused-macros")
