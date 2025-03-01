@@ -156,7 +156,6 @@ jclass JNICALL Jvmcc_DefineClass(JNIEnv *env,
 
 jclass JNICALL Jvmcc_FindClass(JNIEnv *env, const char *name) {
     // assert(env != nullptr && name != nullptr);
-    // // todo
     // jref loader = ((Frame *) (*env)->functions->reserved3)->method->clazz->loader;
     // Class *c = loadClass(loader, name);
     // return to_jclass(c);
@@ -176,7 +175,8 @@ jfieldID JNICALL Jvmcc_FromReflectedField(JNIEnv *env, jobject field) {
     unimplemented
 }
 
-jobject JNICALL Jvmcc_ToReflectedMethod(JNIEnv *env, jclass cls, jmethodID methodID, jboolean isStatic) {
+jobject JNICALL Jvmcc_ToReflectedMethod(JNIEnv *env, jclass cls,
+                                        jmethodID methodID, jboolean isStatic) {
     unimplemented
 }
 
@@ -189,9 +189,6 @@ jobject JNICALL Jvmcc_ToReflectedMethod(JNIEnv *env, jclass cls, jmethodID metho
  * Class object representing the Object class is returned.
  */
 jclass JNICALL Jvmcc_GetSuperclass(JNIEnv *env, jclass sub) {
-    // jclsRef c = (jclsRef) sub;
-    // return c->jvm_mirror->super_class;
-
     Class *c = ((jclsRef) sub)->jvm_mirror;
     if (c->is_interface() || c->is_prim_class() || c->check_class_name("void"))
         return nullptr;
@@ -202,12 +199,11 @@ jclass JNICALL Jvmcc_GetSuperclass(JNIEnv *env, jclass sub) {
 
 // 查看 static jboolean Class::isAssignableFrom(JNIEnv *env, jclsRef this, jclsRef cls);
 jboolean JNICALL Jvmcc_IsAssignableFrom(JNIEnv *env, jclass sub, jclass sup) {
-    // todo
     return JVM_MIRROR(sub)->is_subclass_of(JVM_MIRROR(sup));
 }
 
-jobject JNICALL Jvmcc_ToReflectedField(JNIEnv *env, jclass cls, jfieldID fieldID, jboolean isStatic) {
-    // todo
+jobject JNICALL Jvmcc_ToReflectedField(JNIEnv *env, jclass cls,
+                                       jfieldID fieldID, jboolean isStatic) {
     unimplemented
 }
 
@@ -218,39 +214,32 @@ jint JNICALL Jvmcc_Throw(JNIEnv *env, jthrowable obj) {
 }
 
 jint JNICALL Jvmcc_ThrowNew(JNIEnv *env, jclass clazz, const char *msg) {
-    // Class *c = JVM_MIRROR(clazz);
-    // raise_exception(c->name, msg);
-    Thread::jniThrow(JVM_MIRROR(clazz), msg);
+    Class *c = JVM_MIRROR(clazz);
+    Thread::jniThrow(c, msg);
     return JNI_TRUE;
 }
 
 jthrowable JNICALL Jvmcc_ExceptionOccurred(JNIEnv *env) {
-    // return (jthrowable) exception_occurred();
     return (jthrowable) Thread::jniExceptionOccurred();
 }
 
 void JNICALL Jvmcc_ExceptionDescribe(JNIEnv *env) {
-    // todo
     unimplemented
 }
 
 void JNICALL Jvmcc_ExceptionClear(JNIEnv *env) {
-    // clear_exception();
     Thread::jniExceptionClear();
 }
 
 void JNICALL Jvmcc_FatalError(JNIEnv *env, const char *msg) {
-    // todo
     unimplemented
 }
 
 jint JNICALL Jvmcc_PushLocalFrame(JNIEnv *env, jint capacity) {
-    // todo
     unimplemented
 }
 
 jobject JNICALL Jvmcc_PopLocalFrame(JNIEnv *env, jobject result) {
-    // todo
     unimplemented
 }
 
@@ -299,7 +288,7 @@ jboolean JNICALL Jvmcc_IsSameObject(JNIEnv *env, jobject obj1, jobject obj2) {
 }
 
 jobject JNICALL Jvmcc_NewLocalRef(JNIEnv *env, jobject obj) {
-    assert(env != nullptr);
+    (void) env;
     if (obj == nullptr)
         return nullptr;
 
@@ -327,13 +316,14 @@ jint JNICALL Jvmcc_EnsureLocalCapacity(JNIEnv *env, jint capacity) {
 jobject JNICALL Jvmcc_AllocObject(JNIEnv *env, jclass clazz) {
     Class *c = JVM_MIRROR(clazz);
     if (c->is_abstract() || c->is_interface()) {
-        // Canot be instantiated
+        // Can not be instantiated
         JNI_THROW(env, "java.lang.InstantiationException", c->name);
     }
 
     // Make sure it is initialised
     init_class(c);
-    return (jobject) Allocator::object(c);;
+    return env->NewLocalRef((jobject) Allocator::object(c));
+//    return (jobject) Allocator::object(c);;
     // return addJNILocalRef(newObject(c));
 }
 
@@ -587,35 +577,43 @@ jobject JNICALL Jvmcc_GetObjectField(JNIEnv *env, jobject obj, jfieldID fieldID)
     return (jobject) ((jref) obj)->get_field_value<jref>((Field *) fieldID);
 }
 
-#define GET_AND_SET_FIELD(Type, jtype, type, t) \
-jtype JNICALL Jvmcc_Get##Type##Field(JNIEnv *env, jobject obj, jfieldID fieldID) \
-{ \
+#define GET_AND_SET_FIELD(Type, jtype, t) \
+jtype JNICALL Jvmcc_Get##Type##Field(JNIEnv *env, jobject obj, jfieldID fieldID) {   \
+    (void) env; \
+    assert(obj != nullptr); \
+    assert(fieldID != nullptr); \
     return ((jref) obj)->get_field_value<jtype>((Field *) fieldID); \
 } \
 \
-void JNICALL Jvmcc_Set##Type##Field(JNIEnv *env, jobject obj, jfieldID fieldID, jtype val) \
-{ \
+void JNICALL Jvmcc_Set##Type##Field(JNIEnv *env, jobject obj, jfieldID fieldID, jtype val) { \
+    (void) env; \
+    assert(obj != nullptr); \
+    assert(fieldID != nullptr); \
     ((jref) obj)->set_field_value<jtype>((Field *) fieldID, val); \
 } \
 \
-jtype JNICALL Jvmcc_GetStatic##Type##Field(JNIEnv *env, jclass clazz, jfieldID fieldID) \
-{ \
+jtype JNICALL Jvmcc_GetStatic##Type##Field(JNIEnv *env, jclass clazz, jfieldID fieldID) { \
+    (void) env; \
+    (void) clazz; \
+    assert(fieldID != nullptr); \
     return ((Field *) fieldID)->static_value.t; \
 } \
 \
-void JNICALL Jvmcc_SetStatic##Type##Field(JNIEnv *env, jclass clazz, jfieldID fieldID, jtype value) \
-{ \
+void JNICALL Jvmcc_SetStatic##Type##Field(JNIEnv *env, jclass clazz, jfieldID fieldID, jtype value) { \
+    (void) env; \
+    (void) clazz; \
+    assert(fieldID != nullptr); \
     ((Field *) fieldID)->static_value.t = value; \
 }
 
-GET_AND_SET_FIELD(Bool, jboolean, bool, z)
-GET_AND_SET_FIELD(Byte, jbyte, byte, b)
-GET_AND_SET_FIELD(Char, jchar, char, c)
-GET_AND_SET_FIELD(Short, jshort, short, s)
-GET_AND_SET_FIELD(Int, jint, int, i)
-GET_AND_SET_FIELD(Long, jlong, long, j)
-GET_AND_SET_FIELD(Float, jfloat, float, f)
-GET_AND_SET_FIELD(Double, jdouble, double, d)
+GET_AND_SET_FIELD(Bool, jboolean, z)
+GET_AND_SET_FIELD(Byte, jbyte, b)
+GET_AND_SET_FIELD(Char, jchar, c)
+GET_AND_SET_FIELD(Short, jshort, s)
+GET_AND_SET_FIELD(Int, jint, i)
+GET_AND_SET_FIELD(Long, jlong, j)
+GET_AND_SET_FIELD(Float, jfloat, f)
+GET_AND_SET_FIELD(Double, jdouble, d)
 
 #undef GET_AND_SET_FIELD
 
@@ -701,8 +699,6 @@ void JNICALL Jvmcc_ReleaseStringUTFChars(JNIEnv *env, jstring str, const char *c
     //     delete[] chars;
     // }
 
-    // todo
-
     // UNIMPLEMENTED // todo
 }
 
@@ -747,8 +743,7 @@ void JNICALL Jvmcc_SetObjectArrayElement(JNIEnv *env, jobjectArray array, jsize 
 }
 
 #define NEW_TYPE_ARRAY(Type, class_name) \
-jarray JNICALL Jvmcc_New##Type##Array(JNIEnv *env, jsize len) \
-{ \
+jarray JNICALL Jvmcc_New##Type##Array(JNIEnv *env, jsize len) { \
     if (len < 0) { \
         JNI_THROW_NegativeArraySizeException(env, nullptr); \
         return nullptr; \
@@ -768,17 +763,6 @@ NEW_TYPE_ARRAY(Float, "[F")
 NEW_TYPE_ARRAY(Double, "[D")
 
 #undef NEW_TYPE_ARRAY
-
-// template<char *class_name>
-// jarray JNICALL Jvmcc_NewTypeArray(JNIEnv *env, jsize len) {
-//     if (len < 0) {
-//         JNI_THROW_NegativeArraySizeException(env, nullptr);
-//         return nullptr;
-//     }
-//
-//     jarrRef arr = alloc_array(BOOT_CLASS_LOADER, class_name, len);
-//     return env->NewLocalRef((jobject) arr);
-// }
 
 /*
  * The GetBooleanArrayElements function is to obtain a pointer that can be directly
@@ -844,33 +828,29 @@ void JNICALL Jvmcc_ReleaseTypeArrayElements(JNIEnv *env, jarray array, T *elems,
     deleteJNIGlobalRef((jref) array);
 }
 
-#define GET_AND_SET_TYPE_ARRAY_REGION(Type, raw_type) \
-void JNICALL Jvmcc_Get##Type##ArrayRegion(JNIEnv *env, jarray array, jsize start, jsize len, raw_type *buf) \
-{ \
-    jarrRef arr = (jarrRef) array; \
-    assert(start + len <= arr->arr_len); \
-    /*assert(get_ele_size(arr->clazz) == sizeof(raw_type));*/ \
-    memcpy(buf, (arr)->index(start), len*sizeof(raw_type)); \
-} \
-\
-void JNICALL Jvmcc_Set##Type##ArrayRegion(JNIEnv *env, jarray array, jsize start, jsize len, const raw_type *buf) \
-{ \
-    jarrRef arr = (jarrRef) array; \
-    assert(start + len <= arr->arr_len); \
-    /*assert(get_ele_size(arr->clazz) == sizeof(raw_type));*/ \
-    memcpy((arr)->index(start), buf, len*sizeof(raw_type)); \
+template<typename T>
+void JNICALL Jvmcc_GetTypeArrayRegion(JNIEnv *env,
+                                      jarray array, jsize start, jsize len, T *buf) {
+    (void) env;
+    assert(array != nullptr);
+    assert(buf != nullptr);
+    auto arr = (jarrRef) array;
+    assert(start + len <= arr->arr_len);
+    assert(reinterpret_cast<ArrayClass *>(arr)->get_element_size() == sizeof(raw_type));
+    memcpy(buf, (arr)->index(start), len*sizeof(T));
 }
 
-GET_AND_SET_TYPE_ARRAY_REGION(Byte, jbyte)
-GET_AND_SET_TYPE_ARRAY_REGION(Boolean, jboolean)
-GET_AND_SET_TYPE_ARRAY_REGION(Char, jchar)
-GET_AND_SET_TYPE_ARRAY_REGION(Short, jshort)
-GET_AND_SET_TYPE_ARRAY_REGION(Int, jint)
-GET_AND_SET_TYPE_ARRAY_REGION(Long, jlong)
-GET_AND_SET_TYPE_ARRAY_REGION(Float, jfloat)
-GET_AND_SET_TYPE_ARRAY_REGION(Double, jdouble)
-
-#undef GET_AND_SET_TYPE_ARRAY_REGION
+template<typename T>
+void JNICALL Jvmcc_SetTypeArrayRegion(JNIEnv *env,
+                                      jarray array, jsize start, jsize len, const T *buf) {
+    (void) env;
+    assert(array != nullptr);
+    assert(buf != nullptr);
+    auto arr = (jarrRef) array;
+    assert(start + len <= arr->arr_len);
+    assert(reinterpret_cast<ArrayClass *>(arr)->get_element_size() == sizeof(raw_type));
+    memcpy((arr)->index(start), buf, len*sizeof(T));
+}
 
 jint JNICALL Jvmcc_RegisterNatives(JNIEnv *env, jclass clazz,
                                 const JNINativeMethod *methods, jint methods_count) {
@@ -945,16 +925,19 @@ void* JNICALL Jvmcc_GetPrimitiveArrayCritical(JNIEnv *env, jarray array, jboolea
     return arr->data;
 }
 
-void JNICALL Jvmcc_ReleasePrimitiveArrayCritical(JNIEnv *env, jarray array, void *carray, jint mode) {
+void JNICALL Jvmcc_ReleasePrimitiveArrayCritical(JNIEnv *env,
+                                                 jarray array, void *carray, jint mode) {
     // todo 'mode'
     deleteJNIGlobalRef((jref) array);
 }
 
-const jchar* JNICALL Jvmcc_GetStringCritical(JNIEnv *env, jstring string, jboolean *isCopy) {
+const jchar* JNICALL Jvmcc_GetStringCritical(JNIEnv *env,
+                                             jstring string, jboolean *isCopy) {
     return Jvmcc_GetStringChars(env, string, isCopy);
 }
 
-void JNICALL Jvmcc_ReleaseStringCritical(JNIEnv *env, jstring string, const jchar *cstring) {
+void JNICALL Jvmcc_ReleaseStringCritical(JNIEnv *env,
+                                         jstring string, const jchar *cstring) {
     Jvmcc_ReleaseStringChars(env, string, cstring);
 }
 
@@ -995,11 +978,10 @@ jlong JNICALL Jvmcc_GetDirectBufferCapacity(JNIEnv *env, jobject buf) {
 jobjectRefType JNICALL Jvmcc_GetObjectRefType(JNIEnv* env, jobject obj) {
     // jref o = to_object_ref(obj);
     // return o != nullptr ? o->jni_obj_ref_type : JNIInvalidRefType;
-    unimplemented // todo
+    unimplemented
 }
 
 jobject JNICALL Jvmcc_GetModule(JNIEnv* env, jclass clazz) {
-    // todo
     unimplemented
 }
 
@@ -1248,32 +1230,32 @@ static struct JNINativeInterface_ Jvmcc_JNINativeInterface = {
     .GetFloatArrayElements = Jvmcc_GetFloatArrayElements,
     .GetDoubleArrayElements = Jvmcc_GetDoubleArrayElements,
 
-    .ReleaseBooleanArrayElements = Jvmcc_ReleaseTypeArrayElements<jbool>,//Jvmcc_ReleaseBooleanArrayElements,
-    .ReleaseByteArrayElements = Jvmcc_ReleaseTypeArrayElements<jbyte>,//Jvmcc_ReleaseByteArrayElements,
-    .ReleaseCharArrayElements = Jvmcc_ReleaseTypeArrayElements<jchar>,//Jvmcc_ReleaseCharArrayElements,
-    .ReleaseShortArrayElements = Jvmcc_ReleaseTypeArrayElements<jshort>,//Jvmcc_ReleaseShortArrayElements,
-    .ReleaseIntArrayElements = Jvmcc_ReleaseTypeArrayElements<jint>,//Jvmcc_ReleaseIntArrayElements,
-    .ReleaseLongArrayElements = Jvmcc_ReleaseTypeArrayElements<jlong>,//Jvmcc_ReleaseLongArrayElements,
-    .ReleaseFloatArrayElements = Jvmcc_ReleaseTypeArrayElements<jfloat>,//Jvmcc_ReleaseFloatArrayElements,
-    .ReleaseDoubleArrayElements = Jvmcc_ReleaseTypeArrayElements<jdouble>,//Jvmcc_ReleaseDoubleArrayElements,
+    .ReleaseBooleanArrayElements = Jvmcc_ReleaseTypeArrayElements<jbool>,
+    .ReleaseByteArrayElements = Jvmcc_ReleaseTypeArrayElements<jbyte>,
+    .ReleaseCharArrayElements = Jvmcc_ReleaseTypeArrayElements<jchar>,
+    .ReleaseShortArrayElements = Jvmcc_ReleaseTypeArrayElements<jshort>,
+    .ReleaseIntArrayElements = Jvmcc_ReleaseTypeArrayElements<jint>,
+    .ReleaseLongArrayElements = Jvmcc_ReleaseTypeArrayElements<jlong>,
+    .ReleaseFloatArrayElements = Jvmcc_ReleaseTypeArrayElements<jfloat>,
+    .ReleaseDoubleArrayElements = Jvmcc_ReleaseTypeArrayElements<jdouble>,
 
-    .GetBooleanArrayRegion = Jvmcc_GetBooleanArrayRegion,
-    .GetByteArrayRegion = Jvmcc_GetByteArrayRegion,
-    .GetCharArrayRegion = Jvmcc_GetCharArrayRegion,
-    .GetShortArrayRegion = Jvmcc_GetShortArrayRegion,
-    .GetIntArrayRegion = Jvmcc_GetIntArrayRegion,
-    .GetLongArrayRegion = Jvmcc_GetLongArrayRegion,
-    .GetFloatArrayRegion = Jvmcc_GetFloatArrayRegion,
-    .GetDoubleArrayRegion = Jvmcc_GetDoubleArrayRegion,
+    .GetBooleanArrayRegion = Jvmcc_GetTypeArrayRegion<jboolean>,
+    .GetByteArrayRegion = Jvmcc_GetTypeArrayRegion<jbyte>,
+    .GetCharArrayRegion = Jvmcc_GetTypeArrayRegion<jchar>,
+    .GetShortArrayRegion = Jvmcc_GetTypeArrayRegion<jshort >,
+    .GetIntArrayRegion = Jvmcc_GetTypeArrayRegion<jint>,
+    .GetLongArrayRegion = Jvmcc_GetTypeArrayRegion<jlong>,
+    .GetFloatArrayRegion = Jvmcc_GetTypeArrayRegion<jfloat>,
+    .GetDoubleArrayRegion = Jvmcc_GetTypeArrayRegion<jdouble>,
 
-    .SetBooleanArrayRegion = Jvmcc_SetBooleanArrayRegion,
-    .SetByteArrayRegion = Jvmcc_SetByteArrayRegion,
-    .SetCharArrayRegion = Jvmcc_SetCharArrayRegion,
-    .SetShortArrayRegion = Jvmcc_SetShortArrayRegion,
-    .SetIntArrayRegion = Jvmcc_SetIntArrayRegion,
-    .SetLongArrayRegion = Jvmcc_SetLongArrayRegion,
-    .SetFloatArrayRegion = Jvmcc_SetFloatArrayRegion,
-    .SetDoubleArrayRegion = Jvmcc_SetDoubleArrayRegion,
+    .SetBooleanArrayRegion = Jvmcc_SetTypeArrayRegion<jboolean>,
+    .SetByteArrayRegion = Jvmcc_SetTypeArrayRegion<jbyte>,
+    .SetCharArrayRegion = Jvmcc_SetTypeArrayRegion<jchar>,
+    .SetShortArrayRegion = Jvmcc_SetTypeArrayRegion<jshort>,
+    .SetIntArrayRegion = Jvmcc_SetTypeArrayRegion<jint>,
+    .SetLongArrayRegion = Jvmcc_SetTypeArrayRegion<jlong>,
+    .SetFloatArrayRegion = Jvmcc_SetTypeArrayRegion<jfloat>,
+    .SetDoubleArrayRegion = Jvmcc_SetTypeArrayRegion<jdouble>,
 
     .RegisterNatives = Jvmcc_RegisterNatives,
     .UnregisterNatives = Jvmcc_UnregisterNatives,
