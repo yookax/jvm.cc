@@ -493,7 +493,6 @@ void test_convert() {
 
 int main() {
     test_convert();
-    return 0;
     test_slot();
     test_utf8_equals();
 
