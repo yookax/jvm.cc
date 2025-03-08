@@ -37,7 +37,7 @@ public class InvokeTest extends ArrayList<String> {
     //    assertEquals("InvokeTest", list.get(0));
     }
 //    
-//    @Test
+//    
 //    public void invokeVirtual() throws Exception {
 //        Constructor<FrameworkField> c = FrameworkField.class.getDeclaredConstructor(Field.class);
 //        c.setAccessible(true);
@@ -54,7 +54,7 @@ public class InvokeTest extends ArrayList<String> {
 //        a.getAnnotations();
 //    }
 //    
-//    @Test
+//    
 //    public void invokeVirtual2() {
 //        abstract class A implements Runnable {}
 //        abstract class B implements Runnable {

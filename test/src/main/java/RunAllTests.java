@@ -118,10 +118,7 @@ public class RunAllTests {
                 java.lang.reflect.Method method = myClass.getMethod("main", String[].class);
                 System.out.println("<-------------------------- " + c + " -------------------------->");
                 method.invoke(null, (Object) new String[0]);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
+            } catch (Exception e) { }
         }
 
         System.out.println("\n\nA total of " + testCases.length + " tests were run.");

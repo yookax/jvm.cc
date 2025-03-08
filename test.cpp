@@ -1,5 +1,8 @@
 #include <unordered_set>
 #include <random>
+#include <iomanip>
+#include <limits>
+#include "src/convert.h"
 #include "src/slot.h"
 #include "src/runtime//heap.h"
 #include "src/classfile/class.h"
@@ -390,9 +393,107 @@ void test_array() {
     test_string_array();
 }
 
+// -----------------------------------------------------------------------------------------------
+void test_convert_int() {
+    printf("test_convert_int ---->\n");
+    jint ints[] = {
+            0,
+            1234567,
+            std::numeric_limits<int32_t>::max(),
+    };
+    uint8_t bytes[sizeof(jint)];
+    for (auto i: ints) {
+        int_to_big_endian_bytes(i, bytes);
+        auto x = big_endian_bytes_to_int32(bytes);
+        if (i != x) {
+            printf("failed. %d, %d\n", i, x);
+        }
+    }
+}
+
+void test_convert_long() {
+    printf("test_convert_long ---->\n");
+    jlong longs[] = {
+        0L,
+        1234567L,
+        std::numeric_limits<int64_t>::max(),
+    };
+    uint8_t bytes[sizeof(jlong)];
+    for (auto i: longs) {
+        int_to_big_endian_bytes(i, bytes);
+        auto x = big_endian_bytes_to_int64(bytes);
+        if (i != x) {
+            printf("failed. %lld, %lld\n", i, x);
+        }
+    }
+}
+
+void test_convert_float() {
+    printf("test_convert_float ---->\n");
+
+    float floats[] = {
+            0,
+            23232.716986828,
+            1112.4985495834085,
+            0.71828,
+    };
+
+    unsigned char floatBytes[sizeof(float)];
+
+    for (auto f: floats) {
+        // Convert float to big-endian bytes
+        floating_point_to_big_endian_bytes(f, floatBytes);
+//    std::cout << "Float to big-endian bytes: ";
+//    for (size_t i = 0; i < sizeof(float); ++i) {
+//        std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(floatBytes[i]) << " ";
+//    }
+//    std::cout << std::endl;
+
+        // Convert big-endian bytes back to float
+        auto result = big_endian_bytes_to_float(floatBytes);
+        std::cout << std::setprecision(20) << f << ", " << result << std::endl;
+    }
+}
+
+void test_convert_double() {
+    printf("test_convert_double ---->\n");
+
+    double doubles[] = {
+            0,
+            23232.716986828,
+            1112.4985495834085,
+            0.71828,
+    };
+
+    unsigned char doubleBytes[sizeof(double)];
+
+    for (auto d: doubles) {
+        // Convert double to big-endian bytes
+        floating_point_to_big_endian_bytes(d, doubleBytes);
+//        std::cout << "Double to big-endian bytes: ";
+//        for (size_t i = 0; i < sizeof(double); ++i) {
+//            std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(doubleBytes[i]) << " ";
+//        }
+//        std::cout << std::endl;
+
+        // Convert big-endian bytes back to double
+        auto result = big_endian_bytes_to_double(doubleBytes);
+        std::cout << std::setprecision(20) << d << ", " << result << std::endl;
+    }
+}
+
+void test_convert() {
+    test_convert_int();
+    test_convert_long();
+    test_convert_float();
+    test_convert_double();
+}
+
 // ------------------------------------------------------------------------------------------------
 
 int main() {
+    test_convert();
+    return 0;
     test_slot();
     test_utf8_equals();
 

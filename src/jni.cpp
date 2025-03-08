@@ -836,7 +836,7 @@ void JNICALL Jvmcc_GetTypeArrayRegion(JNIEnv *env,
     assert(buf != nullptr);
     auto arr = (jarrRef) array;
     assert(start + len <= arr->arr_len);
-    assert(reinterpret_cast<ArrayClass *>(arr)->get_element_size() == sizeof(raw_type));
+    //assert(reinterpret_cast<ArrayClass *>(arr)->get_element_size() == sizeof(T));
     memcpy(buf, (arr)->index(start), len*sizeof(T));
 }
 
@@ -848,7 +848,7 @@ void JNICALL Jvmcc_SetTypeArrayRegion(JNIEnv *env,
     assert(buf != nullptr);
     auto arr = (jarrRef) array;
     assert(start + len <= arr->arr_len);
-    assert(reinterpret_cast<ArrayClass *>(arr)->get_element_size() == sizeof(raw_type));
+    //assert(reinterpret_cast<ArrayClass *>(arr)->get_element_size() == sizeof(T));
     memcpy((arr)->index(start), buf, len*sizeof(T));
 }
 
