@@ -44,7 +44,7 @@ static Object *convertDescElement2ClassObject(const char *&b, const char *e, jre
     assert(b != nullptr && e != nullptr);
 
     if (*b == 'L') { // reference
-        char *t = strchr(b, ';');
+        const char *t = strchr(b, ';');
         if (t == nullptr || t >= e) {
             goto error;
         }

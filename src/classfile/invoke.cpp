@@ -210,7 +210,8 @@ slot_t *java_lang_invoke_MethodHandle::invoke(const slot_t *args, u2 len) {
     Method *as_type = _this->clazz->lookup_method(MH_asType_method_desc);
     jref new_handler = execJavaR(as_type, {rslot(_this), rslot(new_type)});
 
-    slot_t exact_args[len];
+//    slot_t exact_args[len];
+    auto exact_args = new slot_t[len];
     slot::set<jref>(exact_args, new_handler);
     for (int i = 1; i < len; i++)
         exact_args[i] = args[i];

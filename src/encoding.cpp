@@ -1,31 +1,31 @@
 #include <cassert>
 #include <cstring>
 #include <unordered_set>
-#include <pthread.h>
+//#include <pthread.h>
 #include "cabin.h"
 #include "encoding.h"
 
 using namespace std;
 
 static unordered_set<const utf8_t *, utf8::Hash, utf8::Comparator> utf8Set;
-static pthread_rwlock_t lock = PTHREAD_RWLOCK_INITIALIZER;
+//static pthread_rwlock_t lock = PTHREAD_RWLOCK_INITIALIZER;
 
 const utf8_t *utf8_pool::save(const utf8_t *utf8) {
     assert(utf8 != nullptr);
 
-    pthread_rwlock_wrlock(&lock);
+    //pthread_rwlock_wrlock(&lock);
     const utf8_t *s = *utf8Set.insert(utf8).first;
-    pthread_rwlock_unlock(&lock);
+    //pthread_rwlock_unlock(&lock);
     return s;
 }
 
 const utf8_t *utf8_pool::find(const utf8_t *utf8) {
     assert(utf8 != nullptr);
 
-    pthread_rwlock_rdlock(&lock);
+    //pthread_rwlock_rdlock(&lock);
     auto iter = utf8Set.find(utf8);
     const utf8_t *s = iter == utf8Set.end() ? nullptr : *iter;
-    pthread_rwlock_unlock(&lock);
+    //pthread_rwlock_unlock(&lock);
     return s;
 }
 

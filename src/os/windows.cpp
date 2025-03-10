@@ -8,6 +8,7 @@
 #include <vector>
 #include <filesystem>
 #include <windows.h>
+#include <direct.h>
 #include "../cabin.h"
 #include "../dll.h"
 
@@ -163,7 +164,7 @@ const char *path_separator() { return ";"; }
 
 const char *line_separator() { return "\r\n"; }
 
-#include <unistd.h>  // todo
+//#include <unistd.h>  // todo
 
 char *get_current_working_directory() {
 	char *cwd = nullptr;
@@ -233,10 +234,13 @@ bool check_jdk_version(string jdk_path) {
 	file.seekg(0, std::ios::beg);
 
 	// 读取文件内容到缓冲区
-	char buffer[size];
+//	char buffer[size];
+    auto buffer = new char[size];
 	file.read(buffer, size);
 	file.close();
-	return strstr(buffer, "JAVA_VERSION=\"17") != nullptr;
+	auto b = strstr(buffer, "JAVA_VERSION=\"17") != nullptr;
+    delete[] buffer;
+    return b;
 }
 
 string find_jdk_dir() {

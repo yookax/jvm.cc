@@ -1,4 +1,5 @@
 #include <cassert>
+#include <atomic>
 #include "../cabin.h"
 #include "../classfile/class_loader.h"
 #include "../classfile/method.h"
@@ -64,7 +65,7 @@ static jboolean compareAndSwapInt(JNIEnv *env, jref _this,
     jint *old;
 
     if (o == nullptr) {
-        // offset is a address
+        // offset is an address
         old = (jint *) offset;
     } else if (o->is_array_object()) {
         old = (jint *) (o->index(offset));
@@ -73,7 +74,9 @@ static jboolean compareAndSwapInt(JNIEnv *env, jref _this,
         old = (jint *) (o->data + offset);
     }
 
-    bool b = __sync_bool_compare_and_swap(old, expected, x);
+    std::atomic_ref<jint> counter(*old);
+    bool b = counter.compare_exchange_strong(expected, x);
+//    bool b = __sync_bool_compare_and_swap(old, expected, x);
     return b ? jtrue : jfalse;
 }
 
@@ -82,7 +85,7 @@ static jboolean compareAndSwapLong(JNIEnv *env, jref _this,
     jlong *old;
 
     if (o == nullptr) {
-        // offset is a address
+        // offset is an address
         old = (jlong *) offset;
     } else if ((o)->is_array_object()) {
         old = (jlong *) ((o)->index(offset));
@@ -91,7 +94,9 @@ static jboolean compareAndSwapLong(JNIEnv *env, jref _this,
         old = (jlong *) (o->data + offset);
     }
 
-    bool b = __sync_bool_compare_and_swap(old, expected, x);
+    std::atomic_ref<jlong> counter(*old);
+    bool b = counter.compare_exchange_strong(expected, x);
+//    bool b = __sync_bool_compare_and_swap(old, expected, x);
     return b ? jtrue : jfalse;
 }
 
@@ -100,7 +105,7 @@ static jboolean compareAndSwapObject(JNIEnv *env, jref _this,
     jref *old;
 
     if (o == nullptr) {
-        // offset is a address
+        // offset is an address
         old = (jref *) offset;
     } else if (o->is_array_object()) {
         old = (jref *) (o->index(offset));
@@ -109,7 +114,9 @@ static jboolean compareAndSwapObject(JNIEnv *env, jref _this,
         old = (jref *) (o->data + offset);
     }
 
-    bool b = __sync_bool_compare_and_swap(old, expected, x);
+    std::atomic_ref<jref> counter(*old);
+    bool b = counter.compare_exchange_strong(expected, x);
+//    bool b = __sync_bool_compare_and_swap(old, expected, x);
     return b ? jtrue : jfalse;
 }
 

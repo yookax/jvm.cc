@@ -41,7 +41,7 @@ bool isSupportedJNIVersion(int version);
 #define JNI_COMMIT 1
 #define JNI_ABORT 2
 
-#define JNIEXPORT extern "C"
+#define JNIEXPORT extern "C" //__declspec(dllexport)
 #define JNICALL
 
 struct _jobject;

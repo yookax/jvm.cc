@@ -6,10 +6,10 @@
 #include <string>
 #include <unordered_set>
 #include <mutex>
+#include "meta.h"
 #include "bytecode_reader.h"
 #include "../cabin.h"
 #include "constant_pool.h"
-#include "meta.h"
 #include "../primitive.h"
 
 class ModuleAttribute;

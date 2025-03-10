@@ -22,8 +22,8 @@ struct Annotation {
     }
 };
 
-class Meta {  
-public:      
+class Meta {
+public:
     // name of Class, Field and Method
     // if is class name, 必须是全限定类名，包名之间以 '/' 分隔。
     const utf8_t *name = nullptr;

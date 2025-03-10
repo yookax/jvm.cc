@@ -57,7 +57,8 @@ void init_reflection() {
 jarrRef get_inner_classes_as_class_array(Class *c, bool public_only) {
     assert(c != nullptr);
 
-    Class *inners[c->inner_classes.size()];
+//    Class *inners[c->inner_classes.size()];
+    auto inners = new Class *[c->inner_classes.size()];
     int count = 0;
 
     for (auto &x: c->inner_classes) {
@@ -80,6 +81,8 @@ jarrRef get_inner_classes_as_class_array(Class *c, bool public_only) {
     for (int i = 0; i < count; i++) {
         result->setRefElt(i, inners[i]->java_mirror);
     }
+
+    delete[] inners;
     return result;
 }
 

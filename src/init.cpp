@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include "cabin.h"
+#include "classfile/class.h"
 #include "runtime//heap.h"
 #include "jni.h"
 #include "runtime/thread.h"
@@ -221,11 +222,11 @@ void init_jvm(InitArgs *init_args) {
                                      "Ljava/lang/ClassLoader;", g_app_class_loader);
                                      
     // gc thread
-    pthread_t tid;
-    int ret = pthread_create(&tid, nullptr, gcLoop, nullptr);
-    if (ret != 0) {
-        panic("create Thread failed"); // todo
-    }
+//    pthread_t tid;
+//    int ret = pthread_create(&tid, nullptr, gcLoop, nullptr);
+//    if (ret != 0) {
+//        panic("create Thread failed"); // todo
+//    }
     
     g_vm_initing = false;
     TRACE("init jvm is over.\n");

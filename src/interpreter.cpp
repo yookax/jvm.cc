@@ -790,7 +790,8 @@ opc_ret:
 
                 // 跳转偏移量表，对应于各个 case 的情况
                 s4 jump_offset_count = height - low + 1;
-                s4 jump_offsets[jump_offset_count];
+//                s4 jump_offsets[jump_offset_count];
+                auto jump_offsets = new s4[jump_offset_count];
                 reader->reads4s(jump_offset_count, jump_offsets);
 
                 // 弹出要判断的值
@@ -807,6 +808,7 @@ opc_ret:
                 // must be the address of an opcode of an instruction within the method
                 // that contains this tableswitch instruction.
                 reader->pc = saved_pc + offset;
+                delete[] jump_offsets;
                 break;
             }
             case JVM_OPC_lookupswitch: {
@@ -823,7 +825,8 @@ opc_ret:
                 assert(npairs >= 0); // The npairs must be greater than or equal to 0.
 
                 // match_offsets 有点像 Map，它的 key 是 case 值，value 是跳转偏移量。
-                s4 match_offsets[npairs * 2];
+//                s4 match_offsets[npairs * 2];
+                auto match_offsets = new s4[npairs * 2];
                 reader->reads4s(npairs * 2, match_offsets);
 
                 // 弹出要判断的值
@@ -1220,7 +1223,8 @@ _invoke_method: {
                     throw java_lang_UnknownError("The dimensions must be greater than or equal to 1.");
                 }
 
-                jint lens[dim];
+//                jint lens[dim];
+                auto lens = new jint[dim];
                 for (int i = dim - 1; i >= 0; i--) {
                     lens[i] = frame->popi();
                     if (lens[i] < 0) {
@@ -1229,6 +1233,7 @@ _invoke_method: {
                     }
                 }
                 frame->pushr(Allocator::multi_array(ac, dim, lens));
+                delete[] lens;
                 break;
             }
             case JVM_OPC_arraylength: {
@@ -1460,7 +1465,8 @@ slot_t *execJava(Method *method, std::initializer_list<slot_t> args)
     assert(method != nullptr);
     assert(method->arg_slots_count == args.size());
 
-    slot_t slots[args.size()];
+//    slot_t slots[args.size()];
+    auto slots = new slot_t[args.size()];
     int i = 0;
     for (slot_t arg: args) {
         slots[i++] = arg;
@@ -1473,7 +1479,8 @@ jref execJavaR(Method *m, std::initializer_list<slot_t> args)
 {
     assert(m != nullptr);
 
-    slot_t slots[args.size()];
+//    slot_t slots[args.size()];
+    auto slots = new slot_t[args.size()];
 
     int i = 0;
     for (slot_t arg: args) {

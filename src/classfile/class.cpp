@@ -849,7 +849,8 @@ Method *Class::lookup_method(const char *name0, const char *descriptor) {
 
 ArrayClass *Class::generate_array_class() const {
     // todo 判断 c 的维度，jvms数组最大维度为255. ARRAY_MAX_DIMENSIONS
-    char buf[strlen(name) + 8]; // big enough
+//    char buf[strlen(name) + 8]; // big enough
+    auto buf= new char[strlen(name) + 8]; // big enough
 
     // 数组
     if (name[0] == '[') {

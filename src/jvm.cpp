@@ -150,9 +150,12 @@ JVM_NanoTime(JNIEnv *env, jclass ignored) {
     TRACE("JVM_NanoTime(env=%p)", env);
     // todo
 
-    timespec ts{};
-    clock_gettime(CLOCK_REALTIME, &ts);  //获取相对于1970到现在的秒数
-    return (jlong) ts.tv_sec * 1000000000 + ts.tv_nsec;
+//    timespec ts{};
+//    clock_gettime(CLOCK_REALTIME, &ts);  //获取相对于1970到现在的秒数
+//    return (jlong) ts.tv_sec * 1000000000 + ts.tv_nsec;
+
+    auto now = std::chrono::high_resolution_clock::now();
+    return now.time_since_epoch().count();
 }
 
 JNIEXPORT jlong JNICALL
@@ -1418,7 +1421,7 @@ JVM_NewMultiArray(JNIEnv *env, jclass _eltClass, jintArray _dim) {
     auto dim = (jarrRef) _dim;
 
     jsize dim_count = dim->array_len();
-    jint lens[dim_count];
+    auto lens = new jint[dim_count];
     for (jsize i = 0; i < dim_count; i++) {
         lens[i] = dim->getElt<jint>(i);
         c = c->generate_array_class();
@@ -1428,6 +1431,7 @@ JVM_NewMultiArray(JNIEnv *env, jclass _eltClass, jintArray _dim) {
     ArrayClass *ac = (ArrayClass *) c;
     jref a = Allocator::multi_array(ac, dim_count, lens);
     // jref a = ((ArrayClass *)c)->alloc_multi_array(dim_count, lens);
+    delete[] lens;
     return (jobject) a;
 }
 
@@ -2079,7 +2083,7 @@ JVM_GetSimpleBinaryName(JNIEnv *env, jclass of_class) {
     Class *c = JVM_MIRROR(of_class);
     const utf8_t *simple_binary_name = c->name;
     if (!c->is_prim_class()) {
-        char *p = strrchr(c->name, '$');
+        const char *p = strrchr(c->name, '$');
         if (p != nullptr) {
             simple_binary_name = ++p; // strip the leading enclosing class name
         } else if ((p = strrchr(c->name, '.')) != nullptr) {
@@ -2202,7 +2206,7 @@ JVM_GetClassDeclaredMethods(JNIEnv *env, jclass of_class, jboolean public_only) 
                 "Ljava/lang/Class;" "[" "Ljava/lang/Class;" "II" "Ljava/lang/String;" "[B[B[B)V");
 
     u2 count = 0;
-    Object *objects[c->methods.size()];
+    auto objects = new Object*[c->methods.size()];
 
     for (size_t i = 0; i < c->methods.size(); i++) {
         Method *m = c->methods[i];
@@ -2237,6 +2241,8 @@ JVM_GetClassDeclaredMethods(JNIEnv *env, jclass of_class, jboolean public_only) 
     for (size_t i = 0; i < count; i++) {
         method_array->setRefElt(i, objects[i]);
     }
+
+    delete[] objects;
     return (jobjectArray) method_array;
 }
 
@@ -2255,7 +2261,7 @@ JVM_GetClassDeclaredFields(JNIEnv *env, jclass ofClass, jboolean public_only) {
                         "IZI" "Ljava/lang/String;" "[B)V");
 
     u2 count = 0;
-    Object *objects[c->fields.size()];
+    auto objects = new Object*[c->fields.size()];
 
     // invoke constructor of class java/lang/reflect/Field
     for (size_t i = 0; i < c->fields.size(); i++) {
@@ -2286,6 +2292,7 @@ JVM_GetClassDeclaredFields(JNIEnv *env, jclass ofClass, jboolean public_only) {
     for (u2 i = 0; i < count; i++)
         field_array->setRefElt(i, objects[i]);
 
+    delete[] objects;
     return (jobjectArray) field_array;
 }
 

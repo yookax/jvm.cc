@@ -160,11 +160,13 @@ static void *invoke_run(void *args) {
 }
 
 void java_lang_Thread::start(jref tobj) {
-    pthread_t th; 
-    if (pthread_create(&th, nullptr, invoke_run, tobj) != 0) {
-        // todo error
-        panic("pthread_create");
-    }
+//    pthread_t th;
+//    if (pthread_create(&th, nullptr, invoke_run, tobj) != 0) {
+//        // todo error
+//        panic("pthread_create");
+//    }
+
+//    std::thread t(invoke_run, tobj);
 }
 
 bool java_lang_Thread::isAlive(jref tobj) {
