@@ -1376,7 +1376,6 @@ struct JNIInvokeInterface_ {
 struct JavaVM_ {
     const struct JNIInvokeInterface_ *functions;
 #ifdef __cplusplus
-
     jint DestroyJavaVM() {
         return functions->DestroyJavaVM(this);
     }

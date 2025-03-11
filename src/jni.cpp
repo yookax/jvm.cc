@@ -1304,7 +1304,7 @@ static struct JNINativeInterface_ Jvmcc_JNINativeInterface = {
     .GetModule = Jvmcc_GetModule,
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// -------------------------------------------------------
 
 jint JNICALL Jvmcc_DestroyJavaVM(JavaVM *vm) {
     unimplemented  //  todo
@@ -1352,7 +1352,8 @@ const static struct JNIInvokeInterface_ Jvmcc_JNIInvokeInterface = {
     .AttachCurrentThreadAsDaemon = Jvmcc_AttachCurrentThreadAsDaemon,
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// -------------------------------------------------------
+
 jint parseJvmInitArgs(JavaVMInitArgs *vm_args, InitArgs *args) {
     // Property props[vm_args->nOptions];
     // args->commandline_props = &props[0];

@@ -59,5 +59,10 @@ target_sources(jvm
         src/primitive.ixx src/sysinfo.ixx
 )
 
-add_executable(test test.cpp)
-target_link_libraries(test jvm)
+target_sources(jvmcc
+        PUBLIC
+        FILE_SET CXX_MODULES
+        BASE_DIRS src
+        FILES
+        src/primitive.ixx src/sysinfo.ixx
+)

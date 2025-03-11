@@ -321,3 +321,10 @@ void init_jvm(InitArgs *init_args) {
     g_vm_initing = false;
     TRACE("init jvm is over.\n");
 }
+
+TEST_CASE(test_properties, {
+    for (Property &p: g_properties) {
+        printf("%s: %s\n", p.name, p.value);
+    }
+})
+
