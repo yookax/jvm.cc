@@ -9,9 +9,10 @@
 #include "class_loader.h"
 #include "../object/allocator.h"
 
+import primitive;
+import sysinfo;
 //#include <bits/fs_path.h>
 
-#include "../sysinfo.h"
 #include "../classfile/method.h"
 #include "../object/object.h"
 #include "../interpreter.h"
@@ -27,7 +28,7 @@ vector<string> jdk_modules;
 
 static char classpath[PATH_MAX + 1] = { 0 };
 
-void set_classpath(const char *cp) {
+JNIEXPORT void set_classpath(const char *cp) {
     assert(cp != nullptr);
     strcpy(classpath, cp);
 }

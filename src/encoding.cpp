@@ -138,13 +138,18 @@ unicode_t *utf8::toUnicode(const utf8_t *utf8, size_t unicode_len) {
     auto buf = new unicode_t[unicode_len + 1];
     buf[unicode_len] = 0;
 
-    auto tmp = buf;
-    while (*utf8) {
-        *tmp++ = get_utf8_char(utf8);
+    for (int i = 0; i < unicode_len; i++) {
+        if (*utf8) {
+            buf[i] = get_utf8_char(utf8);
+        }
     }
 
-    // 不应该写出buf的范围
-    assert(buf[unicode_len] == 0);
+//    auto tmp = buf;
+//    while (*utf8) {
+//        *tmp++ = get_utf8_char(utf8);
+//    }
+//    // 不应该写出buf的范围
+//    assert(buf[unicode_len] == 0);
     return buf;
 }
 

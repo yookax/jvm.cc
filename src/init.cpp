@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <fstream>
+#include <filesystem>
 #include "cabin.h"
 #include "classfile/class.h"
 #include "runtime//heap.h"
@@ -15,9 +17,10 @@
 #include "object/object.h"
 #include "object/reflect.h"
 #include "reference.h"
-#include "sysinfo.h"
 #include "interpreter.h"
 #include "dll.h"
+
+import sysinfo;
 
 using namespace std;
 
@@ -141,7 +144,94 @@ static void init_heap() {
 //     args->exit = exit;
 // }
 
-string find_jdk_dir();
+
+namespace fs = std::filesystem;
+
+static bool check_jdk_version(string jdk_path) {
+    std::ifstream file(jdk_path + "/release", std::ios::binary);
+    if (!file.is_open()) {
+        return false;
+    }
+
+    // 获取文件大小
+    file.seekg(0, std::ios::end);
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    // 读取文件内容到缓冲区
+//	char buffer[size];
+    auto buffer = new char[size];
+    file.read(buffer, size);
+    file.close();
+    auto b = strstr(buffer, "JAVA_VERSION=\"17") != nullptr;
+    delete[] buffer;
+    return b;
+}
+
+static string find_jdk_dir() {
+    // 查找"JAVA_HOME"环境变量
+//    if (char buffer[PATH_MAX]; GetEnvironmentVariable("JAVA_HOME", buffer, PATH_MAX) > 0) {
+//        if (check_jdk_version(buffer))
+//            return std::string(buffer);
+//    }
+    const char *home = std::getenv("JAVA_HOME");
+    if (home != nullptr) {
+        if (check_jdk_version(home))
+            return std::string(home);
+    }
+
+    // 没有设置"JAVA_HOME"环境变量，那么尝试在"PATH"环境变量中查找 java.exe
+    // char pathBuffer[MAX_PATH];
+    // if (GetEnvironmentVariable("PATH", pathBuffer, MAX_PATH) > 0) {
+    // 	std::string pathStr(pathBuffer);
+    // 	std::istringstream iss(pathStr);
+    // 	std::string token;
+    // 	while (std::getline(iss, token, ';')) {
+    // 		std::string javaPath = token + "\\java.exe";
+    // 		if (GetFileAttributes(javaPath.c_str()) != INVALID_FILE_ATTRIBUTES) {
+    // 			return token;
+    // 		}
+    // 	}
+    // }
+
+    // 尝试在以下几个目录查找
+    vector<string> common_paths = {
+            "C:\\Program Files\\Java",
+            "C:\\ProgramData\\Java",
+            "C:\\Java",
+            "D:\\Java",
+            "C:\\",
+            "D:\\",
+    };
+
+    vector<pair<string, string>> jdk_dirs;
+
+    for (const auto& p : common_paths) {
+        if (!filesystem::exists(p))
+            continue;
+
+        for (const auto& entry : filesystem::directory_iterator(p)) {
+            if (!entry.is_directory())
+                continue;
+            if (entry.path().filename().string().find("jdk") != string::npos) {
+                // There should be a "bin" directory in a JDK directory,
+                // and there should be executable files such as "javac" and "java"
+                // in the "bin" directory.
+                fs::path bin_path = entry.path() / "bin";
+                if (fs::exists(bin_path) && fs::is_directory(bin_path)) {
+                    if (fs::exists(bin_path / "javac.exe") || exists(bin_path / "javac")) {
+                        string jdk_path = entry.path().string();
+                        if (check_jdk_version(jdk_path))
+                            return jdk_path;
+                        //jdk_dirs.emplace_back(entry.path().filename().string(), entry.path().string());
+                    }
+                }
+            }
+        }
+    }
+
+    return "";
+}
 
 void init_jvm(InitArgs *init_args) {
     g_java_home = find_jdk_dir();
@@ -176,7 +266,7 @@ void init_jvm(InitArgs *init_args) {
 
     uc->lookup_field("ADDRESS_SIZE0", "I")->static_value.i = sizeof(void *);
     uc->lookup_field("PAGE_SIZE", "I")->static_value.i = page_size();
-    uc->lookup_field("BIG_ENDIAN", "Z")->static_value.z = is_big_endian();
+    uc->lookup_field("BIG_ENDIAN", "Z")->static_value.z = std::endian::native == std::endian::big;
     // todo UNALIGNED_ACCESS
     // todo DATA_CACHE_LINE_FLUSH_SIZE
 

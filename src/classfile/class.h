@@ -10,7 +10,8 @@
 #include "bytecode_reader.h"
 #include "../cabin.h"
 #include "constant_pool.h"
-#include "../primitive.h"
+
+import primitive;
 
 class ModuleAttribute;
 

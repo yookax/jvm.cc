@@ -9,19 +9,28 @@ project(jvmcc)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_EXTENSIONS OFF)
+#set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(jvm PRIVATE -fmodules-ts)
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /experimental:module")
+endif()
 
 set (SOURCE_FILES src/slot.cpp src/jvm.cpp src/jni.cpp src/native/init_native.cpp src/native/unsafe.cpp
         src/jmm.cpp src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
         src/encoding.cpp src/classfile/poly.cpp  src/reference.cpp
         src/runtime/thread.cpp src/runtime/heap.cpp src/dll.cpp src/classfile/method.cpp
         src/classfile/field.cpp src/classfile/constant_pool.cpp
-        src/classfile/class_loader.cpp src/primitive.cpp src/init.cpp
+        src/classfile/class_loader.cpp src/primitive.ixx src/init.cpp
         src/object/object.cpp src/object/array.cpp src/object/string.cpp src/object/box.cpp
         src/object/reflect.cpp src/classfile/class.cpp src/classfile/array_class.cpp src/exception.cpp
-        src/classfile/invoke.cpp src/convert.cpp
-        src/os/windows.cpp src/os/linux.cpp src/native/method_handle_natives.cpp
+        src/classfile/invoke.cpp src/convert.cpp src/native/method_handle_natives.cpp
         src/native/scoped_memory_access.cpp src/native/var_handle.cpp src/native/method_handle.cpp
-        src/object/allocator.cpp)
+        src/object/allocator.cpp src/sysinfo.ixx)
 
 if (MSVC)
     add_compile_options("/utf-8")
@@ -41,13 +50,14 @@ SET_TARGET_PROPERTIES(jvm PROPERTIES OUTPUT_NAME "jvm" PREFIX "")
 add_executable(jvmcc src/vm_client.cpp)
 target_link_libraries(jvmcc jvm)
 
+# 创建CXX_MODULES类型的FILE_SET
+target_sources(jvm
+        PUBLIC
+        FILE_SET CXX_MODULES
+        BASE_DIRS src
+        FILES
+        src/primitive.ixx src/sysinfo.ixx
+)
+
 add_executable(test test.cpp)
 target_link_libraries(test jvm)
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(jvm PRIVATE -fmodules-ts)
-endif()
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(jvm PRIVATE /experimental:module)
-endif()

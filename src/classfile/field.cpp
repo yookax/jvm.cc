@@ -1,7 +1,6 @@
 #include <cassert>
 #include <sstream>
 #include "../cabin.h"
-#include "../primitive.h"
 #include "class.h"
 #include "array_class.h"
 #include "field.h"

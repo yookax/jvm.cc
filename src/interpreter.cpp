@@ -1797,7 +1797,7 @@ static void call_native_method(Frame *frame) {
     }
 
     if (m->native_invoker == nullptr) {
-        const auto invoker = find_native_invoker(m->descriptor);
+        auto invoker = find_native_invoker(m->descriptor);
         if  (invoker == nullptr) {
             panic("The invoker of native method %s~%s~%s was not found. "
                     "It is necessary to add the invoker of this function to the 'invoker_map' array.\n",

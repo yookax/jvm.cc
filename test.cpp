@@ -9,7 +9,6 @@
 #include "src/object/object.h"
 #include "src/classfile/invoke.h"
 #include "src/classfile/descriptor.h"
-#include "src/sysinfo.h"
 #include "src/jni.h"
 #include "src/encoding.h"
 #include "src/object/allocator.h"
@@ -23,7 +22,7 @@ static void test_sys_info() {
     printf("page size: %d\n", page_size());
     printf("os name: %s\n", os_name());
     printf("os arch: %s\n", os_arch());
-    printf("is big endian?: %d\n", is_big_endian());
+    printf("is big endian?: %d\n", std::endian::native == std::endian::big);
 }
 
 static void test_properties() {

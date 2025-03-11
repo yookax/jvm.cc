@@ -60,6 +60,8 @@ static void unpark(JNIEnv *env, jref _this, jref thread) {
  * public final native boolean compareAndSwapInt(Object o, long offset, int expected, int x);
  */
 
+static std::mutex mtx;
+
 static jboolean compareAndSwapInt(JNIEnv *env, jref _this,
                                 jref o, jlong offset, jint expected, jint x) {
     jint *old;
@@ -73,10 +75,18 @@ static jboolean compareAndSwapInt(JNIEnv *env, jref _this,
         assert(0 <= offset && offset < o->clazz->inst_fields_count);
         old = (jint *) (o->data + offset);
     }
+    assert(old != nullptr);
 
-    std::atomic_ref<jint> counter(*old);
-    bool b = counter.compare_exchange_strong(expected, x);
+//#ifdef __GNUC__
 //    bool b = __sync_bool_compare_and_swap(old, expected, x);
+//#else
+    std::lock_guard<std::mutex> lock(mtx);
+    bool b = (*old == expected);
+    if (b) {
+        *old = x;
+    }
+//#endif
+
     return b ? jtrue : jfalse;
 }
 
@@ -93,10 +103,18 @@ static jboolean compareAndSwapLong(JNIEnv *env, jref _this,
         assert(0 <= offset && offset < o->clazz->inst_fields_count);
         old = (jlong *) (o->data + offset);
     }
+    assert(old != nullptr);
 
-    std::atomic_ref<jlong> counter(*old);
-    bool b = counter.compare_exchange_strong(expected, x);
+//#ifdef __GNUC__
 //    bool b = __sync_bool_compare_and_swap(old, expected, x);
+//#else
+    std::lock_guard<std::mutex> lock(mtx);
+    bool b = (*old == expected);
+    if (b) {
+        *old = x;
+    }
+//#endif
+
     return b ? jtrue : jfalse;
 }
 
@@ -113,10 +131,18 @@ static jboolean compareAndSwapObject(JNIEnv *env, jref _this,
         assert(0 <= offset && offset < o->clazz->inst_fields_count);
         old = (jref *) (o->data + offset);
     }
+    assert(old != nullptr);
 
-    std::atomic_ref<jref> counter(*old);
-    bool b = counter.compare_exchange_strong(expected, x);
+//#ifdef __GNUC__
 //    bool b = __sync_bool_compare_and_swap(old, expected, x);
+//#else
+    std::lock_guard<std::mutex> lock(mtx);
+    bool b = (*old == expected);
+    if (b) {
+        *old = x;
+    }
+//#endif
+
     return b ? jtrue : jfalse;
 }
 

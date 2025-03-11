@@ -6,12 +6,13 @@
 #include "../cabin.h"
 #include "constants.h"
 #include "../encoding.h"
+#include "../jni.h"
 
 class ArrayClass;
 
 void set_bootstrap_classpath(const char *bcp);
 
-void set_classpath(const char *cp);
+JNIEXPORT void set_classpath(const char *cp);
 const char *get_classpath();
 
 // Cache 常用的类

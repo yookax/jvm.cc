@@ -1,20 +1,20 @@
-#include <algorithm>
-#include "cabin.h"
-#include "classfile/class_loader.h"
-#include "interpreter.h"
+#include <cassert>
+
+export module primitive;
+
+import std.core;
 
 using namespace std;
-using namespace utf8;
 
 /*
  * 基本类型的名称，描述符，等等
  */
 
 static struct Primitive {
-    const utf8_t *class_name;
-    utf8_t descriptor;
-    const utf8_t *array_class_name;
-    const utf8_t *wrapper_class_name;
+    const char *class_name;
+    char descriptor;
+    const char *array_class_name;
+    const char *wrapper_class_name;
 } prims[] = {
         { "void",    'V', "[V", "java/lang/Void" },
         { "boolean", 'Z', "[Z", "java/lang/Boolean" },
@@ -27,33 +27,33 @@ static struct Primitive {
         { "double",  'D', "[D", "java/lang/Double" }
 };
 
-bool is_prim_class_name(const utf8_t *class_name) {
+export bool is_prim_class_name(const char *class_name) {
     assert(class_name != nullptr);
     return find_if(begin(prims), end(prims),
-                   [=](auto &prim){ return equals(prim.class_name, class_name); }) != end(prims);
+                   [=](auto &prim){ return strcmp(prim.class_name, class_name) == 0; }) != end(prims);
 }
 
-bool is_prim_descriptor(utf8_t descriptor) {
+export bool is_prim_descriptor(char descriptor) {
     return find_if(begin(prims), end(prims),
                    [=](auto &prim){ return prim.descriptor == descriptor; }) != end(prims);
 }
 
-bool is_prim_wrapper_class_name(const utf8_t *class_name) {
+export bool is_prim_wrapper_class_name(const char *class_name) {
     assert(class_name != nullptr);
     return find_if(begin(prims), end(prims),
-                   [=](auto &prim){ return equals(prim.wrapper_class_name, class_name); }) != end(prims);
+                   [=](auto &prim){ return strcmp(prim.wrapper_class_name, class_name) == 0; }) != end(prims);
 }
 
-const utf8_t *get_prim_array_class_name(const utf8_t *class_name) {
+export const char *get_prim_array_class_name(const char *class_name) {
     assert(class_name != nullptr);
     for (auto &t : prims) {
-        if (equals(t.class_name, class_name))
+        if (strcmp(t.class_name, class_name) == 0)
             return t.array_class_name;
     }
     return nullptr;
 }
 
-const utf8_t *get_prim_class_name(utf8_t descriptor) {
+export const char *get_prim_class_name(char descriptor) {
     for (auto &t : prims) {
         if (t.descriptor == descriptor)
             return t.class_name;
@@ -61,25 +61,25 @@ const utf8_t *get_prim_class_name(utf8_t descriptor) {
     return nullptr;
 }
 
-const utf8_t *getPrimDescriptor(const utf8_t *wrapper_class_name) {
+export const char *getPrimDescriptor(const char *wrapper_class_name) {
     for (auto &t : prims) {
-        if (equals(t.wrapper_class_name, wrapper_class_name))
+        if (strcmp(t.wrapper_class_name, wrapper_class_name) == 0)
             return &(t.descriptor);
     }
     return nullptr;
 }
 
-const utf8_t *get_prim_descriptor_by_class_name(const utf8_t *class_name) {
+export const char *get_prim_descriptor_by_class_name(const char *class_name) {
     for (auto &t : prims) {
-        if (equals(t.class_name, class_name))
+        if (strcmp(t.class_name, class_name) == 0)
             return &(t.descriptor);
     }
     return nullptr;
 }
 
-const utf8_t *get_prim_descriptor_by_wrapper_class_name(const utf8_t *wrapper_class_name) {
+export const char *get_prim_descriptor_by_wrapper_class_name(const char *wrapper_class_name) {
     for (auto &t : prims) {
-        if (equals(t.wrapper_class_name, wrapper_class_name))
+        if (strcmp(t.wrapper_class_name, wrapper_class_name) == 0)
             return &(t.descriptor);
     }
     return nullptr;

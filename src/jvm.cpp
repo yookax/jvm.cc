@@ -19,10 +19,11 @@
 #include "object/reflect.h"
 #include "interpreter.h"
 #include "reference.h"
-#include "sysinfo.h"
 #include "dll.h"
 #include "jmm.h"
 #include "object/allocator.h"
+
+import sysinfo;
 
 using namespace std;
 using namespace slot;
@@ -3352,7 +3353,6 @@ typedef struct {
  */
 JNIEXPORT char * JNICALL
 JVM_NativePath(char *path) {
-    // todo 这函数干啥的？？
     TRACE("JVM_NativePath(path=%p)", path);
     return path;
 }

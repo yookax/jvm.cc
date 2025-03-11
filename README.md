@@ -3,8 +3,7 @@ A tiny JVM written in C++.
 
 ## Development environment
 * Win10
-* MinGW64
-* g++
+* cl
 * jdk17
  
 ## Run

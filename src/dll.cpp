@@ -1,11 +1,18 @@
 #include <cassert>
 #include <string>
 #include <sstream>
+#include <utility>
 #include "cabin.h"
 #include "classfile/class.h"
 #include "classfile/method.h"
 #include "classfile/class_loader.h"
 #include "dll.h"
+
+#ifdef _WIN64
+#include <windows.h>
+#include <direct.h>
+#elifdef __linux__
+#endif
 
 using namespace std;
 
@@ -38,9 +45,23 @@ static string mangle(const utf8_t *class_name, const utf8_t *method_name) {
 // [lib name, lib handle]
 static vector<pair<const char *, void *>> loaded_libs;
 
-void *open_library_os_depend(const char *name);
+static void *open_library_os_depend(const char *name) {
+#ifdef _WIN64
+    void *handle = LoadLibrary(name);
+    if (handle == nullptr) {
+        DWORD e = GetLastError();
+                ERR("Load dll failed. %ld, %s\n", e, name); // todo
+        return nullptr;
+    }
+
+    return handle;
+#elifdef __linux__
+    unimplemented
+#endif
+}
 
 void *open_library(const char *name) {
+    assert(name != nullptr);
     for (auto &[lib_name, lib_handle]: loaded_libs) {
         if (strcmp(lib_name, name) == 0) {
             assert(lib_handle != nullptr);
@@ -81,6 +102,15 @@ void init_dll() {
     g_libzip = open_library(strcat(strcpy(path, boot_lib_path), "zip.dll"));
 }
 
+void *find_library_entry(void *handle, const char *name) {
+#ifdef _WIN64
+    assert(handle != nullptr && name != nullptr);
+    return (void *) GetProcAddress((HMODULE) handle, name);
+#elifdef __linux__
+    unimplemented
+#endif
+}
+
 char *get_boot_lib_path() {
     static char boot_lib_path[PATH_MAX + 1] = { 0 };
 
@@ -89,5 +119,3 @@ char *get_boot_lib_path() {
     
     return boot_lib_path;
 }
-
-

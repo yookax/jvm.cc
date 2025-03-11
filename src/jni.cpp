@@ -50,6 +50,11 @@ static void deleteJNIGlobalRef(Object *ref) {
 }
 
 static slot_t *execJavaV(Method *m, jref _this, va_list args) {
+    assert(m != nullptr);
+    if (m->isStatic()) {
+        init_class(m->clazz);
+    }
+
     // Class[]
     jarrRef types = m->get_parameter_types();
     jsize args_count = types->arr_len;
@@ -93,6 +98,11 @@ static slot_t *execJavaV(Method *m, jref _this, va_list args) {
 }
 
 static slot_t *execJavaA(Method *m, jref _this, const jvalue *args) {
+    assert(m != nullptr);
+    if (m->isStatic()) {
+        init_class(m->clazz);
+    }
+
     // Class[]
     jarrRef types = m->get_parameter_types();
     jsize args_count = types->arr_len;
@@ -160,11 +170,13 @@ jclass JNICALL Jvmcc_FindClass(JNIEnv *env, const char *name) {
     // Class *c = loadClass(loader, name);
     // return to_jclass(c);
 
-    // todo
-    Class *c = loadClass(nullptr, name); // todo clasloader
-    return (jclass) c->java_mirror;
+    Class *c = loadClass(nullptr, name);
+    if (c != nullptr) {
+        return (jclass) c->java_mirror;
+    }
 
-    //    UNIMPLEMENTED  // todo
+    c = loadClass(g_app_class_loader, name);
+    return (jclass) c->java_mirror;
 }
 
 jmethodID JNICALL Jvmcc_FromReflectedMethod(JNIEnv *env, jobject method) {
@@ -293,6 +305,10 @@ jobject JNICALL Jvmcc_NewLocalRef(JNIEnv *env, jobject obj) {
         return nullptr;
 
     Frame *f = get_current_thread()->top_frame;
+    if (f == nullptr) {
+        return obj;
+    }
+
     if (f->jni_local_ref_count < JNI_LOCAL_REFERENCE_TABLE_MAX_CAPACITY) {
         f->jni_local_ref_table[f->jni_local_ref_count++] = (jref) obj;
         return obj;
