@@ -1,8 +1,9 @@
 module;
 #include <cassert>
 #include "../cabin.h"
-#include "../runtime//heap.h"
+#include "../runtime/heap.h"
 #include "../exception.h"
+#include "../classfile/constants.h"
 
 module object;
 

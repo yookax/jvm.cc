@@ -212,17 +212,11 @@ public:
     [[nodiscard]] bool isPublic() const    { return accIsPublic(access_flags); }
     [[nodiscard]] bool isProtected() const { return accIsProtected(access_flags); }
     [[nodiscard]] bool isPrivate() const   { return accIsPrivate(access_flags); }
-    [[nodiscard]] bool isStatic() const    {
-        return (access_flags & JVM_ACC_STATIC) != 0;
-//        return accIsStatic(access_flags);
-    }
+    [[nodiscard]] bool isStatic() const    { return accIsStatic(access_flags); }
     [[nodiscard]] bool isFinal() const     { return accIsFinal(access_flags); }
     [[nodiscard]] bool isSynthetic() const { return accIsSynthetic(access_flags); }
 
-    void setSynthetic() {
-        access_flags |= JVM_ACC_SYNTHETIC;
-        //accSetSynthetic(access_flags);
-    }
+    void setSynthetic() { accSetSynthetic(access_flags); }
 };
 
 export struct BootstrapMethod {
@@ -488,10 +482,7 @@ public:
 
     bool is_ref_array_class() const { return (is_array_class() && !is_type_array_class()); }
 
-    bool is_interface() const {
-        return (access_flags & JVM_ACC_INTERFACE) != 0;
-//        return accIsInterface(access_flags);
-    }
+    bool is_interface() const { return accIsInterface(access_flags); }
     bool is_abstract() const  { return accIsAbstract(access_flags); }
     bool is_strict() const    { return accIsStrict(access_flags); }
     bool is_super() const     { return accIsSuper(access_flags); }

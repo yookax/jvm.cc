@@ -4,6 +4,7 @@ module;
 #include "../exception.h"
 #include "../dll.h"
 #include "../jni.h"
+#include "constants.h"
 
 module class_loader;
 
