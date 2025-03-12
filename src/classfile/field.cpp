@@ -7,7 +7,6 @@ module classfile;
 
 import std.core;
 import vmstd;
-import constant_pool;
 
 using namespace std;
 

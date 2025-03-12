@@ -17,7 +17,6 @@ import std.threading;
 import vmstd;
 import runtime;
 import object;
-import constant_pool;
 import classfile;
 
 using namespace std;

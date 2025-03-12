@@ -58,7 +58,7 @@ target_sources(jvm
         BASE_DIRS src
         FILES
         src/classfile/classfile.ixx src/runtime/runtime.ixx
-        src/object/object.ixx src/vmstd.ixx src/classfile/constant_pool.ixx
+        src/object/object.ixx src/vmstd.ixx
         src/classfile/bytecode_reader.ixx
 )
 

@@ -169,7 +169,7 @@ void run_all_tests() {
     RUN_TEST_CASE(test_alloc_continuously);
     RUN_TEST_CASE(test_heap1);
 
-    RUN_TEST_CASE(test_load_class);
+    RUN_TEST_CASE(test_load_class)
     RUN_TEST_CASE(test_classloader1);
 
     RUN_TEST_CASE(test_box);

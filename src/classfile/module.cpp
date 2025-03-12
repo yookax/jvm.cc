@@ -7,7 +7,6 @@ module classfile;
 
 import std.core;
 import object;
-import constant_pool;
 
 using namespace std;
 using namespace utf8;

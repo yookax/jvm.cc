@@ -8,7 +8,7 @@
 import std.core;
 import std.threading;
 import object;
-import constant_pool;
+import classfile;
 
 using namespace slot;
 

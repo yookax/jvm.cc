@@ -12,7 +12,6 @@ import std.core;
 import runtime;
 import object;
 import classfile;
-import constant_pool;
 import bytecode_reader;
 
 using namespace std;

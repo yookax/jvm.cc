@@ -8,7 +8,6 @@
 
 import object;
 import classfile;
-import constant_pool;
 
 using namespace std;
 using namespace slot;
