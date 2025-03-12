@@ -17,6 +17,7 @@
 #include "jni.h"
 #include "encoding.h"
 
+import std.core;
 import sysinfo;
 
 using namespace std;
@@ -252,11 +253,11 @@ static void test_convert_double() {
 
 static void test_slot() {
     slot_t s;
-    set<jref>(&s, (jref) 0x123456789);
+    slot::set<jref>(&s, (jref) 0x123456789);
     auto x = get<jref>(&s);
     printf("%p\n", x);
 
-    set<jref>(&s, nullptr);
+    slot::set<jref>(&s, nullptr);
     x = get<jref>(&s);
     printf("%p\n", x);
 }

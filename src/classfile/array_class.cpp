@@ -1,10 +1,11 @@
 #include <cassert>
-#include <string>
 #include "../cabin.h"
 #include "class.h"
 #include "method.h"
 #include "../object/object.h"
 #include "../runtime/heap.h"
+
+import std.core;
 
 using namespace std;
 

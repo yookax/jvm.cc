@@ -1,10 +1,5 @@
 #include <cstdio>
 #include <cstdlib>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <fstream>
-#include <filesystem>
 #include "cabin.h"
 #include "classfile/class.h"
 #include "runtime//heap.h"
@@ -20,6 +15,8 @@
 #include "interpreter.h"
 #include "dll.h"
 
+import std.core;
+import std.filesystem;
 import sysinfo;
 
 using namespace std;

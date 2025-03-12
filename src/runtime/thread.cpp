@@ -1,8 +1,4 @@
 #include <cassert>
-#include <cstdlib>
-#include <cinttypes>
-#include <thread>
-#include <mutex>
 #include "../cabin.h"
 #include "../slot.h"
 #include "frame.h"
@@ -10,6 +6,9 @@
 #include "../object/object.h"
 #include "../object/allocator.h"
 #include "../interpreter.h"
+
+import std.core;
+import std.threading;
 
 using namespace std;
 using namespace slot;

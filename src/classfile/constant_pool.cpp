@@ -1,6 +1,4 @@
 #include <cassert>
-#include <string>
-#include <sstream>
 #include "../cabin.h"
 #include "constants.h"
 #include "constant_pool.h"
@@ -9,6 +7,8 @@
 #include "method.h"
 #include "invoke.h"
 #include "../interpreter.h"
+
+import std.core;
 
 using namespace std;
 

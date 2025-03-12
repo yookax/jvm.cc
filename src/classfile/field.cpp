@@ -1,10 +1,11 @@
 #include <cassert>
-#include <sstream>
 #include "../cabin.h"
 #include "class.h"
 #include "array_class.h"
 #include "field.h"
 #include "class_loader.h"
+
+import std.core;
 
 using namespace std;
 

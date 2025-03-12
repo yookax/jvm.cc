@@ -1,10 +1,6 @@
 #include <cassert>
 #include <cstdio>
 #include <ctime>
-#include <vector>
-#include <chrono>
-#include <thread>
-#include <mutex>
 #include "cabin.h"
 #include "encoding.h"
 #include "jni.h"
@@ -23,6 +19,8 @@
 #include "jmm.h"
 #include "object/allocator.h"
 
+import std.core;
+import std.threading;
 import sysinfo;
 
 using namespace std;

@@ -1,8 +1,4 @@
 #include <cassert>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <algorithm>
 #include "../cabin.h"
 #include "poly.h"
 #include "../slot.h"
@@ -17,6 +13,8 @@
 #include "../runtime//heap.h"
 #include "descriptor.h"
 #include "module.h"
+
+import std.core;
 
 using namespace std;
 using namespace slot;

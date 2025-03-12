@@ -1,6 +1,4 @@
-export module sysinfo;
-
-#include <utility>
+module;
 
 #ifdef _WIN64
 #include <Windows.h>
@@ -9,6 +7,10 @@ export module sysinfo;
 #include <unistd.h>
 #include <sys/time.h>
 #endif
+
+export module sysinfo;
+
+import std.core;
 
 using namespace std;
 

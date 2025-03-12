@@ -1,6 +1,4 @@
 #include <cassert>
-#include <vector>
-#include <algorithm>
 #include "module.h"
 #include "../encoding.h"
 #include "class.h"
@@ -8,6 +6,8 @@
 #include "method.h"
 #include "class_loader.h"
 #include "../object/object.h"
+
+import std.core;
 
 using namespace std;
 using namespace utf8;

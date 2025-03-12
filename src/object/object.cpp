@@ -1,10 +1,11 @@
 #include <cassert>
-#include <sstream>
 #include "../cabin.h"
 #include "../runtime//heap.h"
 #include "object.h"
 #include "allocator.h"
 #include "../exception.h"
+
+import std.core;
 
 using namespace std;
 

@@ -1,6 +1,3 @@
-#include <cmath>
-#include <sstream>
-//#include <ffi.h>
 #include "cabin.h"
 #include "encoding.h"
 #include "classfile/bytecode_reader.h"
@@ -10,9 +7,6 @@
 #include "classfile/method.h"
 #include "interpreter.h"
 #include "object/allocator.h"
-
-#include <functional>
-
 #include "jni.h"
 #include "runtime/frame.h"
 #include "runtime/thread.h"
@@ -20,6 +14,8 @@
 #include "object/object.h"
 #include "exception.h"
 #include "dll.h"
+
+import std.core;
 
 using namespace std;
 using namespace slot;
@@ -1537,8 +1533,7 @@ slot_t *execJava(Method *m, jref _this, jarrRef args)
     return execJava(m, real_args);
 }
 
-jref execJavaR(Method *m, jref _this, jarrRef args)
-{
+jref execJavaR(Method *m, jref _this, jarrRef args) {
     const slot_t *slots = execJava(m, _this, args);
     return slot::get<jref>(slots);
 }

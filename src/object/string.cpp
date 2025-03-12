@@ -1,13 +1,9 @@
 #include <cassert>
-#include <mutex>
-#include <unordered_set>
-
 #include "allocator.h"
-#include "../cabin.h"
-#include "../slot.h"
 #include "object.h"
-#include "../exception.h"
 #include "../interpreter.h"
+
+import std.core;
 
 using namespace std;
 using namespace slot;

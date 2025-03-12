@@ -1,11 +1,9 @@
-#include <functional>
-#include <string>
-#include <sstream>
-
 #include "allocator.h"
 #include "../cabin.h"
 #include "object.h"
 #include "../exception.h"
+
+import std.core;
 
 using namespace std;
 

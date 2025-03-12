@@ -1,9 +1,9 @@
 #include "../classfile/class_loader.h"
 #include "allocator.h"
-#include "../cabin.h"
 #include "../interpreter.h"
-#include "../classfile/class.h"
 #include "object.h"
+
+import std.core;
 
 using namespace std;
 using namespace slot;

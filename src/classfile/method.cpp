@@ -1,5 +1,3 @@
-#include <vector>
-#include <sstream>
 #include "../cabin.h"
 #include "../encoding.h"
 #include "class.h"
@@ -8,6 +6,8 @@
 #include "../object/object.h"
 #include "descriptor.h"
 #include "../object/allocator.h"
+
+import std.core;
 
 using namespace std;
 
