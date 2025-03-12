@@ -1,9 +1,10 @@
+module;
 #include <cassert>
-#include <cstdlib>
 #include "cabin.h"
-#include "exception.h"
 
-import vmstd;
+module vmstd;
+
+import std.core;
 import object;
 import class_loader;
 

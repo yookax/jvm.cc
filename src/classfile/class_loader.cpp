@@ -1,7 +1,6 @@
 module;
 #include <cassert>
 #include "../cabin.h"
-#include "../exception.h"
 #include "../dll.h"
 #include "../jni.h"
 #include "constants.h"

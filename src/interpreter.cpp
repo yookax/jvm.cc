@@ -2,7 +2,6 @@ module;
 #include "cabin.h"
 #include "classfile/constants.h"
 #include "jni.h"
-#include "exception.h"
 #include "dll.h"
 
 module vmstd;

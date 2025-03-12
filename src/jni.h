@@ -3,7 +3,6 @@
 
 #include <cstdio>
 #include <cstdarg>
-#include "cabin.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -3,7 +3,6 @@ module;
 #include "../cabin.h"
 #include "poly.h"
 #include "constants.h"
-#include "../exception.h"
 #include "../runtime/heap.h"
 
 module classfile;

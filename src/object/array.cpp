@@ -1,6 +1,5 @@
 module;
 #include "../cabin.h"
-#include "../exception.h"
 
 module object;
 

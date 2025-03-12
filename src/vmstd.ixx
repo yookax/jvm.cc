@@ -16,6 +16,7 @@ export const char *path_separator();
 export const char *line_separator();
 export char *get_current_working_directory();
 
+// -----------------------------------------------------------------------
 
 export bool is_prim_class_name(const char *class_name);
 export bool is_prim_descriptor(char descriptor);
@@ -26,6 +27,7 @@ export const char *getPrimDescriptor(const char *wrapper_class_name);
 export const char *get_prim_descriptor_by_class_name(const char *class_name);
 export const char *get_prim_descriptor_by_wrapper_class_name(const char *wrapper_class_name);
 
+// -----------------------------------------------------------------------
 
 /*
  * 将字节数组转换为32位整形.
@@ -51,6 +53,7 @@ export jfloat bytes_to_float(const uint8_t *bytes);
  */
 export jdouble bytes_to_double(const uint8_t *bytes);
 
+// -----------------------------------------------------------------------
 
 // 一个slot_t类型必须可以容纳 jbool, jbyte, jchar, jshort，jint，jfloat, jref 称为类型一
 // jlong, jdouble 称为类型二，占两个slot
@@ -94,6 +97,8 @@ export namespace slot {
     slot_t fslot(jfloat v);
     slot_t rslot(jref v);
 }
+
+// -----------------------------------------------------------------------
 
 /*
  * jvm内部使用的utf8是一种改进过的utf8，与标准的utf8有所不同，
@@ -148,6 +153,7 @@ export namespace unicode {
     utf8_t *to_utf8(const unicode_t *unicode, size_t len);
 }
 
+// -----------------------------------------------------------------------
 
 // Java Function Return Type
 // using jfrt = std::variant<jint, jfloat, jlong, jdouble, jref, std::monostate>;
@@ -166,3 +172,65 @@ export jref execJavaR(Method *m, std::initializer_list<slot_t> args);
 // Object[] args;
 export slot_t *execJava(Method *, jref _this, jarrRef args);
 export jref execJavaR(Method *, jref _this, jarrRef args);
+
+// -----------------------------------------------------------------------
+
+export struct UncaughtJavaException: public std::exception {
+    Object *java_excep;
+    explicit UncaughtJavaException(Object *java_excep0): java_excep(java_excep0) { }
+};
+
+export struct JavaException: public std::exception {
+    const char *excep_class_name = nullptr;
+    Object *excep = nullptr;
+    std::string msg;
+
+    explicit JavaException(const char *excep_class_name0): excep_class_name(excep_class_name0) {
+        assert(excep_class_name != nullptr);
+    }
+
+    explicit JavaException(const char *excep_class_name0, std::string msg0)
+            : excep_class_name(excep_class_name0), msg(msg0) {
+        assert(excep_class_name != nullptr);
+    }
+
+    Object *get_excep();
+};
+
+#define DEF_EXCEP_CLASS(ClassName, ClassNameStr) \
+export struct ClassName: public JavaException { \
+    ClassName(): JavaException(ClassNameStr) { } \
+    explicit ClassName(std::string msg0): JavaException(ClassNameStr, msg0) { } \
+}
+
+DEF_EXCEP_CLASS(java_lang_ArrayStoreException, "java/lang/ArrayStoreException");
+DEF_EXCEP_CLASS(java_lang_UnknownError, "java/lang/UnknownError");
+DEF_EXCEP_CLASS(java_lang_ArrayIndexOutOfBoundsException, "java/lang/ArrayIndexOutOfBoundsException");
+DEF_EXCEP_CLASS(java_lang_ArithmeticException, "java/lang/ArithmeticException");
+DEF_EXCEP_CLASS(java_lang_ClassNotFoundException, "java/lang/ClassNotFoundException");
+DEF_EXCEP_CLASS(java_lang_InternalError, "java/lang/InternalError");
+DEF_EXCEP_CLASS(java_lang_IncompatibleClassChangeError, "java/lang/IncompatibleClassChangeError");
+DEF_EXCEP_CLASS(java_lang_IllegalAccessError, "java/lang/IllegalAccessError");
+DEF_EXCEP_CLASS(java_lang_AbstractMethodError, "java/lang/AbstractMethodError");
+DEF_EXCEP_CLASS(java_lang_InstantiationException, "java/lang/InstantiationException");
+DEF_EXCEP_CLASS(java_lang_NegativeArraySizeException, "java/lang/NegativeArraySizeException");
+DEF_EXCEP_CLASS(java_lang_NullPointerException, "java/lang/NullPointerException");
+DEF_EXCEP_CLASS(java_lang_ClassCastException, "java/lang/ClassCastException");
+DEF_EXCEP_CLASS(java_lang_ClassFormatError, "java/lang/ClassFormatError");
+DEF_EXCEP_CLASS(java_lang_LinkageError, "java/lang/LinkageError");
+DEF_EXCEP_CLASS(java_lang_NoSuchFieldError, "java/lang/NoSuchFieldError");
+DEF_EXCEP_CLASS(java_lang_NoSuchMethodError, "java/lang/NoSuchMethodError");
+DEF_EXCEP_CLASS(java_lang_IllegalArgumentException, "java/lang/IllegalArgumentException");
+DEF_EXCEP_CLASS(java_lang_CloneNotSupportedException, "java/lang/CloneNotSupportedException");
+DEF_EXCEP_CLASS(java_lang_VirtualMachineError, "java/lang/VirtualMachineError");
+DEF_EXCEP_CLASS(java_io_IOException, "java/io/IOException");
+DEF_EXCEP_CLASS(java_io_FileNotFoundException, "java/io/FileNotFoundException");
+
+#undef DEF_EXCEP_CLASS
+
+export void print_stack_trace(Object *e);
+
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------

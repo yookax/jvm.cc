@@ -1,5 +1,4 @@
 #include "../cabin.h"
-#include "../exception.h"
 #include "../object/reflect.h"
 #include "../classfile/constants.h"
 #include "../jni.h"
