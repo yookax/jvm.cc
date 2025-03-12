@@ -1,21 +1,20 @@
 #include "cabin.h"
 #include "encoding.h"
 #include "classfile/bytecode_reader.h"
+#include "classfile/class_loader.h"
 #include "classfile/constants.h"
 #include "classfile/class.h"
 #include "classfile/array_class.h"
 #include "classfile/method.h"
 #include "interpreter.h"
-#include "object/allocator.h"
 #include "jni.h"
-#include "runtime/frame.h"
-#include "runtime/thread.h"
 #include "classfile/invoke.h"
-#include "object/object.h"
 #include "exception.h"
 #include "dll.h"
 
 import std.core;
+import runtime;
+import object;
 
 using namespace std;
 using namespace slot;

@@ -1,12 +1,13 @@
 #include "../cabin.h"
 #include "../classfile/class.h"
 #include "../classfile/method.h"
-#include "../object/object.h"
 #include "../interpreter.h"
 #include "../exception.h"
 #include "../encoding.h"
-#include "../object/allocator.h"
+#include "../classfile/class_loader.h"
 #include "../object/reflect.h"
+
+import object;
 
 using namespace slot;
 using namespace utf8;

@@ -6,8 +6,7 @@
 #include "class.h"
 #include "method.h"
 #include "field.h"
-#include "../object/object.h"
-#include "../object/allocator.h"
+#include "class_loader.h"
 #include "../interpreter.h"
 #include "../exception.h"
 #include "../runtime//heap.h"
@@ -15,6 +14,7 @@
 #include "module.h"
 
 import std.core;
+import object;
 
 using namespace std;
 using namespace slot;

@@ -1,11 +1,11 @@
 #include <cassert>
 #include <cstdlib>
 #include "cabin.h"
-#include "runtime/thread.h"
-#include "object/object.h"
+#include "classfile/class_loader.h"
 #include "exception.h"
 #include "interpreter.h"
-#include "object/allocator.h"
+
+import object;
 
 using namespace slot;
 

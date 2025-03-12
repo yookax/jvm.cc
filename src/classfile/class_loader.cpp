@@ -1,9 +1,7 @@
 #include <cassert>
 #include "../cabin.h"
 #include "class_loader.h"
-#include "../object/allocator.h"
 #include "../classfile/method.h"
-#include "../object/object.h"
 #include "../interpreter.h"
 #include "../exception.h"
 #include "../dll.h"
@@ -12,6 +10,7 @@ import std.core;
 import std.filesystem;
 import primitive;
 import sysinfo;
+import object;
 
 using namespace std;
 using namespace slot;

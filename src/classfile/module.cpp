@@ -5,13 +5,14 @@
 #include "field.h"
 #include "method.h"
 #include "class_loader.h"
-#include "../object/object.h"
 
 import std.core;
+import object;
 
 using namespace std;
 using namespace utf8;
 using namespace java_lang_Module;
+
 
 static jref boot_loader_unnamed_module = nullptr;
 
@@ -93,7 +94,6 @@ void define_module_to_vm(jref module, jbool is_open,
         });
     // }
 }
-
 
 /*
  * Sets the module that the class or interface is a member of.

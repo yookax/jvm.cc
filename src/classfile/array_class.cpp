@@ -1,11 +1,13 @@
 #include <cassert>
 #include "../cabin.h"
 #include "class.h"
+#include "array_class.h"
+#include "class_loader.h"
 #include "method.h"
-#include "../object/object.h"
 #include "../runtime/heap.h"
 
 import std.core;
+import object;
 
 using namespace std;
 

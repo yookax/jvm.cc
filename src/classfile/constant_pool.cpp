@@ -2,13 +2,13 @@
 #include "../cabin.h"
 #include "constants.h"
 #include "constant_pool.h"
-#include "../object/object.h"
-#include "../object/allocator.h"
+#include "class_loader.h"
 #include "method.h"
 #include "invoke.h"
 #include "../interpreter.h"
 
 import std.core;
+import object;
 
 using namespace std;
 

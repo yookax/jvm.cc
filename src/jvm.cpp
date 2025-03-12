@@ -4,24 +4,22 @@
 #include "cabin.h"
 #include "encoding.h"
 #include "jni.h"
-#include "runtime//heap.h"
+#include "runtime/heap.h"
 #include "classfile/class_loader.h"
 #include "classfile/module.h"
-#include "runtime/frame.h"
-#include "runtime/thread.h"
 #include "classfile/class.h"
 #include "classfile/method.h"
-#include "object/object.h"
 #include "object/reflect.h"
 #include "interpreter.h"
 #include "reference.h"
 #include "dll.h"
 #include "jmm.h"
-#include "object/allocator.h"
 
 import std.core;
 import std.threading;
 import sysinfo;
+import runtime;
+import object;
 
 using namespace std;
 using namespace slot;
@@ -913,10 +911,10 @@ JVM_DumpAllStacks(JNIEnv *env, jclass dummy) {
 JNIEXPORT jobjectArray JNICALL
 JVM_GetAllThreads(JNIEnv *env, jclass dummy) {
     TRACE("JVM_GetAllThreads(env=%p, dummy=%p)", env, dummy);
-    jarrRef threads = Allocator::array("[Ljava/lang/Thread;", ALL_JAVA_THREADS_COUNT);
+    jarrRef threads = Allocator::array("[Ljava/lang/Thread;", g_all_java_thread.size());
 
     int i = 0;
-    ALL_JAVA_THREADS(t) {
+    for (Thread *t: g_all_java_thread) {
         threads->setRefElt(i, t->tobj);
         i++;
     }

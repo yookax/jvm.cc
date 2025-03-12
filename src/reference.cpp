@@ -2,7 +2,8 @@
 #include "classfile/class_loader.h"
 #include "classfile/class.h"
 #include "classfile/field.h"
-#include "object/object.h"
+
+import object;
 
 using namespace std;
 

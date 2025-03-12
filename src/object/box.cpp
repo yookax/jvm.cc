@@ -1,7 +1,7 @@
 #include "../classfile/class_loader.h"
-#include "allocator.h"
 #include "../interpreter.h"
-#include "object.h"
+
+module object;
 
 import std.core;
 

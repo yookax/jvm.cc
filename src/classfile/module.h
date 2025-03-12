@@ -44,7 +44,7 @@ struct ModuleAttribute {
     struct Require {
         const utf8_t *require_module_name;
         u2 flags;
-        // If requires_version is NULL, 
+        // If requires_version is NULL,
         // then no version information about the current module is present.
         const utf8_t *version;
 

@@ -1,9 +1,3 @@
-#include <chrono>
-#include <unordered_set>
-#include <random>
-#include <iomanip>
-#include <limits>
-
 #include "cabin.h"
 #include "convert.h"
 #include "slot.h"
@@ -12,12 +6,12 @@
 #include "classfile/invoke.h"
 #include "classfile/method.h"
 #include "classfile/descriptor.h"
-#include "object/object.h"
-#include "object/allocator.h"
+#include "classfile/class_loader.h"
 #include "jni.h"
 #include "encoding.h"
 
 import std.core;
+import std.filesystem;
 import sysinfo;
 
 using namespace std;
@@ -287,8 +281,6 @@ static void test_inject_field() {
     //     printf("\t%s\n", c->toString().c_str());
     // }
 }
-
-#include <filesystem>
 
 namespace fs = std::filesystem;
 

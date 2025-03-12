@@ -1,15 +1,14 @@
 #include <cstdio>
 #include <cstdlib>
 #include "cabin.h"
-#include "classfile/class.h"
 #include "runtime//heap.h"
 #include "jni.h"
-#include "runtime/thread.h"
 #include "classfile/invoke.h"
 #include "classfile/field.h"
 #include "classfile/poly.h"
 #include "classfile/module.h"
-#include "object/object.h"
+#include "classfile/class.h"
+#include "classfile/class_loader.h"
 #include "object/reflect.h"
 #include "reference.h"
 #include "interpreter.h"
@@ -18,6 +17,8 @@
 import std.core;
 import std.filesystem;
 import sysinfo;
+import runtime;
+import object;
 
 using namespace std;
 

@@ -5,9 +5,9 @@
 #include "../classfile/method.h"
 #include "../jni.h"
 #include "../classfile/invoke.h"
-#include "../object/allocator.h"
-#include "../object/object.h"
 #include "../object/reflect.h"
+
+import object;
 
 using namespace slot;
 

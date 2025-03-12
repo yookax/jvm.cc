@@ -1,12 +1,4 @@
-#ifndef CABIN_OBJECT_H
-#define CABIN_OBJECT_H
-
-#include <functional>
-#include <string>
-#include <unordered_map>
-#include <mutex>
-#include <initializer_list>
-#include <variant>
+module;
 #include "../cabin.h"
 #include "../classfile/class.h"
 #include "../classfile/array_class.h"
@@ -15,19 +7,24 @@
 #include "../classfile/class_loader.h"
 #include "../encoding.h"
 
-class Object {
+export module object;
+
+import std.core;
+import std.threading;
+
+export class Object {
 public:
     bool reachable; // gc时判断对象是否可达
 
     Class *clazz = nullptr;
-    
+
 private:
     explicit Object(Class *c);
     Object(ArrayClass *arr_cls, jint arr_len);
     Object(ArrayClass *, jint dim, const jint lens[]);
 
     std::recursive_mutex mutex;
-    
+
 // private:
 //     Field *lookupField(const char *name, const char *descriptor);
 public:
@@ -50,7 +47,7 @@ public:
     jref protection_domain; // present only if Object of java.lang.Class
 
     std::string toString() const;
-    
+
     bool is_array_object() const    { return clazz->name[0] == '['; }
     bool is_class_object() const    { return clazz == g_class_class; }
     bool is_string_object() const   { return clazz == g_string_class; }
@@ -168,24 +165,53 @@ public:
     friend class Class;
     friend class ArrayClass;
     friend struct Allocator;
-    
+
     // 保存所有实例变量的值
     // 包括此Object中定义的和继承来的。
     // 特殊的，对于数组对象，保存数组的元素
     slot_t *data;
 };
 
+
+/*
+ * 所有从堆上申请对象的函数都在这里声明
+ */
+export struct Allocator {
+    // alloc non array object
+    static Object *object(Class *c);
+
+    // 一维数组
+    static Object *array(ArrayClass *ac, jint arr_len);
+    // alloc 一维数组
+    static jarrRef array(jref class_loader, const char *arr_class_name, jint arr_len);
+    // alloc 一维数组，使用 'BOOT_CLASS_LOADER'
+    static jarrRef array(const char *arr_class_name, jint arr_len) {
+        return array(BOOT_CLASS_LOADER, arr_class_name, arr_len);
+    }
+
+    static jarrRef string_array(jint arr_len) { return array("[Ljava/lang/String;", arr_len); }
+    static jarrRef class_array(jint arr_len) { return array("[Ljava/lang/Class;", arr_len); }
+    static jarrRef object_array(jint arr_len) { return array("[Ljava/lang/Object;", arr_len); }
+    static jarrRef object_array(std::initializer_list<jref> os);
+
+    // 多维数组
+    static Object *multi_array(ArrayClass *ac, jint dim, const jint lens[]);
+
+    static jstrRef string(const utf8_t *str);
+    static jstrRef string(const unicode_t *str, jsize len);
+};
+
 /*-------- Array --------*/
 
 // [[[I -> int
 // [Ljava/lang/Object; -> java/lang/Object
-const char *arr_class_name_2_elt_class_name(const utf8_t *arr_class_name);
+export const char *arr_class_name_2_elt_class_name(const utf8_t *arr_class_name);
 
-void array_copy(jarrRef dst, jint dst_pos, const jarrRef src, jint src_pos, jint len);
+export void array_copy(jarrRef dst, jint dst_pos, const jarrRef src, jint src_pos, jint len);
 
 /*-------- String --------*/
 
-namespace java_lang_String {
+export namespace java_lang_String {
     utf8_t *to_utf8(jstrRef);
     unicode_t *to_unicode(jstrRef);
     bool equals(jstrRef, jstrRef);
@@ -197,14 +223,12 @@ namespace java_lang_String {
 
 /*-------- Primary Box --------*/
 
-jref void_box();
-jref byte_box(jbyte x);
-jref bool_box(jbool x);
-jref char_box(jchar x);
-jref short_box(jshort x);
-jref int_box(jint x);
-jref float_box(jfloat x);
-jref long_box(jlong x);
-jref double_box(jdouble x);
-
-#endif // CABIN_OBJECT_H
+export jref void_box();
+export jref byte_box(jbyte x);
+export jref bool_box(jbool x);
+export jref char_box(jchar x);
+export jref short_box(jshort x);
+export jref int_box(jint x);
+export jref float_box(jfloat x);
+export jref long_box(jlong x);
+export jref double_box(jdouble x);

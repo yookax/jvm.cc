@@ -1,20 +1,67 @@
+module;
+
 #include <cassert>
 #include "../cabin.h"
 #include "../slot.h"
-#include "frame.h"
-#include "thread.h"
-#include "../object/object.h"
-#include "../object/allocator.h"
+#include "../classfile/class_loader.h"
 #include "../interpreter.h"
+
+module runtime;
 
 import std.core;
 import std.threading;
+import object;
 
 using namespace std;
 using namespace slot;
 using namespace java_lang_Thread;
 
-vector<Thread *> g_all_java_thread;
+
+/* Thread states */
+
+#define JVMTI_THREAD_STATE_ALIVE                     0x001
+#define JVMTI_THREAD_STATE_TERMINATED                0x002
+#define JVMTI_THREAD_STATE_RUNNABLE                  0x004
+#define JVMTI_THREAD_STATE_WAITING_INDEFINITELY      0x010
+#define JVMTI_THREAD_STATE_WAITING_WITH_TIMEOUT      0x020
+#define JVMTI_THREAD_STATE_SLEEPING                  0x040
+#define JVMTI_THREAD_STATE_WAITING                   0x080
+#define JVMTI_THREAD_STATE_IN_OBJECT_WAIT            0x100
+#define JVMTI_THREAD_STATE_PARKED                    0x200
+#define JVMTI_THREAD_STATE_BLOCKED_ON_MONITOR_ENTER  0x400
+
+#define CREATING           0x0
+#define RUNNING            (JVMTI_THREAD_STATE_ALIVE |JVMTI_THREAD_STATE_RUNNABLE)
+#define WAITING            (JVMTI_THREAD_STATE_ALIVE |JVMTI_THREAD_STATE_WAITING |JVMTI_THREAD_STATE_WAITING_INDEFINITELY)
+#define TIMED_WAITING      (JVMTI_THREAD_STATE_ALIVE |JVMTI_THREAD_STATE_WAITING |JVMTI_THREAD_STATE_WAITING_WITH_TIMEOUT)
+#define OBJECT_WAIT        (JVMTI_THREAD_STATE_IN_OBJECT_WAIT|WAITING)
+#define OBJECT_TIMED_WAIT  (JVMTI_THREAD_STATE_IN_OBJECT_WAIT|TIMED_WAITING)
+#define SLEEPING           (JVMTI_THREAD_STATE_SLEEPING|TIMED_WAITING)
+#define PARKED             (JVMTI_THREAD_STATE_PARKED|WAITING)
+#define TIMED_PARKED       (JVMTI_THREAD_STATE_PARKED|TIMED_WAITING)
+#define BLOCKED            JVMTI_THREAD_STATE_BLOCKED_ON_MONITOR_ENTER
+#define TERMINATED         JVMTI_THREAD_STATE_TERMINATED
+
+/* thread priorities */
+
+#define THREAD_MIN_PRIORITY   1
+#define THREAD_NORM_PRIORITY  5
+#define THREAD_MAX_PRIORITY   10
+
+///* Suspend states */
+//
+//#define SUSP_NONE      0
+//#define SUSP_BLOCKING  1
+//#define SUSP_CRITICAL  2
+//#define SUSP_SUSPENDED 3
+//
+///* Park states */
+//
+//#define PARK_BLOCKED   0
+//#define PARK_RUNNING   1
+//#define PARK_PERMIT    2
+
+//vector<Thread *> g_all_java_thread;
 
 // static pthread_key_t key;
 thread_local Thread *curr_thread;
@@ -42,7 +89,7 @@ static int tid_id;
 // Cached java.lang.Thread class
 static Class *thread_class;
 
-Thread *g_main_thread;
+//Thread *g_main_thread;
 
 void Thread::bind(Object *tobj0) {
     if (tobj != nullptr) {
@@ -208,6 +255,10 @@ Frame *Thread::alloc_frame(Method *m, bool vm_invoke) {
     new ((void *)new_frame) Frame(m, vm_invoke, lvars, ostack, top_frame);
     top_frame = new_frame;
     return top_frame;
+}
+
+void Thread::pop_frame() {
+    top_frame = top_frame->prev;
 }
 
 int Thread::count_stack_frames() const {

@@ -30,7 +30,10 @@ set (SOURCE_FILES src/slot.cpp src/jvm.cpp src/jni.cpp src/native/init_native.cp
         src/object/reflect.cpp src/classfile/class.cpp src/classfile/array_class.cpp src/exception.cpp
         src/classfile/invoke.cpp src/convert.cpp src/native/method_handle_natives.cpp
         src/native/scoped_memory_access.cpp src/native/var_handle.cpp src/native/method_handle.cpp
-        src/object/allocator.cpp src/sysinfo.ixx)
+        src/object/allocator.cpp src/sysinfo.ixx
+        src/classfile/metadata.ixx src/runtime/runtime.ixx
+        src/object/object.ixx
+)
 
 if (MSVC)
     add_compile_options("/utf-8")
@@ -56,7 +59,7 @@ target_sources(jvm
         FILE_SET CXX_MODULES
         BASE_DIRS src
         FILES
-        src/primitive.ixx src/sysinfo.ixx
+        src/primitive.ixx src/sysinfo.ixx src/classfile/metadata.ixx src/runtime/runtime.ixx src/object/object.ixx
 )
 
 target_sources(jvmcc
@@ -64,5 +67,5 @@ target_sources(jvmcc
         FILE_SET CXX_MODULES
         BASE_DIRS src
         FILES
-        src/primitive.ixx src/sysinfo.ixx
+        src/primitive.ixx src/sysinfo.ixx src/classfile/metadata.ixx src/runtime/runtime.ixx src/object/object.ixx
 )

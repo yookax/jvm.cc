@@ -1,7 +1,8 @@
-#include "allocator.h"
 #include "../cabin.h"
-#include "object.h"
 #include "../exception.h"
+#include "../slot.h"
+
+module object;
 
 import std.core;
 

@@ -1,7 +1,7 @@
 #include <cassert>
-#include <string>
-#include <sstream>
-#include <utility>
+//#include <string>
+//#include <sstream>
+//#include <utility>
 #include "cabin.h"
 #include "classfile/class.h"
 #include "classfile/method.h"
@@ -13,6 +13,8 @@
 #include <direct.h>
 #elifdef __linux__
 #endif
+
+import std.core;
 
 using namespace std;
 

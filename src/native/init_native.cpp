@@ -4,7 +4,6 @@
 #include "../classfile/method.h"
 #include "../jni.h"
 #include "../classfile/invoke.h"
-#include "../object/object.h"
 
 using namespace slot;
 

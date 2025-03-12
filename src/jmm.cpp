@@ -1,9 +1,10 @@
 #include "cabin.h"
 #include "jmm.h"
+#include "classfile/class.h"
+#include "classfile/class_loader.h"
 
-#include "object/allocator.h"
-#include "object/object.h"
-#include "runtime/thread.h"
+import runtime;
+import object;
 
 using namespace std;
 
@@ -170,10 +171,10 @@ jobjectArray JNICALL Jmm_DumpThreads(JNIEnv *env, jlongArray _ids, jboolean lock
     Class *c = load_boot_class("java/lang/management/ThreadInfo"); // in java.management module
     init_class(c);
 
-    jref *thread_infos = new jref[ALL_JAVA_THREADS_COUNT];
+    jref *thread_infos = new jref[g_all_java_thread.size()];
     int count = 0;
 
-    ALL_JAVA_THREADS(t) {
+    for (Thread *t: g_all_java_thread) {
         jref o = t->tobj;
         if (o != nullptr && java_lang_Thread::isAlive(o)) {
             jref name = java_lang_Thread::getName(o);

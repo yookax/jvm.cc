@@ -3,12 +3,11 @@
 #include "classfile/class_loader.h"
 #include "classfile/field.h"
 #include "classfile/method.h"
-#include "object/object.h"
-#include "runtime/frame.h"
-#include "runtime/thread.h"
 #include "exception.h"
 #include "interpreter.h"
-#include "object/allocator.h"
+
+import runtime;
+import object;
 
 using namespace slot;
 

@@ -1,15 +1,12 @@
 #include <cassert>
-#include <cstring>
-#include <cstdlib>
-#include <sstream>
-#include <iostream>
 #include "../cabin.h"
 #include "../slot.h"
 #include "../classfile/class.h"
-#include "../object/object.h"
-#include "frame.h"
-#include "thread.h"
 #include "heap.h"
+
+import std.core;
+import runtime;
+import object;
 
 using namespace std;
 using namespace slot;
@@ -329,7 +326,7 @@ static void analysis_class(Class *c) {
  */
 static void reachability_analysis() {
     /* 虚拟机栈(栈桢中的本地变量表)中的引用的对象 */
-    ALL_JAVA_THREADS(t) {
+    for (Thread *t: g_all_java_thread) {
         for (Frame *frame = t->top_frame; frame != nullptr; frame = frame->prev) {
             slot_t *lvars = frame->lvars;
             u2 max_locals = frame->method->max_locals;
@@ -391,8 +388,6 @@ void gc() {
 }
 
 // ---------------------
-
-#include <random>
 
 TEST_CASE(test_alloc_continuously, {
     std::random_device rd;

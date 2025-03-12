@@ -1,11 +1,12 @@
 #include <cassert>
 #include "../cabin.h"
 #include "../exception.h"
-#include "../object/object.h"
-#include "../object/allocator.h"
+#include "class.h"
+#include "class_loader.h"
 #include "invoke.h"
 
 import std.core;
+import object;
 
 using namespace std;
 

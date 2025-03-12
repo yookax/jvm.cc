@@ -1,7 +1,10 @@
-#include "allocator.h"
-
-#include <utility>
+#include <cassert>
+#include "../cabin.h"
 #include "../runtime/heap.h"
+
+module object;
+
+import std.core;
 
 using namespace std;
 

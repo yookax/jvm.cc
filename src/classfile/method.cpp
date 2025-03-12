@@ -3,11 +3,11 @@
 #include "class.h"
 #include "../jni.h"
 #include "method.h"
-#include "../object/object.h"
+#include "../classfile//class_loader.h"
 #include "descriptor.h"
-#include "../object/allocator.h"
 
 import std.core;
+import object;
 
 using namespace std;
 

@@ -6,12 +6,11 @@
 #include "../classfile/class_loader.h"
 #include "../classfile/method.h"
 #include "../classfile/field.h"
-#include "../object/object.h"
 #include "../interpreter.h"
 #include "reflect.h"
-
-#include "allocator.h"
 #include "../classfile/descriptor.h"
+
+import object;
 
 using namespace std;
 using namespace slot;

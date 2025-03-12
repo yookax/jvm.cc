@@ -1,7 +1,11 @@
 #include <cassert>
-#include "allocator.h"
-#include "object.h"
+#include "../slot.h"
+#include "../encoding.h"
 #include "../interpreter.h"
+#include "../classfile/class.h"
+#include "../classfile/class_loader.h"
+
+module object;
 
 import std.core;
 
