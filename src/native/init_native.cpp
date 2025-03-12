@@ -1,9 +1,8 @@
 #include "../cabin.h"
-#include "../interpreter.h"
 #include "../classfile/class_loader.h"
 #include "../jni.h"
-#include "../classfile/invoke.h"
 
+import vmstd;
 import classfile;
 
 using namespace slot;

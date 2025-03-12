@@ -1,14 +1,13 @@
 module;
 #include <cassert>
 #include "../cabin.h"
-#include "../slot.h"
 #include "../classfile/class_loader.h"
-#include "../interpreter.h"
 
 module runtime;
 
 import std.core;
 import std.threading;
+import vmstd;
 import object;
 
 using namespace std;

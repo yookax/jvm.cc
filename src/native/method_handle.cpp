@@ -1,8 +1,9 @@
-#include <vector>
-#include "../slot.h"
 #include "../cabin.h"
 #include "../classfile/class_loader.h"
-#include "../classfile/invoke.h"
+
+import std.core;
+import vmstd;
+import invoke;
 
 using namespace std;
 using namespace slot;

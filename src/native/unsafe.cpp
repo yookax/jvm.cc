@@ -2,11 +2,11 @@
 #include "../cabin.h"
 #include "../classfile/class_loader.h"
 #include "../jni.h"
-#include "../classfile/invoke.h"
 #include "../object/reflect.h"
 
 import std.core;
 import std.threading;
+import vmstd;
 import object;
 import classfile;
 

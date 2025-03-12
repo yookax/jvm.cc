@@ -3,12 +3,10 @@
 #include "cabin.h"
 #include "runtime//heap.h"
 #include "jni.h"
-#include "classfile/invoke.h"
 #include "classfile/poly.h"
 #include "classfile/class_loader.h"
 #include "object/reflect.h"
 #include "reference.h"
-#include "interpreter.h"
 #include "dll.h"
 
 import std.core;
@@ -17,6 +15,7 @@ import vmstd;
 import runtime;
 import object;
 import classfile;
+import invoke;
 
 using namespace std;
 

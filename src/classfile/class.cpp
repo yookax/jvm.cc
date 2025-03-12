@@ -1,10 +1,8 @@
 #include <cassert>
 #include "../cabin.h"
 #include "poly.h"
-#include "../slot.h"
 #include "../encoding.h"
 #include "class_loader.h"
-#include "../interpreter.h"
 #include "../exception.h"
 #include "../runtime//heap.h"
 

@@ -1,8 +1,8 @@
-#include <vector>
-#include <tuple>
-#include "../slot.h"
 #include "../cabin.h"
 #include "../classfile/class_loader.h"
+
+import std.core;
+import vmstd;
 
 using namespace std;
 using namespace slot;

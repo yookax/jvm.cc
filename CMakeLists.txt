@@ -60,6 +60,7 @@ target_sources(jvm
         src/classfile/classfile.ixx src/runtime/runtime.ixx
         src/object/object.ixx src/vmstd.ixx
         src/classfile/bytecode_reader.ixx
+        src/classfile/invoke.ixx
 )
 
 #target_sources(jvmcc

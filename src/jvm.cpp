@@ -7,7 +7,6 @@
 #include "runtime/heap.h"
 #include "classfile/class_loader.h"
 #include "object/reflect.h"
-#include "interpreter.h"
 #include "reference.h"
 #include "dll.h"
 #include "jmm.h"

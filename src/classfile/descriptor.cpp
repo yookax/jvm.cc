@@ -3,13 +3,13 @@ module;
 #include "../cabin.h"
 #include "../exception.h"
 #include "class_loader.h"
-#include "invoke.h"
 
 module classfile;
 
 import std.core;
 import vmstd;
 import object;
+import invoke;
 
 using namespace std;
 

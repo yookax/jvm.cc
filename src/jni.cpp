@@ -2,8 +2,8 @@
 #include "jni.h"
 #include "classfile/class_loader.h"
 #include "exception.h"
-#include "interpreter.h"
 
+import vmstd;
 import runtime;
 import object;
 import classfile;

@@ -1,5 +1,8 @@
+module;
 #include <cassert>
-#include "slot.h"
+#include "cabin.h"
+
+module vmstd;
 
 using namespace slot;
 

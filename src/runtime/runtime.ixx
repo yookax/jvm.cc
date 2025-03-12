@@ -1,12 +1,12 @@
 module;
 #include <cassert>
 #include "../cabin.h"
-#include "../slot.h"
 
 export module runtime;
 
 import std.core;
 import std.threading;
+import vmstd;
 import classfile;
 import bytecode_reader;
 

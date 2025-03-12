@@ -1,18 +1,13 @@
 #include "cabin.h"
-#include "slot.h"
 #include "runtime/heap.h"
-#include "classfile/invoke.h"
 #include "classfile/class_loader.h"
 #include "jni.h"
 #include "encoding.h"
 
 import std.core;
 import std.filesystem;
-//import vmstd;
-//import classfile;
 
 using namespace std;
-using namespace slot;
 
 static char main_class_name[FILENAME_MAX] = { 0 };
 static char *main_func_args[MAX_JVM_ARITY];

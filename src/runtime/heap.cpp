@@ -1,9 +1,9 @@
 #include <cassert>
 #include "../cabin.h"
-#include "../slot.h"
 #include "heap.h"
 
 import std.core;
+import vmstd;
 import runtime;
 import object;
 

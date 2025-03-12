@@ -3,15 +3,13 @@ module;
 #include "../cabin.h"
 #include "constants.h"
 #include "class_loader.h"
-#include "invoke.h"
-#include "../interpreter.h"
-#include "../slot.h"
 
 module classfile;
 
 import std.core;
 import vmstd;
 import object;
+import invoke;
 
 using namespace std;
 

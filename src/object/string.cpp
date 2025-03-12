@@ -1,13 +1,12 @@
 module;
 #include <cassert>
-#include "../slot.h"
 #include "../encoding.h"
-#include "../interpreter.h"
 #include "../classfile/class_loader.h"
 
 module object;
 
 import std.core;
+import vmstd;
 
 using namespace std;
 using namespace slot;

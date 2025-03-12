@@ -1,12 +1,13 @@
+module;
 #include "cabin.h"
 #include "encoding.h"
 #include "classfile/class_loader.h"
 #include "classfile/constants.h"
-#include "interpreter.h"
 #include "jni.h"
-#include "classfile/invoke.h"
 #include "exception.h"
 #include "dll.h"
+
+module vmstd;
 
 import std.core;
 import runtime;
@@ -1405,8 +1406,7 @@ opc_athrow:
     }
 }
 
-slot_t *execJava(Method *method, const slot_t *args)
-{
+slot_t *execJava(Method *method, const slot_t *args) {
     assert(method != nullptr);
     assert(method->arg_slots_count > 0 ? args != nullptr : true);
 

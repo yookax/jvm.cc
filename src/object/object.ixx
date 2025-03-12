@@ -1,6 +1,5 @@
 module;
 #include "../cabin.h"
-#include "../slot.h"
 #include "../classfile/class_loader.h"
 #include "../encoding.h"
 
@@ -8,6 +7,7 @@ export module object;
 
 import std.core;
 import std.threading;
+import vmstd;
 import classfile;
 
 export class Object {

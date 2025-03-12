@@ -1,10 +1,10 @@
 #include "../cabin.h"
-#include "../interpreter.h"
 #include "../exception.h"
 #include "../encoding.h"
 #include "../classfile/class_loader.h"
 #include "../object/reflect.h"
 
+import vmstd;
 import object;
 import classfile;
 

@@ -1,6 +1,5 @@
 module;
 #include "../cabin.h"
-#include "../slot.h"
 #include "../encoding.h"
 #include "poly.h"
 #include "../jni.h"
@@ -9,6 +8,7 @@ module;
 export module classfile;
 
 import std.core;
+import vmstd;
 import bytecode_reader;
 
 

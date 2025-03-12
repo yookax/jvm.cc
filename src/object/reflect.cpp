@@ -1,11 +1,10 @@
 #include <cassert>
 #include "../cabin.h"
-#include "../slot.h"
 #include "../encoding.h"
 #include "../classfile/class_loader.h"
-#include "../interpreter.h"
 #include "reflect.h"
 
+import vmstd;
 import object;
 import classfile;
 

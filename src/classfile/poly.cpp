@@ -1,9 +1,9 @@
 #include <cassert>
 #include "class_loader.h"
-#include "invoke.h"
 
 import std.core;
 import classfile;
+import invoke;
 
 using namespace std;
 using namespace java_lang_invoke_MethodHandle;

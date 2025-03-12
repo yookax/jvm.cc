@@ -1,7 +1,6 @@
 #include <cassert>
 #include "../cabin.h"
 #include "class_loader.h"
-#include "../interpreter.h"
 #include "../exception.h"
 #include "../dll.h"
 
