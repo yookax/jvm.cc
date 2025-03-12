@@ -1,13 +1,12 @@
 #include "cabin.h"
 #include "jni.h"
 #include "classfile/class_loader.h"
-#include "classfile/field.h"
-#include "classfile/method.h"
 #include "exception.h"
 #include "interpreter.h"
 
 import runtime;
 import object;
+import classfile;
 
 using namespace slot;
 

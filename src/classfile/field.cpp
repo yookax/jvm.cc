@@ -1,11 +1,13 @@
+module;
 #include <cassert>
 #include "../cabin.h"
-#include "class.h"
-#include "array_class.h"
-#include "field.h"
 #include "class_loader.h"
 
+module classfile;
+
 import std.core;
+import vmstd;
+import constant_pool;
 
 using namespace std;
 

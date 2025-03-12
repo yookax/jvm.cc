@@ -1,6 +1,7 @@
 #include <cassert>
 #include "../cabin.h"
 #include "../runtime/heap.h"
+#include "../classfile/class_loader.h"
 
 module object;
 

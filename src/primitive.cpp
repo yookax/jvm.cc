@@ -1,7 +1,7 @@
 module;
 #include <cassert>
 
-export module primitive;
+module vmstd;
 
 import std.core;
 
@@ -28,24 +28,24 @@ static struct Primitive {
         { "double",  'D', "[D", "java/lang/Double" }
 };
 
-export bool is_prim_class_name(const char *class_name) {
+bool is_prim_class_name(const char *class_name) {
     assert(class_name != nullptr);
     return find_if(begin(prims), end(prims),
                    [=](auto &prim){ return strcmp(prim.class_name, class_name) == 0; }) != end(prims);
 }
 
-export bool is_prim_descriptor(char descriptor) {
+bool is_prim_descriptor(char descriptor) {
     return find_if(begin(prims), end(prims),
                    [=](auto &prim){ return prim.descriptor == descriptor; }) != end(prims);
 }
 
-export bool is_prim_wrapper_class_name(const char *class_name) {
+bool is_prim_wrapper_class_name(const char *class_name) {
     assert(class_name != nullptr);
     return find_if(begin(prims), end(prims),
                    [=](auto &prim){ return strcmp(prim.wrapper_class_name, class_name) == 0; }) != end(prims);
 }
 
-export const char *get_prim_array_class_name(const char *class_name) {
+const char *get_prim_array_class_name(const char *class_name) {
     assert(class_name != nullptr);
     for (auto &t : prims) {
         if (strcmp(t.class_name, class_name) == 0)
@@ -54,7 +54,7 @@ export const char *get_prim_array_class_name(const char *class_name) {
     return nullptr;
 }
 
-export const char *get_prim_class_name(char descriptor) {
+const char *get_prim_class_name(char descriptor) {
     for (auto &t : prims) {
         if (t.descriptor == descriptor)
             return t.class_name;
@@ -62,7 +62,7 @@ export const char *get_prim_class_name(char descriptor) {
     return nullptr;
 }
 
-export const char *getPrimDescriptor(const char *wrapper_class_name) {
+const char *getPrimDescriptor(const char *wrapper_class_name) {
     for (auto &t : prims) {
         if (strcmp(t.wrapper_class_name, wrapper_class_name) == 0)
             return &(t.descriptor);
@@ -70,7 +70,7 @@ export const char *getPrimDescriptor(const char *wrapper_class_name) {
     return nullptr;
 }
 
-export const char *get_prim_descriptor_by_class_name(const char *class_name) {
+const char *get_prim_descriptor_by_class_name(const char *class_name) {
     for (auto &t : prims) {
         if (strcmp(t.class_name, class_name) == 0)
             return &(t.descriptor);
@@ -78,7 +78,7 @@ export const char *get_prim_descriptor_by_class_name(const char *class_name) {
     return nullptr;
 }
 
-export const char *get_prim_descriptor_by_wrapper_class_name(const char *wrapper_class_name) {
+const char *get_prim_descriptor_by_wrapper_class_name(const char *wrapper_class_name) {
     for (auto &t : prims) {
         if (strcmp(t.wrapper_class_name, wrapper_class_name) == 0)
             return &(t.descriptor);

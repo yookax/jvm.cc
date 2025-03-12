@@ -1,9 +1,8 @@
 #include "cabin.h"
 #include "classfile/class_loader.h"
-#include "classfile/class.h"
-#include "classfile/field.h"
 
 import object;
+import classfile;
 
 using namespace std;
 

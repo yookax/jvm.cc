@@ -4,6 +4,8 @@
 #include "cabin.h"
 #include "encoding.h"
 
+module vmstd;
+
 import std.core;
 
 using namespace std;

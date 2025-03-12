@@ -1,14 +1,18 @@
+module;
 #include <cassert>
 #include "../cabin.h"
 #include "constants.h"
-#include "constant_pool.h"
 #include "class_loader.h"
-#include "method.h"
 #include "invoke.h"
 #include "../interpreter.h"
+#include "../slot.h"
+#include "../convert.h"
+
+module constant_pool;
 
 import std.core;
 import object;
+import classfile;
 
 using namespace std;
 

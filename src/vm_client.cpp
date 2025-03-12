@@ -2,17 +2,15 @@
 #include "convert.h"
 #include "slot.h"
 #include "runtime/heap.h"
-#include "classfile/class.h"
 #include "classfile/invoke.h"
-#include "classfile/method.h"
-#include "classfile/descriptor.h"
 #include "classfile/class_loader.h"
 #include "jni.h"
 #include "encoding.h"
 
 import std.core;
 import std.filesystem;
-import sysinfo;
+import vmstd;
+import classfile;
 
 using namespace std;
 using namespace slot;

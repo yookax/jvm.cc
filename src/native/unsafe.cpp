@@ -1,13 +1,14 @@
 #include <cassert>
-#include <atomic>
 #include "../cabin.h"
 #include "../classfile/class_loader.h"
-#include "../classfile/method.h"
 #include "../jni.h"
 #include "../classfile/invoke.h"
 #include "../object/reflect.h"
 
+import std.core;
+import std.threading;
 import object;
+import constant_pool;
 
 using namespace slot;
 

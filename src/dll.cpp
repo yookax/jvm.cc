@@ -1,10 +1,5 @@
 #include <cassert>
-//#include <string>
-//#include <sstream>
-//#include <utility>
 #include "cabin.h"
-#include "classfile/class.h"
-#include "classfile/method.h"
 #include "classfile/class_loader.h"
 #include "dll.h"
 

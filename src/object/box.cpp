@@ -1,3 +1,4 @@
+module;
 #include "../classfile/class_loader.h"
 #include "../interpreter.h"
 

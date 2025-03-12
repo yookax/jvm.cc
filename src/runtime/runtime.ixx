@@ -3,13 +3,12 @@ module;
 #include "../cabin.h"
 #include "../slot.h"
 #include "../classfile/bytecode_reader.h"
-#include "../classfile/class.h"
-#include "../classfile/method.h"
 
 export module runtime;
 
 import std.core;
 import std.threading;
+import classfile;
 
 export struct Frame {
     Method *method;

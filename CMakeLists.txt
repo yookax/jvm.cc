@@ -25,14 +25,12 @@ set (SOURCE_FILES src/slot.cpp src/jvm.cpp src/jni.cpp src/native/init_native.cp
         src/encoding.cpp src/classfile/poly.cpp  src/reference.cpp
         src/runtime/thread.cpp src/runtime/heap.cpp src/dll.cpp src/classfile/method.cpp
         src/classfile/field.cpp src/classfile/constant_pool.cpp
-        src/classfile/class_loader.cpp src/primitive.ixx src/init.cpp
+        src/classfile/class_loader.cpp src/primitive.cpp src/init.cpp
         src/object/object.cpp src/object/array.cpp src/object/string.cpp src/object/box.cpp
         src/object/reflect.cpp src/classfile/class.cpp src/classfile/array_class.cpp src/exception.cpp
         src/classfile/invoke.cpp src/convert.cpp src/native/method_handle_natives.cpp
         src/native/scoped_memory_access.cpp src/native/var_handle.cpp src/native/method_handle.cpp
-        src/object/allocator.cpp src/sysinfo.ixx
-        src/classfile/metadata.ixx src/runtime/runtime.ixx
-        src/object/object.ixx
+        src/object/allocator.cpp src/sysinfo.cpp
 )
 
 if (MSVC)
@@ -59,13 +57,15 @@ target_sources(jvm
         FILE_SET CXX_MODULES
         BASE_DIRS src
         FILES
-        src/primitive.ixx src/sysinfo.ixx src/classfile/metadata.ixx src/runtime/runtime.ixx src/object/object.ixx
+        src/classfile/classfile.ixx src/runtime/runtime.ixx
+        src/object/object.ixx src/vmstd.ixx src/classfile/constant_pool.ixx
 )
 
-target_sources(jvmcc
-        PUBLIC
-        FILE_SET CXX_MODULES
-        BASE_DIRS src
-        FILES
-        src/primitive.ixx src/sysinfo.ixx src/classfile/metadata.ixx src/runtime/runtime.ixx src/object/object.ixx
-)
+#target_sources(jvmcc
+#        PUBLIC
+#        FILE_SET CXX_MODULES
+#        BASE_DIRS src
+#        FILES
+#        src/classfile/classfile.ixx src/runtime/runtime.ixx
+#        src/object/object.ixx src/vmstd.ixx src/classfile/constant_pool.ixx
+#)

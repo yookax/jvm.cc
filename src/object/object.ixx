@@ -1,8 +1,5 @@
 module;
 #include "../cabin.h"
-#include "../classfile/class.h"
-#include "../classfile/array_class.h"
-#include "../classfile/field.h"
 #include "../slot.h"
 #include "../classfile/class_loader.h"
 #include "../encoding.h"
@@ -11,6 +8,7 @@ export module object;
 
 import std.core;
 import std.threading;
+import classfile;
 
 export class Object {
 public:
@@ -171,7 +169,6 @@ public:
     // 特殊的，对于数组对象，保存数组的元素
     slot_t *data;
 };
-
 
 /*
  * 所有从堆上申请对象的函数都在这里声明

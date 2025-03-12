@@ -1,27 +1,23 @@
-#ifndef CABIN_CONSTANT_POOL_H
-#define CABIN_CONSTANT_POOL_H
-
+module;
 #include <cassert>
-#include <mutex>
-#include <string>
 #include "../cabin.h"
 #include "../slot.h"
 #include "constants.h"
 #include "bytecode_reader.h"
 
-class Class;
-class Method;
-class Field;
-class Object;
+export module constant_pool;
+
+import std.core;
+import std.threading;
 
 // 从 1 开始计数，第0位无效
-class ConstantPool {
+export class ConstantPool {
     Class *owner = nullptr;
 public:
     u1 *type = nullptr;
     slot_t *info = nullptr;
     u2 size = 0;
-    
+
 private:
     mutable std::recursive_mutex mutex;
 
@@ -302,7 +298,7 @@ public:
         u2 boot_method_index;
 
         ResolvedInvDyn(const utf8_t *name0, const utf8_t *descriptor0, u2 boot_method_index0)
-            :name(name0), descriptor(descriptor0), boot_method_index(boot_method_index0) { }
+                :name(name0), descriptor(descriptor0), boot_method_index(boot_method_index0) { }
     };
     ResolvedInvDyn *resolve_invoke_dynamic(u2 i);
 
@@ -312,7 +308,5 @@ public:
     friend class ArrayClass;
 };
 
-Method *find_invoke_dynamic_invoker(
-                Class *c, ConstantPool::ResolvedInvDyn *inv_dyn, Object *&appendix);
-
-#endif
+export Method *find_invoke_dynamic_invoker(
+        Class *c, ConstantPool::ResolvedInvDyn *inv_dyn, Object *&appendix);

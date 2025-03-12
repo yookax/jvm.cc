@@ -1,13 +1,14 @@
+module;
 #include <cassert>
 #include "../cabin.h"
 #include "../runtime//heap.h"
-#include "../classfile/class.h"
 #include "../classfile/class_loader.h"
 #include "../exception.h"
 
 module object;
 
 import std.core;
+import vmstd;
 
 using namespace std;
 

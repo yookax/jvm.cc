@@ -1,6 +1,4 @@
 #include "../cabin.h"
-#include "../classfile/class.h"
-#include "../classfile/method.h"
 #include "../interpreter.h"
 #include "../exception.h"
 #include "../encoding.h"
@@ -8,6 +6,7 @@
 #include "../object/reflect.h"
 
 import object;
+import classfile;
 
 using namespace slot;
 using namespace utf8;

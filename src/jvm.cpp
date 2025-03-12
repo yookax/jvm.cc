@@ -6,9 +6,6 @@
 #include "jni.h"
 #include "runtime/heap.h"
 #include "classfile/class_loader.h"
-#include "classfile/module.h"
-#include "classfile/class.h"
-#include "classfile/method.h"
 #include "object/reflect.h"
 #include "interpreter.h"
 #include "reference.h"
@@ -17,9 +14,11 @@
 
 import std.core;
 import std.threading;
-import sysinfo;
+import vmstd;
 import runtime;
 import object;
+import constant_pool;
+import classfile;
 
 using namespace std;
 using namespace slot;

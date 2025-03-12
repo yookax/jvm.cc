@@ -1,7 +1,6 @@
 #include <cassert>
 #include "../cabin.h"
 #include "../slot.h"
-#include "../classfile/class.h"
 #include "heap.h"
 
 import std.core;

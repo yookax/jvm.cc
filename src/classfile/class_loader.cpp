@@ -1,16 +1,15 @@
 #include <cassert>
 #include "../cabin.h"
 #include "class_loader.h"
-#include "../classfile/method.h"
 #include "../interpreter.h"
 #include "../exception.h"
 #include "../dll.h"
 
 import std.core;
 import std.filesystem;
-import primitive;
-import sysinfo;
+import vmstd;
 import object;
+import classfile;
 
 using namespace std;
 using namespace slot;

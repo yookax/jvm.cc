@@ -1,13 +1,14 @@
 #include <cassert>
 #include "../cabin.h"
-#include "class.h"
-#include "array_class.h"
 #include "class_loader.h"
-#include "method.h"
 #include "../runtime/heap.h"
 
+module classfile;
+
 import std.core;
+import vmstd;
 import object;
+import constant_pool;
 
 using namespace std;
 

@@ -1,5 +1,4 @@
 module;
-
 #include <cassert>
 #include "../cabin.h"
 #include "../slot.h"

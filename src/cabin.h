@@ -76,6 +76,7 @@ class Class;
 class ArrayClass;
 class Method;
 class Field;
+class Annotation;
 
 typedef Object* jref; // JVM 中的引用类型。
 typedef jref jstrRef; // java.lang.String 的引用。

@@ -1,6 +1,5 @@
 #include "cabin.h"
 #include "jmm.h"
-#include "classfile/class.h"
 #include "classfile/class_loader.h"
 
 import runtime;

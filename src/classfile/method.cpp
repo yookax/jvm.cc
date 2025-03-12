@@ -1,13 +1,14 @@
+module;
 #include "../cabin.h"
 #include "../encoding.h"
-#include "class.h"
 #include "../jni.h"
-#include "method.h"
 #include "../classfile//class_loader.h"
-#include "descriptor.h"
+
+module classfile;
 
 import std.core;
 import object;
+import constant_pool;
 
 using namespace std;
 

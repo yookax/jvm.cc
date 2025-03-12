@@ -2,15 +2,13 @@
 #include "../cabin.h"
 #include "../slot.h"
 #include "../encoding.h"
-#include "../classfile/class.h"
 #include "../classfile/class_loader.h"
-#include "../classfile/method.h"
-#include "../classfile/field.h"
 #include "../interpreter.h"
 #include "reflect.h"
-#include "../classfile/descriptor.h"
 
 import object;
+import classfile;
+import constant_pool;
 
 using namespace std;
 using namespace slot;
@@ -129,12 +127,12 @@ Method *get_method_from_reflect_object(jref mo) {
     return m;
 }
 
-jarrRef get_annotation_as_byte_array(Annotation &a) {
+jarrRef get_annotation_as_byte_array(Annotation& a) {
     if (a.data == nullptr)
         return nullptr;
 
     jarrRef arr = Allocator::array("[B", a.len);
-    memcpy(arr->data, a.data, a.len); 
+    memcpy(arr->data, a.data, a.len);
     return arr;    
 }
 

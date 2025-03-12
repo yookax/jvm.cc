@@ -26,7 +26,7 @@ Field *get_field_from_reflect_object(jref fo);
 // mo: object of "java.lang.reflect.Method" or "java.lang.reflect.Constructor"
 Method *get_method_from_reflect_object(jref mo);
 
-jarrRef get_annotation_as_byte_array(Annotation &a);
+jarrRef get_annotation_as_byte_array(Annotation& a);
 
 // mo: object of java.lang.reflect.Method
 // _this: If method is static, _this is NULL.

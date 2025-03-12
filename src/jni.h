@@ -4,7 +4,6 @@
 #include <cstdio>
 #include <cstdarg>
 #include "cabin.h"
-#include "classfile/class.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -4,10 +4,7 @@
 #include "runtime//heap.h"
 #include "jni.h"
 #include "classfile/invoke.h"
-#include "classfile/field.h"
 #include "classfile/poly.h"
-#include "classfile/module.h"
-#include "classfile/class.h"
 #include "classfile/class_loader.h"
 #include "object/reflect.h"
 #include "reference.h"
@@ -16,9 +13,10 @@
 
 import std.core;
 import std.filesystem;
-import sysinfo;
+import vmstd;
 import runtime;
 import object;
+import classfile;
 
 using namespace std;
 

@@ -1,13 +1,13 @@
+module;
 #include <cassert>
-#include "module.h"
 #include "../encoding.h"
-#include "class.h"
-#include "field.h"
-#include "method.h"
 #include "class_loader.h"
+
+module classfile;
 
 import std.core;
 import object;
+import constant_pool;
 
 using namespace std;
 using namespace utf8;

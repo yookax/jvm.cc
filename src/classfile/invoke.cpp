@@ -1,12 +1,11 @@
 #include "../cabin.h"
 #include "../interpreter.h"
-#include "method.h"
 #include "class_loader.h"
-#include "field.h"
 #include "invoke.h"
 
 import runtime;
 import object;
+import classfile;
 
 using namespace std;
 using namespace slot;

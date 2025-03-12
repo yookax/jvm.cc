@@ -1,5 +1,4 @@
 #include "../cabin.h"
-#include "../classfile/method.h"
 #include "../jni.h"
 
 // 这些native函数全部定义在 jdk\internal\misc\ScopedMemoryAccess.java

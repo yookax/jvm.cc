@@ -3,9 +3,6 @@
 #include "classfile/bytecode_reader.h"
 #include "classfile/class_loader.h"
 #include "classfile/constants.h"
-#include "classfile/class.h"
-#include "classfile/array_class.h"
-#include "classfile/method.h"
 #include "interpreter.h"
 #include "jni.h"
 #include "classfile/invoke.h"
@@ -15,6 +12,8 @@
 import std.core;
 import runtime;
 import object;
+import classfile;
+import constant_pool;
 
 using namespace std;
 using namespace slot;
@@ -1797,7 +1796,7 @@ static void call_native_method(Frame *frame) {
                     "It is necessary to add the invoker of this function to the 'invoker_map' array.\n",
                 m->clazz->name, m->name, m->descriptor); // todo
         }
-        m->native_invoker = invoker;
+        m->native_invoker = (void (*)(void *, JNIEnv *, jref, slot_t *, void*))(invoker);
     }
 
     jref _this;

@@ -1,5 +1,4 @@
 module;
-
 #ifdef _WIN64
 #include <Windows.h>
 #include <direct.h>
@@ -8,13 +7,13 @@ module;
 #include <sys/time.h>
 #endif
 
-export module sysinfo;
+module vmstd;
 
 import std.core;
 
 using namespace std;
 
-export int processor_number() {
+int processor_number() {
 #ifdef _WIN64
     SYSTEM_INFO sysInfo;
     GetSystemInfo(&sysInfo);
@@ -24,7 +23,7 @@ export int processor_number() {
 #endif
 }
 
-export int page_size() {
+int page_size() {
 #ifdef _WIN64
     SYSTEM_INFO sysInfo;
     GetSystemInfo(&sysInfo);
@@ -35,7 +34,7 @@ export int page_size() {
 }
 
 // 返回操作系统的名称。e.g. window 10
-export const char *os_name() {
+const char *os_name() {
 #ifdef _WIN64
     SYSTEM_INFO info;        //用SYSTEM_INFO结构判断64位AMD处理器
     GetSystemInfo(&info);    //调用GetSystemInfo函数填充结构
@@ -136,7 +135,7 @@ export const char *os_name() {
 }
 
 // 返回操作系统的架构。e.g. amd64
-export const char *os_arch() {
+const char *os_arch() {
 #ifdef _WIN64
     SYSTEM_INFO si;
     GetNativeSystemInfo(&si);
@@ -178,7 +177,7 @@ export const char *os_arch() {
 #endif
 }
 
-export const char *file_separator() {
+const char *file_separator() {
 #ifdef _WIN64
     return "\\";
 #elifdef __linux__
@@ -186,7 +185,7 @@ export const char *file_separator() {
 #endif
 }
 
-export const char *path_separator() {
+const char *path_separator() {
 #ifdef _WIN64
     return ";";
 #elifdef __linux__
@@ -194,7 +193,7 @@ export const char *path_separator() {
 #endif
 }
 
-export const char *line_separator() {
+const char *line_separator() {
 #ifdef _WIN64
     return "\r\n";
 #elifdef __linux__
@@ -202,7 +201,7 @@ export const char *line_separator() {
 #endif
 }
 
-export char *get_current_working_directory() {
+char *get_current_working_directory() {
     char *cwd = nullptr;
     int size = 256;
 

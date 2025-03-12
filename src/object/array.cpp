@@ -1,10 +1,13 @@
+module;
 #include "../cabin.h"
 #include "../exception.h"
 #include "../slot.h"
+#include "../classfile/class_loader.h"
 
 module object;
 
 import std.core;
+import vmstd;
 
 using namespace std;
 

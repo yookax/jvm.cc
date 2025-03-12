@@ -1,8 +1,8 @@
+module;
 #include <cassert>
 #include "../slot.h"
 #include "../encoding.h"
 #include "../interpreter.h"
-#include "../classfile/class.h"
 #include "../classfile/class_loader.h"
 
 module object;

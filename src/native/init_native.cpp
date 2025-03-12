@@ -1,9 +1,10 @@
 #include "../cabin.h"
 #include "../interpreter.h"
 #include "../classfile/class_loader.h"
-#include "../classfile/method.h"
 #include "../jni.h"
 #include "../classfile/invoke.h"
+
+import classfile;
 
 using namespace slot;
 

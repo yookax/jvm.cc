@@ -3,18 +3,17 @@
 #include "poly.h"
 #include "../slot.h"
 #include "../encoding.h"
-#include "class.h"
-#include "method.h"
-#include "field.h"
 #include "class_loader.h"
 #include "../interpreter.h"
 #include "../exception.h"
 #include "../runtime//heap.h"
-#include "descriptor.h"
-#include "module.h"
+
+module classfile;
 
 import std.core;
+import vmstd;
 import object;
+import constant_pool;
 
 using namespace std;
 using namespace slot;
@@ -922,6 +921,9 @@ int Class::inherited_depth() const {
     }
     return depth;
 }
+
+bool Class::is_prim_class() const { return is_prim_class_name(name); }
+bool Class::is_prim_wrapper_class() { return is_prim_wrapper_class_name(name); }
 
 bool Class::is_type_array_class() const {
     if (strlen(name) != 2 || name[0] != '[')
