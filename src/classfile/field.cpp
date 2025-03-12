@@ -1,12 +1,12 @@
 module;
 #include <cassert>
 #include "../cabin.h"
-#include "class_loader.h"
 
 module classfile;
 
 import std.core;
 import vmstd;
+import class_loader;
 
 using namespace std;
 

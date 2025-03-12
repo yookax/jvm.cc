@@ -1,16 +1,17 @@
+module;
 #include <cassert>
 #include "../cabin.h"
 #include "poly.h"
-#include "../encoding.h"
-#include "class_loader.h"
+#include "constants.h"
 #include "../exception.h"
-#include "../runtime//heap.h"
+#include "../runtime/heap.h"
 
 module classfile;
 
 import std.core;
 import vmstd;
 import object;
+import class_loader;
 
 using namespace std;
 using namespace slot;

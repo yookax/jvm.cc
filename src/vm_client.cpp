@@ -1,8 +1,6 @@
 #include "cabin.h"
 #include "runtime/heap.h"
-#include "classfile/class_loader.h"
 #include "jni.h"
-#include "encoding.h"
 
 import std.core;
 import std.filesystem;
@@ -12,6 +10,8 @@ using namespace std;
 static char main_class_name[FILENAME_MAX] = { 0 };
 static char *main_func_args[MAX_JVM_ARITY];
 static int main_func_args_count = 0;
+
+void set_classpath(const char *cp);
 
 static void parse_command_line(int argc, char *argv[]) {
     // 可执行程序的名字为 argv[0]

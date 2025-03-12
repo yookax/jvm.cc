@@ -1,11 +1,11 @@
 #include <cassert>
 #include <cstdlib>
 #include "cabin.h"
-#include "classfile/class_loader.h"
 #include "exception.h"
 
 import vmstd;
 import object;
+import class_loader;
 
 using namespace slot;
 

@@ -1,7 +1,5 @@
 module;
 #include "../cabin.h"
-#include "../classfile/class_loader.h"
-#include "../encoding.h"
 
 export module object;
 
@@ -9,6 +7,7 @@ import std.core;
 import std.threading;
 import vmstd;
 import classfile;
+import class_loader;
 
 export class Object {
 public:

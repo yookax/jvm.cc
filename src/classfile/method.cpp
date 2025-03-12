@@ -1,13 +1,14 @@
 module;
 #include "../cabin.h"
-#include "../encoding.h"
 #include "../jni.h"
-#include "../classfile//class_loader.h"
+#include "constants.h"
 
 module classfile;
 
 import std.core;
+import vmstd;
 import object;
+import class_loader;
 
 using namespace std;
 

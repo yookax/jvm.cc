@@ -1,5 +1,5 @@
 #include "../cabin.h"
-#include "../classfile/class_loader.h"
+#include "../classfile/constants.h"
 
 import std.core;
 import vmstd;

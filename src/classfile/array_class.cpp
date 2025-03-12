@@ -1,6 +1,6 @@
 #include <cassert>
 #include "../cabin.h"
-#include "class_loader.h"
+#include "constants.h"
 #include "../runtime/heap.h"
 
 module classfile;
@@ -8,6 +8,7 @@ module classfile;
 import std.core;
 import vmstd;
 import object;
+import class_loader;
 
 using namespace std;
 

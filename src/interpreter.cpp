@@ -1,7 +1,5 @@
 module;
 #include "cabin.h"
-#include "encoding.h"
-#include "classfile/class_loader.h"
 #include "classfile/constants.h"
 #include "jni.h"
 #include "exception.h"
@@ -14,6 +12,7 @@ import runtime;
 import object;
 import classfile;
 import bytecode_reader;
+import class_loader;
 
 using namespace std;
 using namespace slot;

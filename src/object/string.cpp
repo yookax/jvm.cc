@@ -1,7 +1,6 @@
 module;
 #include <cassert>
-#include "../encoding.h"
-#include "../classfile/class_loader.h"
+#include "../cabin.h"
 
 module object;
 

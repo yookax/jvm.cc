@@ -1,8 +1,11 @@
+module;
 #include <cassert>
 #include "../cabin.h"
-#include "class_loader.h"
 #include "../exception.h"
 #include "../dll.h"
+#include "../jni.h"
+
+module class_loader;
 
 import std.core;
 import std.filesystem;
@@ -19,7 +22,11 @@ vector<string> jdk_modules;
 
 static char classpath[PATH_MAX + 1] = { 0 };
 
-JNIEXPORT void set_classpath(const char *cp) {
+
+#define IS_SLASH_CLASS_NAME(class_name) (strchr(class_name, '.') == NULL)
+#define IS_DOT_CLASS_NAME(class_name) (strchr(class_name, '/') == NULL)
+
+__declspec(dllexport) void set_classpath(const char *cp) {
     assert(cp != nullptr);
     strcpy(classpath, cp);
 }
@@ -452,9 +459,9 @@ Object *get_app_classloader() {
     return execJavaR(get);
 }
 
-Class *g_object_class = nullptr;
-Class *g_class_class = nullptr;
-Class *g_string_class = nullptr;
+//Class *g_object_class = nullptr;
+//Class *g_class_class = nullptr;
+//Class *g_string_class = nullptr;
 
 void init_classloader() {
     init_classpath();
@@ -493,10 +500,6 @@ unordered_map<const utf8_t *, Class *, utf8::Hash, utf8::Comparator> *getAllBoot
 
 const unordered_set<const Object *> &getAllClassLoaders() {
     return loaders;
-}
-
-void traverseAllLoadedClasses(void (*_do)(Class *)) {
-    ALL_LOADED_CLASSES(c, {_do(c);});
 }
 
 TEST_CASE(test_load_class, {

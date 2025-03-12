@@ -61,6 +61,7 @@ target_sources(jvm
         src/object/object.ixx src/vmstd.ixx
         src/classfile/bytecode_reader.ixx
         src/classfile/invoke.ixx
+        src/classfile/class_loader.ixx
 )
 
 #target_sources(jvmcc

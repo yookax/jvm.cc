@@ -1,10 +1,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include "cabin.h"
-#include "runtime//heap.h"
+#include "runtime/heap.h"
 #include "jni.h"
 #include "classfile/poly.h"
-#include "classfile/class_loader.h"
 #include "object/reflect.h"
 #include "reference.h"
 #include "dll.h"
@@ -16,6 +15,7 @@ import runtime;
 import object;
 import classfile;
 import invoke;
+import class_loader;
 
 using namespace std;
 
@@ -36,6 +36,7 @@ Object *g_platform_class_loader;
 bool g_vm_initing = true;
 
 void init_native();
+const char *get_classpath();
 
 static void *gcLoop(void *dummy) {
     // todo

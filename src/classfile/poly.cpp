@@ -1,9 +1,11 @@
 #include <cassert>
-#include "class_loader.h"
+#include "../cabin.h"
 
 import std.core;
+import vmstd;
 import classfile;
 import invoke;
+import class_loader;
 
 using namespace std;
 using namespace java_lang_invoke_MethodHandle;

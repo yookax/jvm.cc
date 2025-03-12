@@ -2,7 +2,6 @@ module;
 #include <cassert>
 #include "../cabin.h"
 #include "constants.h"
-#include "class_loader.h"
 
 module classfile;
 
@@ -10,6 +9,7 @@ import std.core;
 import vmstd;
 import object;
 import invoke;
+import class_loader;
 
 using namespace std;
 

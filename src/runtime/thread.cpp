@@ -1,7 +1,6 @@
 module;
 #include <cassert>
 #include "../cabin.h"
-#include "../classfile/class_loader.h"
 
 module runtime;
 
@@ -9,6 +8,7 @@ import std.core;
 import std.threading;
 import vmstd;
 import object;
+import class_loader;
 
 using namespace std;
 using namespace slot;

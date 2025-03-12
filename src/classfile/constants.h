@@ -26,28 +26,28 @@
 #define JVM_ACC_MODULE        0x8000  // class             , 表示class文件描述的是一个模块
 #define JVM_ACC_MANDATED      0x8000
 
-static inline bool accIsPublic(int access_flags)       { return (access_flags & JVM_ACC_PUBLIC)       != 0; }
-static inline bool accIsPrivate(int access_flags)      { return (access_flags & JVM_ACC_PRIVATE)      != 0; }
-static inline bool accIsProtected(int access_flags)    { return (access_flags & JVM_ACC_PROTECTED)    != 0; }
-static inline bool accIsStatic(int access_flags)       { return (access_flags & JVM_ACC_STATIC)       != 0; }
-static inline bool accIsFinal(int access_flags)        { return (access_flags & JVM_ACC_FINAL)        != 0; }
-static inline bool accIsSuper(int access_flags)        { return (access_flags & JVM_ACC_SUPER)        != 0; }
-static inline bool accIsSynchronized(int access_flags) { return (access_flags & JVM_ACC_SYNCHRONIZED) != 0; }
-static inline bool accIsVolatile(int access_flags)     { return (access_flags & JVM_ACC_VOLATILE)     != 0; }
-static inline bool accIsBridge(int access_flags)       { return (access_flags & JVM_ACC_BRIDGE)       != 0; }
-static inline bool accIsTransient(int access_flags)    { return (access_flags & JVM_ACC_TRANSIENT)    != 0; }
-static inline bool accIsVarargs(int access_flags)      { return (access_flags & JVM_ACC_VARARGS)      != 0; }
-static inline bool accIsNative(int access_flags)       { return (access_flags & JVM_ACC_NATIVE)       != 0; }
-static inline bool accIsInterface(int access_flags)    { return (access_flags & JVM_ACC_INTERFACE)    != 0; }
-static inline bool accIsAbstract(int access_flags)     { return (access_flags & JVM_ACC_ABSTRACT)     != 0; }
-static inline bool accIsStrict(int access_flags)       { return (access_flags & JVM_ACC_STRICT)       != 0; }
-static inline bool accIsSynthetic(int access_flags)    { return (access_flags & JVM_ACC_SYNTHETIC)    != 0; }
-static inline bool accIsAnnotation(int access_flags)   { return (access_flags & JVM_ACC_ANNOTATION)   != 0; }
-static inline bool accIsEnum(int access_flags)         { return (access_flags & JVM_ACC_ENUM)         != 0; }
-static inline bool accIsModule(int access_flags)       { return (access_flags & JVM_ACC_MODULE)       != 0; }
-static inline bool accIsMandated(int access_flags)     { return (access_flags & JVM_ACC_MANDATED)     != 0; }
+static bool accIsPublic(int access_flags)       { return (access_flags & JVM_ACC_PUBLIC)       != 0; }
+static bool accIsPrivate(int access_flags)      { return (access_flags & JVM_ACC_PRIVATE)      != 0; }
+static bool accIsProtected(int access_flags)    { return (access_flags & JVM_ACC_PROTECTED)    != 0; }
+static bool accIsStatic(int access_flags)       { return (access_flags & JVM_ACC_STATIC)       != 0; }
+static bool accIsFinal(int access_flags)        { return (access_flags & JVM_ACC_FINAL)        != 0; }
+static bool accIsSuper(int access_flags)        { return (access_flags & JVM_ACC_SUPER)        != 0; }
+static bool accIsSynchronized(int access_flags) { return (access_flags & JVM_ACC_SYNCHRONIZED) != 0; }
+static bool accIsVolatile(int access_flags)     { return (access_flags & JVM_ACC_VOLATILE)     != 0; }
+static bool accIsBridge(int access_flags)       { return (access_flags & JVM_ACC_BRIDGE)       != 0; }
+static bool accIsTransient(int access_flags)    { return (access_flags & JVM_ACC_TRANSIENT)    != 0; }
+static bool accIsVarargs(int access_flags)      { return (access_flags & JVM_ACC_VARARGS)      != 0; }
+static bool accIsNative(int access_flags)       { return (access_flags & JVM_ACC_NATIVE)       != 0; }
+static bool accIsInterface(int access_flags)    { return (access_flags & JVM_ACC_INTERFACE)    != 0; }
+static bool accIsAbstract(int access_flags)     { return (access_flags & JVM_ACC_ABSTRACT)     != 0; }
+static bool accIsStrict(int access_flags)       { return (access_flags & JVM_ACC_STRICT)       != 0; }
+static bool accIsSynthetic(int access_flags)    { return (access_flags & JVM_ACC_SYNTHETIC)    != 0; }
+static bool accIsAnnotation(int access_flags)   { return (access_flags & JVM_ACC_ANNOTATION)   != 0; }
+static bool accIsEnum(int access_flags)         { return (access_flags & JVM_ACC_ENUM)         != 0; }
+static bool accIsModule(int access_flags)       { return (access_flags & JVM_ACC_MODULE)       != 0; }
+static bool accIsMandated(int access_flags)     { return (access_flags & JVM_ACC_MANDATED)     != 0; }
 
-static inline void accSetSynthetic(int &access_flags)   { access_flags |= JVM_ACC_SYNTHETIC; }
+static void accSetSynthetic(int &access_flags)   { access_flags |= JVM_ACC_SYNTHETIC; }
 
 
 #define JVM_ACC_PUBLIC_BIT        0

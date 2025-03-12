@@ -1,6 +1,5 @@
 #include <cassert>
 #include "cabin.h"
-#include "classfile/class_loader.h"
 #include "dll.h"
 
 #ifdef _WIN64

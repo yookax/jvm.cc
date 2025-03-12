@@ -1,6 +1,5 @@
 module;
 #include "../cabin.h"
-#include "../encoding.h"
 #include "poly.h"
 #include "../jni.h"
 #include "constants.h"
@@ -220,7 +219,10 @@ public:
     [[nodiscard]] bool isFinal() const     { return accIsFinal(access_flags); }
     [[nodiscard]] bool isSynthetic() const { return accIsSynthetic(access_flags); }
 
-    void setSynthetic() { accSetSynthetic(access_flags); }
+    void setSynthetic() {
+        access_flags |= JVM_ACC_SYNTHETIC;
+        //accSetSynthetic(access_flags);
+    }
 };
 
 export struct BootstrapMethod {
@@ -486,7 +488,10 @@ public:
 
     bool is_ref_array_class() const { return (is_array_class() && !is_type_array_class()); }
 
-    bool is_interface() const { return accIsInterface(access_flags); }
+    bool is_interface() const {
+        return (access_flags & JVM_ACC_INTERFACE) != 0;
+//        return accIsInterface(access_flags);
+    }
     bool is_abstract() const  { return accIsAbstract(access_flags); }
     bool is_strict() const    { return accIsStrict(access_flags); }
     bool is_super() const     { return accIsSuper(access_flags); }
@@ -754,7 +759,10 @@ public:
 
     bool is_abstract() const     { return accIsAbstract(access_flags); }
     bool is_synchronized() const { return accIsSynchronized(access_flags); }
-    bool is_native() const       { return accIsNative(access_flags); }
+    bool is_native() const       {
+        return (access_flags & JVM_ACC_NATIVE) != 0;
+//        return accIsNative(access_flags);
+    }
     bool is_strict() const       { return accIsStrict(access_flags); }
     bool is_varargs() const      { return accIsVarargs(access_flags); }
 

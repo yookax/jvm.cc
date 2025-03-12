@@ -1,12 +1,12 @@
 #include <cassert>
 #include "../cabin.h"
-#include "../encoding.h"
-#include "../classfile/class_loader.h"
 #include "reflect.h"
+#include "../classfile/constants.h"
 
 import vmstd;
 import object;
 import classfile;
+import class_loader;
 
 using namespace std;
 using namespace slot;

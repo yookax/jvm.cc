@@ -1,12 +1,13 @@
 module;
 #include <cassert>
-#include "../encoding.h"
-#include "class_loader.h"
+#include "../cabin.h"
 
 module classfile;
 
 import std.core;
+import vmstd;
 import object;
+import class_loader;
 
 using namespace std;
 using namespace utf8;
@@ -75,6 +76,35 @@ static jref find_java_base_module() {
 
     return java_base_module;
 }
+
+/*
+ * 遍历已经加载的所有类，每个遍历出的类被命名为`clazz`
+ *
+ * 比如要输出所有已经加载的所有类的类名，可以使用以下代码：
+ * TRAVERSE_ALL_LOADED_CLASSES({
+ *     std::cout << c->toString().c_str() << std::endl;
+ * });
+ */
+#define ALL_LOADED_CLASSES(clazz, code_block) \
+    do { \
+        const std::unordered_set<const Object *> &_loaders_ = getAllClassLoaders(); \
+        for (auto _loader_: _loaders_) { \
+            std::unordered_map<const utf8_t *, Class *, utf8::Hash, utf8::Comparator> *_classes_; \
+            \
+            if (_loader_ == BOOT_CLASS_LOADER) { \
+                _classes_ = getAllBootClasses(); \
+            } else { \
+                _classes_ = _loader_->classes; \
+            } \
+            assert(_classes_ != nullptr); \
+            \
+            for (auto &_p_: *_classes_) { \
+                Class *clazz = _p_.second; \
+                code_block \
+            } \
+        } \
+    } while(false)
+
 
 void define_module_to_vm(jref module, jbool is_open,
                         jstrRef version, jstrRef location, jarrRef packages) {

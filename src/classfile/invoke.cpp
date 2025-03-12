@@ -1,6 +1,5 @@
 module;
 #include "../cabin.h"
-#include "class_loader.h"
 
 module invoke;
 
@@ -8,6 +7,7 @@ import vmstd;
 import runtime;
 import object;
 import classfile;
+import class_loader;
 
 using namespace std;
 using namespace slot;

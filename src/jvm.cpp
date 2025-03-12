@@ -2,14 +2,13 @@
 #include <cstdio>
 #include <ctime>
 #include "cabin.h"
-#include "encoding.h"
 #include "jni.h"
 #include "runtime/heap.h"
-#include "classfile/class_loader.h"
 #include "object/reflect.h"
 #include "reference.h"
 #include "dll.h"
 #include "jmm.h"
+#include "classfile/constants.h"
 
 import std.core;
 import std.threading;
@@ -17,6 +16,7 @@ import vmstd;
 import runtime;
 import object;
 import classfile;
+import class_loader;
 
 using namespace std;
 using namespace slot;
