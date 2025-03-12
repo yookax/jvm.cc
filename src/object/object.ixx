@@ -228,3 +228,37 @@ export jref int_box(jint x);
 export jref float_box(jfloat x);
 export jref long_box(jlong x);
 export jref double_box(jdouble x);
+
+/*-------- reflect --------*/
+
+/*
+ * java.lang.reflect.Field
+ * java.lang.reflect.Method
+ * java.lang.reflect.Constructor
+ */
+
+export void init_reflection();
+
+export jarrRef get_inner_classes_as_class_array(Class *c, bool public_only);
+
+export Class *get_declaring_class(Class *c);
+
+// fo: object of "java.lang.reflect.Field"
+export jint field_offset(jref fo);
+
+export jint field_offset(Field *f);
+
+// fo: object of "java.lang.reflect.Field"
+export Field *get_field_from_reflect_object(jref fo);
+
+// mo: object of "java.lang.reflect.Method" or "java.lang.reflect.Constructor"
+export Method *get_method_from_reflect_object(jref mo);
+
+export jarrRef get_annotation_as_byte_array(Annotation& a);
+
+// mo: object of java.lang.reflect.Method
+// _this: If method is static, _this is NULL.
+export jref invoke_method(jref mo, jref _this, jarrRef args);
+
+// co: object of java.lang.reflect.Constructor
+export jref new_instance_from_constructor(jref co, jarrRef args);

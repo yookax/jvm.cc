@@ -1,7 +1,6 @@
 #include <cassert>
 #include "../cabin.h"
 #include "../jni.h"
-#include "../object/reflect.h"
 #include "../classfile/constants.h"
 
 import std.core;

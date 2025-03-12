@@ -4,7 +4,6 @@
 #include "runtime/heap.h"
 #include "jni.h"
 #include "classfile/poly.h"
-#include "object/reflect.h"
 #include "reference.h"
 #include "dll.h"
 

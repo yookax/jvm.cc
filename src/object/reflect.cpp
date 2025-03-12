@@ -1,10 +1,11 @@
+module;
 #include <cassert>
 #include "../cabin.h"
-#include "reflect.h"
 #include "../classfile/constants.h"
 
+module object;
+
 import vmstd;
-import object;
 import classfile;
 import class_loader;
 
