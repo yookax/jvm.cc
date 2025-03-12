@@ -3,12 +3,12 @@ module;
 #include "../cabin.h"
 #include "../slot.h"
 #include "constants.h"
-#include "bytecode_reader.h"
 
 export module constant_pool;
 
 import std.core;
 import std.threading;
+import bytecode_reader;
 
 // 从 1 开始计数，第0位无效
 export class ConstantPool {

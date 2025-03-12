@@ -59,6 +59,7 @@ target_sources(jvm
         FILES
         src/classfile/classfile.ixx src/runtime/runtime.ixx
         src/object/object.ixx src/vmstd.ixx src/classfile/constant_pool.ixx
+        src/classfile/bytecode_reader.ixx
 )
 
 #target_sources(jvmcc

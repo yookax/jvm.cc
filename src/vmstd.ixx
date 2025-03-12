@@ -24,3 +24,27 @@ export const char *getPrimDescriptor(const char *wrapper_class_name);
 export const char *get_prim_descriptor_by_class_name(const char *class_name);
 export const char *get_prim_descriptor_by_wrapper_class_name(const char *wrapper_class_name);
 
+
+/*
+ * 将字节数组转换为32位整形.
+ * 字节数组bytes按大端存储，长度4.
+ */
+export int32_t bytes_to_int32(const uint8_t *bytes);
+
+/*
+ * 将字节数组转换为64位整形.
+ * 字节数组bytes按大端存储，长度8.
+ */
+export int64_t bytes_to_int64(const uint8_t *bytes);
+
+/*
+ * 将字节数组转换为32位浮点数.
+ * 字节数组bytes按大端存储，长度4.
+ */
+export jfloat bytes_to_float(const uint8_t *bytes);
+
+/*
+ * 将字节数组转换为64位浮点数.
+ * 字节数组bytes按大端存储，长度8.
+ */
+export jdouble bytes_to_double(const uint8_t *bytes);

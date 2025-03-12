@@ -1,6 +1,5 @@
 #include "cabin.h"
 #include "encoding.h"
-#include "classfile/bytecode_reader.h"
 #include "classfile/class_loader.h"
 #include "classfile/constants.h"
 #include "interpreter.h"
@@ -14,6 +13,7 @@ import runtime;
 import object;
 import classfile;
 import constant_pool;
+import bytecode_reader;
 
 using namespace std;
 using namespace slot;

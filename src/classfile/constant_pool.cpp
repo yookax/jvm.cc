@@ -6,11 +6,11 @@ module;
 #include "invoke.h"
 #include "../interpreter.h"
 #include "../slot.h"
-#include "../convert.h"
 
 module constant_pool;
 
 import std.core;
+import vmstd;
 import object;
 import classfile;
 

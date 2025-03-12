@@ -1,5 +1,4 @@
 #include "cabin.h"
-#include "convert.h"
 #include "slot.h"
 #include "runtime/heap.h"
 #include "classfile/invoke.h"
@@ -9,8 +8,8 @@
 
 import std.core;
 import std.filesystem;
-import vmstd;
-import classfile;
+//import vmstd;
+//import classfile;
 
 using namespace std;
 using namespace slot;
@@ -146,156 +145,22 @@ int main(int argc, char* argv[]) {
 
 // ----------------------------------- tests ---------------------------------------------
 
-static void test_sys_info() {
-    printf("test_sys_info ---->\n");
-    printf("processor number: %d\n", processor_number());
-    printf("page size: %d\n", page_size());
-    printf("os name: %s\n", os_name());
-    printf("os arch: %s\n", os_arch());
-    printf("is big endian?: %d\n", std::endian::native == std::endian::big);
-}
-
-static void test_convert_int() {
-    printf("test_convert_int ---->\n");
-    jint ints[] = {
-            0,
-            1234567,
-            std::numeric_limits<int32_t>::max(),
-    };
-    uint8_t bytes[sizeof(jint)];
-    for (auto i: ints) {
-        int_to_big_endian_bytes(i, bytes);
-        auto x = big_endian_bytes_to_int32(bytes);
-        if (i != x) {
-            printf("failed. %d, %d\n", i, x);
-        }
-    }
-}
-
-static void test_convert_long() {
-    printf("test_convert_long ---->\n");
-    jlong longs[] = {
-            0L,
-            1234567L,
-            std::numeric_limits<int64_t>::max(),
-    };
-    uint8_t bytes[sizeof(jlong)];
-    for (auto i: longs) {
-        int_to_big_endian_bytes(i, bytes);
-        auto x = big_endian_bytes_to_int64(bytes);
-        if (i != x) {
-            printf("failed. %lld, %lld\n", i, x);
-        }
-    }
-}
-
-static void test_convert_float() {
-    printf("test_convert_float ---->\n");
-
-    float floats[] = {
-            0,
-            23232.716986828,
-            1112.4985495834085,
-            0.71828,
-    };
-
-    unsigned char floatBytes[sizeof(float)];
-
-    for (auto f: floats) {
-        // Convert float to big-endian bytes
-        floating_point_to_big_endian_bytes(f, floatBytes);
-//    std::cout << "Float to big-endian bytes: ";
-//    for (size_t i = 0; i < sizeof(float); ++i) {
-//        std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(floatBytes[i]) << " ";
-//    }
-//    std::cout << std::endl;
-
-        // Convert big-endian bytes back to float
-        auto result = big_endian_bytes_to_float(floatBytes);
-        std::cout << std::setprecision(20) << f << ", " << result << std::endl;
-    }
-}
-
-static void test_convert_double() {
-    printf("test_convert_double ---->\n");
-
-    double doubles[] = {
-            0,
-            23232.716986828,
-            1112.4985495834085,
-            0.71828,
-    };
-
-    unsigned char doubleBytes[sizeof(double)];
-
-    for (auto d: doubles) {
-        // Convert double to big-endian bytes
-        floating_point_to_big_endian_bytes(d, doubleBytes);
-//        std::cout << "Double to big-endian bytes: ";
-//        for (size_t i = 0; i < sizeof(double); ++i) {
-//            std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(doubleBytes[i]) << " ";
-//        }
-//        std::cout << std::endl;
-
-        // Convert big-endian bytes back to double
-        auto result = big_endian_bytes_to_double(doubleBytes);
-        std::cout << std::setprecision(20) << d << ", " << result << std::endl;
-    }
-}
-
-static void test_slot() {
-    slot_t s;
-    slot::set<jref>(&s, (jref) 0x123456789);
-    auto x = get<jref>(&s);
-    printf("%p\n", x);
-
-    slot::set<jref>(&s, nullptr);
-    x = get<jref>(&s);
-    printf("%p\n", x);
-}
-
-static void test_inject_field() {
-    printf("test_inject_field ---->\n");
-    // const char *class_names[] = {
-    //     "java/lang/Object",
-    //     "java/lang/Class",
-    //     "java/lang/Object", // 第二次注入 java/lang/Object
-    // };
-
-    // for (const char *class_name : class_names) {
-    //     Class *c = loadBootClass(class_name);
-    //     printf("%s\n", c->name);
-
-    //     // 因为 injectInstField 只能在 loaded 之后进行，
-    //     // 所以这里为了测试强制设置一下。
-    //     Class::State state = c->state;
-    //     c->state = Class::State::LOADED;
-    //     bool b1 = c->injectInstField("inject1", "C");
-    //     bool b2 = c->injectInstField("inject2", "I");
-    //     bool b3 = c->injectInstField("inject3", "J");
-    //     c->state = state;
-
-    //     printf("\t%d, %d, %d\n", b1, b2, b3);
-    //     printf("\t%s\n", c->toString().c_str());
-    // }
-}
-
 namespace fs = std::filesystem;
 
 #define RUN_TEST_CASE(func_name) void func_name(); func_name();
 
 void run_all_tests() {
-#if 0
-    test_sys_info();
-
-    test_convert_int();
-    test_convert_long();
-    test_convert_float();
-    test_convert_double();
-
-    test_slot();
-
+#if 1
     JNI_CreateJavaVM(nullptr, nullptr, nullptr);
+
+    RUN_TEST_CASE(test_sys_info);
+
+    RUN_TEST_CASE(test_convert_int);
+    RUN_TEST_CASE(test_convert_long);
+    RUN_TEST_CASE(test_convert_float);
+    RUN_TEST_CASE(test_convert_double);
+
+    RUN_TEST_CASE(test_slot);
 
     RUN_TEST_CASE(test_properties);
 
@@ -318,7 +183,7 @@ void run_all_tests() {
     RUN_TEST_CASE(test_multi_array2);
     RUN_TEST_CASE(test_string_array);
 
-    test_inject_field();
+    RUN_TEST_CASE(test_inject_field);
 #endif
 
 //    JavaVM *vm;

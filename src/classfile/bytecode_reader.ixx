@@ -1,11 +1,12 @@
-#ifndef CABIN_BYTECODE_READER_H
-#define CABIN_BYTECODE_READER_H
-
+module;
 #include <cassert>
 #include "../cabin.h"
-#include "../convert.h"
 
-class BytecodeReader {
+export module bytecode_reader;
+
+import vmstd;
+
+export class BytecodeReader {
     const u1 *bytecode;
     size_t len; // bytecode len
 
@@ -16,7 +17,7 @@ public:
 
     void savePC() { saved_pc = pc; }
     void recoverPC() { pc = saved_pc; }
-    
+
     BytecodeReader(const u1 *bytecode0, size_t len0): bytecode(bytecode0), len(len0) {
         assert(bytecode != nullptr);
     }
@@ -24,12 +25,12 @@ public:
     const u1 *curr_pos() const { return bytecode + pc; }
 
     bool has_more() const { return pc < len; }
-    
+
     void skip(int offset) {
         pc += offset;
         assert(pc <= len);
     }
-    
+
     /*
     * todo 函数干什么用的
     */
@@ -39,7 +40,7 @@ public:
         }
         assert(pc < len);
     }
-    
+
     void read_bytes(u1 *buf, size_t _len) {
         assert(buf != nullptr);
 
@@ -126,5 +127,3 @@ public:
         }
     }
 };
-
-#endif // CABIN_BYTECODE_READER_H

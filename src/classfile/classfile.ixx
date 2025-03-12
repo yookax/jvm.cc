@@ -1,7 +1,6 @@
 module;
 #include "../cabin.h"
 #include "../slot.h"
-#include "bytecode_reader.h"
 #include "../encoding.h"
 #include "poly.h"
 #include "../jni.h"
@@ -11,6 +10,7 @@ export module classfile;
 
 import std.core;
 import constant_pool;
+import bytecode_reader;
 
 export struct DefinedModule {
     jref module;

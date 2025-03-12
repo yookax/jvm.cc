@@ -2,13 +2,13 @@ module;
 #include <cassert>
 #include "../cabin.h"
 #include "../slot.h"
-#include "../classfile/bytecode_reader.h"
 
 export module runtime;
 
 import std.core;
 import std.threading;
 import classfile;
+import bytecode_reader;
 
 export struct Frame {
     Method *method;
