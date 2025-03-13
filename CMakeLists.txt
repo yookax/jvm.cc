@@ -23,7 +23,7 @@ endif()
 set (SOURCE_FILES src/slot.cpp src/jvm.cpp src/jni.cpp src/native/init_native.cpp src/native/unsafe.cpp
         src/jmm.cpp src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
         src/encoding.cpp src/classfile/poly.cpp src/reference.cpp
-        src/runtime/thread.cpp src/runtime/heap.cpp src/dll.cpp src/classfile/method.cpp
+        src/runtime/thread.cpp src/runtime/heap.cpp src/classfile/method.cpp
         src/classfile/field.cpp src/classfile/constant_pool.cpp
         src/classfile/class_loader.cpp src/primitive.cpp src/init.cpp
         src/object/object.cpp src/object/array.cpp src/object/string.cpp src/object/box.cpp
