@@ -6,6 +6,7 @@ module classfile;
 
 import std.core;
 import vmstd;
+import interpreter;
 import object;
 import class_loader;
 

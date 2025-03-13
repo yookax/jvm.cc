@@ -8,6 +8,7 @@
 import std.core;
 import std.threading;
 import vmstd;
+import slot;
 import runtime;
 import object;
 import heap;
@@ -15,6 +16,7 @@ import classfile;
 import class_loader;
 import reference;
 import dll;
+import interpreter;
 
 using namespace std;
 using namespace slot;

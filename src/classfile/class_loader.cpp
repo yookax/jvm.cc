@@ -8,9 +8,11 @@ module class_loader;
 import std.core;
 import std.filesystem;
 import vmstd;
+import slot;
 import object;
 import classfile;
 import dll;
+import interpreter;
 
 using namespace std;
 using namespace slot;

@@ -7,6 +7,7 @@ export module runtime;
 import std.core;
 import std.threading;
 import vmstd;
+import slot;
 import classfile;
 import bytecode_reader;
 

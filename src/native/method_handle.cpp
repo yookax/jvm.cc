@@ -2,6 +2,7 @@
 
 import std.core;
 import vmstd;
+import slot;
 import invoke;
 
 using namespace std;

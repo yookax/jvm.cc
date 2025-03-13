@@ -9,13 +9,13 @@ module;
 #endif
 #include "vmdef.h"
 
-module vmstd;
+export module sysinfo;
 
 import std.core;
 
 using namespace std;
 
-int processor_number() {
+export int processor_number() {
 #ifdef _WIN64
     SYSTEM_INFO sysInfo;
     GetSystemInfo(&sysInfo);
@@ -25,7 +25,7 @@ int processor_number() {
 #endif
 }
 
-int page_size() {
+export int page_size() {
 #ifdef _WIN64
     SYSTEM_INFO sysInfo;
     GetSystemInfo(&sysInfo);
@@ -36,7 +36,7 @@ int page_size() {
 }
 
 // 返回操作系统的名称。e.g. window 10
-const char *os_name() {
+export const char *os_name() {
 #ifdef _WIN64
     if (IsWindows10OrGreater()) {
         return "Windows 10 or later";
@@ -67,7 +67,7 @@ const char *os_name() {
 }
 
 // 返回操作系统的架构。e.g. amd64
-const char *os_arch() {
+export const char *os_arch() {
 #ifdef _WIN64
     SYSTEM_INFO si;
     GetNativeSystemInfo(&si);
@@ -114,7 +114,7 @@ const char *os_arch() {
 #endif
 }
 
-const char *file_separator() {
+export const char *file_separator() {
 #ifdef _WIN64
     return "\\";
 #elifdef __linux__
@@ -122,7 +122,7 @@ const char *file_separator() {
 #endif
 }
 
-const char *path_separator() {
+export const char *path_separator() {
 #ifdef _WIN64
     return ";";
 #elifdef __linux__
@@ -130,7 +130,7 @@ const char *path_separator() {
 #endif
 }
 
-const char *line_separator() {
+export const char *line_separator() {
 #ifdef _WIN64
     return "\r\n";
 #elifdef __linux__
@@ -138,7 +138,7 @@ const char *line_separator() {
 #endif
 }
 
-char *get_current_working_directory() {
+export char *get_current_working_directory() {
     char *cwd = nullptr;
     int size = 256;
 

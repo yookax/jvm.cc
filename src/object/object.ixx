@@ -6,6 +6,7 @@ export module object;
 import std.core;
 import std.threading;
 import vmstd;
+import slot;
 import classfile;
 import class_loader;
 

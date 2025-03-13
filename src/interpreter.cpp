@@ -2,9 +2,11 @@ module;
 #include "vmdef.h"
 #include "jni.h"
 
-module vmstd;
+module interpreter;
 
 import std.core;
+import vmstd;
+import slot;
 import runtime;
 import object;
 import classfile;

@@ -20,17 +20,17 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /experimental:module")
 endif()
 
-set (SOURCE_FILES src/slot.cpp src/jvm.cpp src/jni.cpp src/native/init_native.cpp src/native/unsafe.cpp
+set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/init_native.cpp src/native/unsafe.cpp
         src/jmm.cpp src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
         src/encoding.cpp src/classfile/poly.cpp src/reference.cpp
         src/runtime/thread.cpp src/runtime/heap.cpp src/classfile/method.cpp
         src/classfile/field.cpp src/classfile/constant_pool.cpp
-        src/classfile/class_loader.cpp src/primitive.cpp src/init.cpp
+        src/classfile/class_loader.cpp src/init.cpp
         src/object/object.cpp src/object/array.cpp src/object/string.cpp src/object/box.cpp
         src/object/reflect.cpp src/classfile/class.cpp src/classfile/array_class.cpp src/exception.cpp
-        src/classfile/invoke.cpp src/convert.cpp src/native/method_handle_natives.cpp
+        src/classfile/invoke.cpp src/native/method_handle_natives.cpp
         src/native/scoped_memory_access.cpp src/native/var_handle.cpp src/native/method_handle.cpp
-        src/object/allocator.cpp src/sysinfo.cpp
+        src/object/allocator.cpp
 )
 
 set (TEST_SOURCE_FILES
@@ -66,11 +66,12 @@ target_sources(jvm
         FILE_SET CXX_MODULES
         BASE_DIRS src
         FILES
-        src/classfile/classfile.ixx src/runtime/runtime.ixx
-        src/object/object.ixx src/vmstd.ixx src/constants.ixx
+        src/classfile/classfile.ixx src/runtime/runtime.ixx src/slot.ixx
+        src/object/object.ixx src/vmstd.ixx src/constants.ixx src/primitive.ixx
         src/classfile/bytecode_reader.ixx src/classfile/invoke.ixx
-        src/classfile/class_loader.ixx src/classfile/poly.ixx
-        src/runtime/heap.ixx src/reference.ixx src/dll.ixx
+        src/classfile/class_loader.ixx src/classfile/poly.ixx src/sysinfo.ixx
+        src/runtime/heap.ixx src/reference.ixx src/dll.ixx src/convert.ixx
+        src/interpreter.ixx
 )
 
 #target_sources(jvmcc

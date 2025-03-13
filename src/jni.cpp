@@ -2,10 +2,12 @@
 #include "jni.h"
 
 import vmstd;
+import slot;
 import runtime;
 import object;
 import classfile;
 import class_loader;
+import interpreter;
 
 using namespace slot;
 

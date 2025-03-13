@@ -14,6 +14,7 @@ import invoke;
 import class_loader;
 import reference;
 import dll;
+import interpreter;
 
 using namespace std;
 

@@ -5,7 +5,9 @@ module;
 module object;
 
 import std.core;
+import slot;
 import vmstd;
+import interpreter;
 
 using namespace std;
 using namespace slot;

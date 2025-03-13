@@ -2,6 +2,7 @@
 #include "../jni.h"
 
 import vmstd;
+import slot;
 import classfile;
 import class_loader;
 

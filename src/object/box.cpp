@@ -4,6 +4,7 @@ module;
 module object;
 
 import std.core;
+import interpreter;
 
 using namespace std;
 using namespace slot;

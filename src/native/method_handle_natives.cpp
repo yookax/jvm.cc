@@ -2,9 +2,11 @@
 #include "../jni.h"
 
 import vmstd;
+import slot;
 import object;
 import classfile;
 import class_loader;
+import interpreter;
 
 using namespace slot;
 using namespace utf8;

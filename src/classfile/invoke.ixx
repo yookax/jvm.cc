@@ -4,6 +4,7 @@ module;
 export module invoke;
 
 import vmstd;
+import slot;
 
 export void init_invoke();
 

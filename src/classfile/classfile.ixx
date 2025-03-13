@@ -8,6 +8,7 @@ export import poly;
 
 import std.core;
 import vmstd;
+import slot;
 import bytecode_reader;
 
 

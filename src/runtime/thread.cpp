@@ -9,6 +9,7 @@ import std.threading;
 import vmstd;
 import object;
 import class_loader;
+import interpreter;
 
 using namespace std;
 using namespace slot;

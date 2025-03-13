@@ -6,9 +6,11 @@ module classfile;
 
 import std.core;
 import vmstd;
+import slot;
 import object;
 import invoke;
 import class_loader;
+import interpreter;
 
 using namespace std;
 

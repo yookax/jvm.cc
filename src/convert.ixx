@@ -1,15 +1,43 @@
 module;
 #include "vmdef.h"
 
-module vmstd;
+export module convert;
 
 import std.core;
 
-using namespace std;
+/*
+ * 将字节数组转换为32位整形.
+ * 字节数组bytes按大端存储，长度4.
+ */
+export int32_t bytes_to_int32(const uint8_t *bytes);
+export void int32_to_bytes(int32_t value, unsigned char bytes[]);
+
+/*
+ * 将字节数组转换为64位整形.
+ * 字节数组bytes按大端存储，长度8.
+ */
+export int64_t bytes_to_int64(const uint8_t *bytes);
+export void int64_to_bytes(int64_t value, unsigned char bytes[]);
+
+/*
+ * 将字节数组转换为32位浮点数.
+ * 字节数组bytes按大端存储，长度4.
+ */
+export jfloat bytes_to_float(const uint8_t *bytes);
+export void float_to_bytes(float f, unsigned char bytes[]);
+
+/*
+ * 将字节数组转换为64位浮点数.
+ * 字节数组bytes按大端存储，长度8.
+ */
+export jdouble bytes_to_double(const uint8_t *bytes);
+export void double_to_bytes(double d, unsigned char bytes[]);
+
+module : private;
 
 // 将大端字节数组转换为整数
 template <typename T>
-static T big_endian_bytes_to_int(const unsigned char bytes[]) {
+T big_endian_bytes_to_int(const unsigned char bytes[]) {
     T value = 0;
     if constexpr (std::endian::native == std::endian::big) {
         // 如果本地字节序是大端，直接复制
@@ -56,7 +84,7 @@ jdouble bytes_to_double(const uint8_t *bytes) {
 
 // 将整数转换为大端字节数组
 template <typename T>
-static void int_to_big_endian_bytes(T value, unsigned char bytes[]) {
+void int_to_big_endian_bytes(T value, unsigned char bytes[]) {
     if constexpr (std::endian::native == std::endian::big) {
         // 如果本地字节序是大端，直接复制
         std::memcpy(bytes, &value, sizeof(T));
@@ -79,7 +107,7 @@ void int64_to_bytes(int64_t value, unsigned char bytes[]) {
 
 // Convert a floating-point number (either float or double) to a big-endian byte array
 template <typename T>
-static void floating_point_to_big_endian_bytes(T num, unsigned char bytes[]) {
+void floating_point_to_big_endian_bytes(T num, unsigned char bytes[]) {
     static_assert(std::is_floating_point<T>::value, "Template argument must be a floating-point type");
     using IntType = typename std::conditional<sizeof(T) == 4, uint32_t, uint64_t>::type;
     IntType rawValue = *reinterpret_cast<IntType*>(&num);

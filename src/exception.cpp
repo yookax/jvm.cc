@@ -5,8 +5,10 @@ module;
 module vmstd;
 
 import std.core;
+import slot;
 import object;
 import class_loader;
+import interpreter;
 
 using namespace slot;
 

@@ -2,6 +2,7 @@
 
 import std.core;
 import vmstd;
+import slot;
 
 using namespace std;
 using namespace slot;
