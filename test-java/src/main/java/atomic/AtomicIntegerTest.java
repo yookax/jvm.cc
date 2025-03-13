@@ -21,14 +21,14 @@ public class AtomicIntegerTest {
     }
     
     public static void main(String[] args) {
-        for (int i = 0; i < 100; i++) {
-            new Runner().start();
-        }
-        while (y.get() != 100) {
-            sleepMS(100);
-        }
-        AtomicInteger y = new AtomicInteger(0);
-        System.out.println("\ny=" + y.get());
+//        for (int i = 0; i < 100; i++) {
+//            new Runner().start();
+//        }
+//        while (y.get() != 100) {
+//            sleepMS(100);
+//        }
+//        AtomicInteger y = new AtomicInteger(0);
+//        System.out.println("\ny=" + y.get());
     }
     
     private static void sleepMS(long millis) {

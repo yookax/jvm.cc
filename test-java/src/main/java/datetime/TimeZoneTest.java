@@ -3,7 +3,6 @@ package datetime;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-// failed
 public class TimeZoneTest {
     
     public static void main(String[] args) {
