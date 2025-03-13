@@ -1,22 +1,11 @@
-/*
- * This fiel is from "hotspot\share\include\jmm.h"
- */
-
 #ifndef CABIN_JMM_H
 #define CABIN_JMM_H
 
 /*
- * This is a private interface used by JDK for JVM monitoring
- * and management.
+ * This is a private interface used by JDK for JVM monitoring and management.
  *
- * Bump the version number when either of the following happens:
- *
- * 1. There is a change in functions in JmmInterface.
- *
- * 2. There is a change in the contract between VM and Java classes.
+ * hotspot\share\include\jmm.h
  */
-
-// hotspot\share\include\jmm.h
 
 #include "jni.h"
 
@@ -193,133 +182,54 @@ typedef struct {
     const char* default_string;      /* Default value in a parsable string */
     jboolean    mandatory;           /* True if the option/argument is mandatory */
     jboolean    option;              /* True if it is an option, false if it is an argument */
-                                    /* (see diagnosticFramework.hpp for option/argument definitions) */
+                                     /* (see diagnosticFramework.hpp for option/argument definitions) */
     jboolean    multiple;            /* True is the option can be specified several time */
     int         position;            /* Expected position for this argument (this field is */
-                                    /* meaningless for options) */
+                                     /* meaningless for options) */
 } dcmdArgInfo;
 
 typedef struct jmmInterface_1_ {
     void*        reserved1;
     void*        reserved2;
 
-    jint         (JNICALL *GetVersion)             (JNIEnv *env);
-
-    jint         (JNICALL *GetOptionalSupport)     (JNIEnv *env,
-                                                    jmmOptionalSupport* support_ptr);
-
-    jint         (JNICALL *GetThreadInfo)          (JNIEnv *env,
-                                                    jlongArray ids,
-                                                    jint maxDepth,
-                                                    jobjectArray infoArray);
-
-    jobjectArray (JNICALL *GetMemoryPools)         (JNIEnv* env, jobject mgr);
-
-    jobjectArray (JNICALL *GetMemoryManagers)      (JNIEnv* env, jobject pool);
-
-    jobject      (JNICALL *GetMemoryPoolUsage)     (JNIEnv* env, jobject pool);
-    jobject      (JNICALL *GetPeakMemoryPoolUsage) (JNIEnv* env, jobject pool);
-
-    jlong        (JNICALL *GetOneThreadAllocatedMemory)
-                                                  (JNIEnv *env,
-                                                    jlong thread_id);
-    void         (JNICALL *GetThreadAllocatedMemory)
-                                                  (JNIEnv *env,
-                                                    jlongArray ids,
-                                                    jlongArray sizeArray);
-
-    jobject      (JNICALL *GetMemoryUsage)         (JNIEnv* env, jboolean heap);
-
-    jlong        (JNICALL *GetLongAttribute)       (JNIEnv *env, jobject obj, jmmLongAttribute att);
-    jboolean     (JNICALL *GetBoolAttribute)       (JNIEnv *env, jmmBoolAttribute att);
-    jboolean     (JNICALL *SetBoolAttribute)       (JNIEnv *env, jmmBoolAttribute att, jboolean flag);
-
-    jint         (JNICALL *GetLongAttributes)      (JNIEnv *env,
-                                                    jobject obj,
-                                                    jmmLongAttribute* atts,
-                                                    jint count,
-                                                    jlong* result);
-
-    jobjectArray (JNICALL *FindCircularBlockedThreads) (JNIEnv *env);
-
-    // Not used in JDK 6 or JDK 7
-    jlong        (JNICALL *GetThreadCpuTime)       (JNIEnv *env, jlong thread_id);
-
-    jobjectArray (JNICALL *GetVMGlobalNames)       (JNIEnv *env);
-    jint         (JNICALL *GetVMGlobals)           (JNIEnv *env,
-                                                    jobjectArray names,
-                                                    jmmVMGlobal *globals,
-                                                    jint count);
-
-    jint         (JNICALL *GetInternalThreadTimes) (JNIEnv *env,
-                                                    jobjectArray names,
-                                                    jlongArray times);
-
-    jboolean     (JNICALL *ResetStatistic)         (JNIEnv *env,
-                                                    jvalue obj,
-                                                    jmmStatisticType type);
-
-    void         (JNICALL *SetPoolSensor)          (JNIEnv *env,
-                                                    jobject pool,
-                                                    jmmThresholdType type,
-                                                    jobject sensor);
-
-    jlong        (JNICALL *SetPoolThreshold)       (JNIEnv *env,
-                                                    jobject pool,
-                                                    jmmThresholdType type,
-                                                    jlong threshold);
-    jobject      (JNICALL *GetPoolCollectionUsage) (JNIEnv* env, jobject pool);
-
-    jint         (JNICALL *GetGCExtAttributeInfo)  (JNIEnv *env,
-                                                    jobject mgr,
-                                                    jmmExtAttributeInfo *ext_info,
-                                                    jint count);
-    void         (JNICALL *GetLastGCStat)          (JNIEnv *env,
-                                                    jobject mgr,
-                                                    jmmGCStat *gc_stat);
-
-    jlong        (JNICALL *GetThreadCpuTimeWithKind)
-                                                  (JNIEnv *env,
-                                                    jlong thread_id,
-                                                    jboolean user_sys_cpu_time);
-    void         (JNICALL *GetThreadCpuTimesWithKind)
-                                                  (JNIEnv *env,
-                                                    jlongArray ids,
-                                                    jlongArray timeArray,
-                                                    jboolean user_sys_cpu_time);
-
-    jint         (JNICALL *DumpHeap0)              (JNIEnv *env,
-                                                    jstring outputfile,
-                                                    jboolean live);
-    jobjectArray (JNICALL *FindDeadlocks)          (JNIEnv *env,
-                                                    jboolean object_monitors_only);
-    void         (JNICALL *SetVMGlobal)            (JNIEnv *env,
-                                                    jstring flag_name,
-                                                    jvalue  new_value);
-    void*        reserved6;
-    jobjectArray (JNICALL *DumpThreads)            (JNIEnv *env,
-                                                    jlongArray ids,
-                                                    jboolean lockedMonitors,
-                                                    jboolean lockedSynchronizers,
-                                                    jint maxDepth);
-    void         (JNICALL *SetGCNotificationEnabled) (JNIEnv *env,
-                                                      jobject mgr,
-                                                      jboolean enabled);
-    jobjectArray (JNICALL *GetDiagnosticCommands)  (JNIEnv *env);
-    void         (JNICALL *GetDiagnosticCommandInfo)
-                                                  (JNIEnv *env,
-                                                    jobjectArray cmds,
-                                                    dcmdInfo *infoArray);
-    void         (JNICALL *GetDiagnosticCommandArgumentsInfo)
-                                                  (JNIEnv *env,
-                                                    jstring commandName,
-                                                    dcmdArgInfo *infoArray);
-    jstring      (JNICALL *ExecuteDiagnosticCommand)
-                                                  (JNIEnv *env,
-                                                    jstring command);
-    void         (JNICALL *SetDiagnosticFrameworkNotificationEnabled)
-                                                  (JNIEnv *env,
-                                                    jboolean enabled);
+    jint (JNICALL *GetVersion)(JNIEnv *env);
+    jint (JNICALL *GetOptionalSupport)(JNIEnv *env, jmmOptionalSupport* support_ptr);
+    jint (JNICALL *GetThreadInfo)(JNIEnv *env, jlongArray ids, jint maxDepth, jobjectArray infoArray);
+    jobjectArray (JNICALL *GetMemoryPools)(JNIEnv* env, jobject mgr);
+    jobjectArray (JNICALL *GetMemoryManagers)(JNIEnv* env, jobject pool);
+    jobject (JNICALL *GetMemoryPoolUsage)(JNIEnv* env, jobject pool);
+    jobject (JNICALL *GetPeakMemoryPoolUsage)(JNIEnv* env, jobject pool);
+    jlong (JNICALL *GetOneThreadAllocatedMemory)(JNIEnv *env, jlong thread_id);
+    void (JNICALL *GetThreadAllocatedMemory)(JNIEnv *env, jlongArray ids, jlongArray sizeArray);
+    jobject (JNICALL *GetMemoryUsage)(JNIEnv* env, jboolean heap);
+    jlong (JNICALL *GetLongAttribute)(JNIEnv *env, jobject obj, jmmLongAttribute att);
+    jboolean (JNICALL *GetBoolAttribute)(JNIEnv *env, jmmBoolAttribute att);
+    jboolean (JNICALL *SetBoolAttribute)(JNIEnv *env, jmmBoolAttribute att, jboolean flag);
+    jint (JNICALL *GetLongAttributes)(JNIEnv *env, jobject obj, jmmLongAttribute* atts, jint count, jlong* result);
+    jobjectArray (JNICALL *FindCircularBlockedThreads)(JNIEnv *env);
+    jlong (JNICALL *GetThreadCpuTime)(JNIEnv *env, jlong thread_id);
+    jobjectArray (JNICALL *GetVMGlobalNames)(JNIEnv *env);
+    jint (JNICALL *GetVMGlobals)(JNIEnv *env, jobjectArray names, jmmVMGlobal *globals, jint count);
+    jint (JNICALL *GetInternalThreadTimes)(JNIEnv *env, jobjectArray names, jlongArray times);
+    jboolean (JNICALL *ResetStatistic)(JNIEnv *env, jvalue obj, jmmStatisticType type);
+    void (JNICALL *SetPoolSensor)(JNIEnv *env, jobject pool, jmmThresholdType type, jobject sensor);
+    jlong (JNICALL *SetPoolThreshold)(JNIEnv *env, jobject pool, jmmThresholdType type, jlong threshold);
+    jobject (JNICALL *GetPoolCollectionUsage)(JNIEnv* env, jobject pool);
+    jint (JNICALL *GetGCExtAttributeInfo)(JNIEnv *env, jobject mgr, jmmExtAttributeInfo *ext_info, jint count);
+    void (JNICALL *GetLastGCStat)(JNIEnv *env, jobject mgr, jmmGCStat *gc_stat);
+    jlong (JNICALL *GetThreadCpuTimeWithKind)(JNIEnv *env, jlong thread_id, jboolean user_sys_cpu_time);
+    void (JNICALL *GetThreadCpuTimesWithKind)(JNIEnv *env, jlongArray ids, jlongArray timeArray, jboolean user_sys_cpu_time);
+    jint (JNICALL *DumpHeap0)(JNIEnv *env, jstring outputfile, jboolean live);
+    jobjectArray (JNICALL *FindDeadlocks)(JNIEnv *env, jboolean object_monitors_only);
+    void (JNICALL *SetVMGlobal)(JNIEnv *env, jstring flag_name, jvalue  new_value);
+    void* reserved6;
+    jobjectArray (JNICALL *DumpThreads)(JNIEnv *env, jlongArray ids, jboolean lockedMonitors, jboolean lockedSynchronizers, jint maxDepth);
+    void (JNICALL *SetGCNotificationEnabled)(JNIEnv *env, jobject mgr, jboolean enabled);
+    jobjectArray (JNICALL *GetDiagnosticCommands)(JNIEnv *env);
+    void (JNICALL *GetDiagnosticCommandInfo)(JNIEnv *env, jobjectArray cmds, dcmdInfo *infoArray);
+    void (JNICALL *GetDiagnosticCommandArgumentsInfo)(JNIEnv *env, jstring commandName, dcmdArgInfo *infoArray);
+    jstring (JNICALL *ExecuteDiagnosticCommand)(JNIEnv *env, jstring command);
+    void (JNICALL *SetDiagnosticFrameworkNotificationEnabled)(JNIEnv *env, jboolean enabled);
 } JmmInterface;
 
 #ifdef __cplusplus
