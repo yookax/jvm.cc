@@ -1,6 +1,5 @@
 #include "cabin.h"
 #include "jni.h"
-#include "classfile/constants.h"
 
 import vmstd;
 import runtime;

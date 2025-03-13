@@ -1,9 +1,7 @@
 module;
 #include <cassert>
 #include "../cabin.h"
-#include "../dll.h"
 #include "../jni.h"
-#include "constants.h"
 
 module class_loader;
 
@@ -12,6 +10,7 @@ import std.filesystem;
 import vmstd;
 import object;
 import classfile;
+import dll;
 
 using namespace std;
 using namespace slot;

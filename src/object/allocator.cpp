@@ -1,10 +1,10 @@
 #include <cassert>
 #include "../cabin.h"
-#include "../runtime/heap.h"
 
 module object;
 
 import std.core;
+import heap;
 
 using namespace std;
 

@@ -1,7 +1,6 @@
 module;
 #include "../cabin.h"
 #include "../jni.h"
-#include "constants.h"
 
 module classfile;
 
@@ -382,9 +381,6 @@ string Method::toString() const {
     return oss.str();
 }
 
-static const char *opcode_names[] = JVM_OPCODE_NAME_INITIALIZER;
-static const u1 opcode_len[] = JVM_OPCODE_LENGTH_INITIALIZER;
-
 string Method::get_bytecode_string() const {
     ostringstream oss;
 
@@ -412,7 +408,7 @@ string Method::get_bytecode_string() const {
             Class *cls = cp->resolve_class(index);
             oss << " #" << ((int) index) << " <" << cls->name << ">";
         } else {
-            r.skip(opcode_len[c] - 1); // alread read 1 byte
+            r.skip(opcode_length[c] - 1); // already read 1 byte
         }
 
         oss << endl;

@@ -1,10 +1,10 @@
 module;
 #include "../cabin.h"
-#include "poly.h"
 #include "../jni.h"
-#include "constants.h"
 
 export module classfile;
+
+export import poly;
 
 import std.core;
 import vmstd;

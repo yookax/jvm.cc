@@ -1,20 +1,19 @@
 #include <cstdio>
 #include <cstdlib>
 #include "cabin.h"
-#include "runtime/heap.h"
 #include "jni.h"
-#include "classfile/poly.h"
-#include "reference.h"
-#include "dll.h"
 
 import std.core;
 import std.filesystem;
 import vmstd;
 import runtime;
 import object;
+import heap;
 import classfile;
 import invoke;
 import class_loader;
+import reference;
+import dll;
 
 using namespace std;
 

@@ -1,12 +1,11 @@
-#ifndef CABIN_POLY_H
-#define CABIN_POLY_H
-
-#include <tuple>
+module;
 #include "../cabin.h"
 
-class Class;
+export module poly;
 
-void init_polymorphic_method();
+import std.core;
+
+export void init_polymorphic_method();
 
 /*
  * Lookup polymorphic method named `name` from class `c` and it's super class.
@@ -14,6 +13,4 @@ void init_polymorphic_method();
  * tuple<1>: access flag
  * tuple<2>: native method
  */
-std::tuple<Class *, int, void *> lookup_polymorphic_method(Class *c, const utf8_t *name);
-
-#endif
+export std::tuple<Class *, int, void *> lookup_polymorphic_method(Class *c, const utf8_t *name);

@@ -3,6 +3,8 @@ module;
 
 export module vmstd;
 
+export import constants;
+
 import std.core;
 
 export int processor_number();

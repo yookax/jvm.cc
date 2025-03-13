@@ -1,7 +1,6 @@
 #include <cassert>
 #include "../cabin.h"
 #include "../jni.h"
-#include "../classfile/constants.h"
 
 import std.core;
 import std.threading;

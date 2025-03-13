@@ -1,8 +1,6 @@
 module;
 #include "cabin.h"
-#include "classfile/constants.h"
 #include "jni.h"
-#include "dll.h"
 
 module vmstd;
 
@@ -12,20 +10,16 @@ import object;
 import classfile;
 import bytecode_reader;
 import class_loader;
+import dll;
 
 using namespace std;
 using namespace slot;
 using namespace utf8;
 
-#if (LOG_LEVEL >= LOG_LEVEL_VERBOSE)
-// The mapping of instructions' code and name
-static const char *instruction_names[] = JVM_OPCODE_NAME_INITIALIZER;
-#endif
-
 #define PRINT_OPCODE VERBOSE("%d(0x%x), %s, pc = %d", \
-                        opcode, opcode, instruction_names[opcode], (int)frame->reader.pc);
+                        opcode, opcode, opcode_names[opcode], (int)frame->reader.pc);
 
-static const u1 opcode_len[JVM_OPC_MAX + 1] = JVM_OPCODE_LENGTH_INITIALIZER;
+//static const u1 opcode_length[JVM_OPC_MAX + 1] = JVM_OPCODE_LENGTH_INITIALIZER;
 
 static void call_native_method(Frame *frame);
 
@@ -63,7 +57,7 @@ static int get_prev_aload_opc_index(BytecodeReader &r) {
         } else {
             // 当前指令不是 aload 指令镞，跳过
             // 减一是因为前面已经读取了一个字节
-            r.skip(opcode_len[opc]-1);
+            r.skip(opcode_length[opc]-1);
         }
     }
     
@@ -89,7 +83,7 @@ static const utf8_t *get_opc_operating_obj_name(Frame *frame, int opc) {
             int index_in_lvars = get_prev_aload_opc_index(frame->reader);
             if (index_in_lvars >= 0) {
                 auto [name, descriptor] = frame->method->find_local_variable(
-                        frame->reader.pc - opcode_len[opc], (u2) index_in_lvars);
+                        frame->reader.pc - opcode_length[opc], (u2) index_in_lvars);
                 return name;
             }        
             
@@ -717,7 +711,7 @@ do { \
 { \
     jint offset = reader->reads2(); \
     if (slot::get<jint>(--frame->ostack) cond 0) \
-        reader->skip(offset - opcode_len[opc]); \
+        reader->skip(offset - opcode_length[opc]); \
     break; \
 }
             case JVM_OPC_ifeq: IF_COND(==, JVM_OPC_ifeq)
@@ -734,7 +728,7 @@ do { \
     type v2 = frame->pop##t(); \
     type v1 = frame->pop##t(); \
     if (v1 cond v2) \
-        reader->skip(offset - opcode_len[opc]); \
+        reader->skip(offset - opcode_length[opc]); \
     break; \
 }
             case JVM_OPC_if_icmpeq: IF_CMP_COND(jint, i, ==, JVM_OPC_if_icmpeq)
@@ -749,14 +743,14 @@ do { \
                 s2 offset = reader->reads2();
                 frame->ostack -= 2;
                 if (slot::get<jint>(frame->ostack) <= slot::get<jint>(frame->ostack + 1))
-                    reader->skip(offset - opcode_len[JVM_OPC_if_icmple]);
+                    reader->skip(offset - opcode_length[JVM_OPC_if_icmple]);
                 break;
             }
 #undef IF_CMP_COND
 
             case JVM_OPC_goto: {
                 s2 offset = reader->reads2();
-                reader->skip(offset - opcode_len[JVM_OPC_goto]);
+                reader->skip(offset - opcode_length[JVM_OPC_goto]);
                 break;
             }
 
@@ -1380,20 +1374,20 @@ opc_athrow:
             case JVM_OPC_ifnull: {
                 s2 offset = reader->reads2();
                 if (frame->popr() == nullptr) {
-                    reader->skip(offset - opcode_len[JVM_OPC_ifnull]);
+                    reader->skip(offset - opcode_length[JVM_OPC_ifnull]);
                 }
                 break;
             }
             case JVM_OPC_ifnonnull: {
                 s2 offset = reader->reads2();
                 if (frame->popr() != nullptr) {
-                    reader->skip(offset - opcode_len[JVM_OPC_ifnonnull]);
+                    reader->skip(offset - opcode_length[JVM_OPC_ifnonnull]);
                 }
                 break;
             }
             case JVM_OPC_goto_w: {
                 s4 offset = reader->reads4();
-                reader->skip(offset - opcode_len[JVM_OPC_goto_w]);
+                reader->skip(offset - opcode_length[JVM_OPC_goto_w]);
                 break;
             }
             case JVM_OPC_jsr_w: UNREACHABLE("jsr_w doesn't support after jdk 6."); break;

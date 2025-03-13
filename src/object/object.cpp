@@ -1,13 +1,12 @@
 module;
 #include <cassert>
 #include "../cabin.h"
-#include "../runtime/heap.h"
-#include "../classfile/constants.h"
 
 module object;
 
 import std.core;
 import vmstd;
+import heap;
 
 using namespace std;
 

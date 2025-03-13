@@ -1,5 +1,8 @@
+module;
 #include <cassert>
 #include "../cabin.h"
+
+module poly;
 
 import std.core;
 import vmstd;

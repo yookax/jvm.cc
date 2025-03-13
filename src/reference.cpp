@@ -1,4 +1,7 @@
+module;
 #include "cabin.h""
+
+module reference;
 
 import object;
 import classfile;

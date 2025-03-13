@@ -1,5 +1,4 @@
 #include "../cabin.h"
-#include "../classfile/constants.h"
 #include "../jni.h"
 
 import vmstd;

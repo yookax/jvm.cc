@@ -1,7 +1,5 @@
 #include <cassert>
 #include "../cabin.h"
-#include "constants.h"
-#include "../runtime/heap.h"
 
 module classfile;
 

@@ -1,7 +1,6 @@
 module;
 #include <cassert>
 #include "../cabin.h"
-#include "../classfile/constants.h"
 
 module object;
 

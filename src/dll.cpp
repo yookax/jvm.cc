@@ -1,6 +1,6 @@
+module;
 #include <cassert>
 #include "cabin.h"
-#include "dll.h"
 
 #ifdef _WIN64
 #include <windows.h>
@@ -8,11 +8,13 @@
 #elifdef __linux__
 #endif
 
+module dll;
+
 import std.core;
 
 using namespace std;
 
-void *g_libzip = nullptr;
+//void *g_libzip = nullptr;
 
 static string mangle(const utf8_t *class_name, const utf8_t *method_name) {
     assert(class_name != nullptr && method_name != nullptr);

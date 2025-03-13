@@ -1,18 +1,18 @@
-#ifndef CABIN_REFERENCE_H
-#define CABIN_REFERENCE_H
-
+module;
 #include "cabin.h"
 
-void init_reference();
+export module reference;
+
+export void init_reference();
 
 // Atomically get and clear (set to null) the VM's pending-Reference list.
-jref getAndClearReferencePendingList();
+export jref getAndClearReferencePendingList();
 
 // Test whether the VM's pending-Reference list contains any entries.
-jboolean hasReferencePendingList();
+export jboolean hasReferencePendingList();
 
 // Wait until the VM's pending-Reference list may be non-null.
-void waitForReferencePendingList();
+export void waitForReferencePendingList();
 
 /**
  * Tests if the referent of this reference object is {@code obj}.
@@ -25,7 +25,7 @@ void waitForReferencePendingList();
  */
 // ref: object of java.lang.Reference
 // obj: the object to compare with "ref" object's referent
-jboolean referenceRefersTo(jref ref, jref obj);
+export jboolean referenceRefersTo(jref ref, jref obj);
 
 /* Override the implementation of Reference.refersTo.
  * Phantom references are weaker than finalization, so the referent
@@ -34,8 +34,6 @@ jboolean referenceRefersTo(jref ref, jref obj);
  */
 // phantom_ref: object of java.lang.PhantomReference
 // obj: the object to compare with "phantom_ref" object's referent
-jboolean phantomReferenceRefersTo(jref phantom_ref, jref obj);
+export jboolean phantomReferenceRefersTo(jref phantom_ref, jref obj);
 
-void referenceClear(jref ref);
-
-#endif
+export void referenceClear(jref ref);

@@ -1,14 +1,14 @@
-#ifndef CABIN_HEAP_H
-#define CABIN_HEAP_H
+module;
+#include "../cabin.h"
 
-#include <cstddef>
-#include <cstdint>
-#include <mutex>
+export module heap;
 
-class Object;
+import std.core;
+import std.threading;
+
 typedef uintptr_t address_t;
 
-class Heap {
+export class Heap {
     const size_t size; // The total size of the heap, measured in bytes.
     const address_t starting_address; // The starting address of the heap.
 
@@ -18,7 +18,7 @@ class Heap {
         Chunk *next;
 
         Chunk(address_t head0, size_t len0, Chunk *next0)
-            : head(head0), len(len0), next(next0) { }
+                : head(head0), len(len0), next(next0) { }
     } *freelist;
 
     /*mutable*/ std::recursive_mutex mutex;
@@ -45,7 +45,7 @@ public:
         bool b = (starting_address <= p) && (p < starting_address + size);
         return b;
     }
-    
+
     // 堆还有多少剩余空间，以字节为单位。
     size_t count_free_memory() const;
 
@@ -54,5 +54,3 @@ public:
 
     void display();
 };
-
-#endif //CABIN_HEAP_H

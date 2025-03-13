@@ -1,6 +1,5 @@
 module;
 #include "../cabin.h"
-#include "constants.h"
 #include "../jni.h"
 
 export module class_loader;

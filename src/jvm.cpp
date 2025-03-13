@@ -3,19 +3,18 @@
 #include <ctime>
 #include "cabin.h"
 #include "jni.h"
-#include "runtime/heap.h"
-#include "reference.h"
-#include "dll.h"
 #include "jmm.h"
-#include "classfile/constants.h"
 
 import std.core;
 import std.threading;
 import vmstd;
 import runtime;
 import object;
+import heap;
 import classfile;
 import class_loader;
+import reference;
+import dll;
 
 using namespace std;
 using namespace slot;

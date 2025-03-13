@@ -1,5 +1,4 @@
 #include "cabin.h"
-#include "runtime/heap.h"
 #include "jni.h"
 
 import std.core;

@@ -1,7 +1,8 @@
+module;
 #include <cassert>
 #include "../cabin.h"
-#include "heap.h"
-#include "../classfile/constants.h"
+
+module heap;
 
 import std.core;
 import vmstd;
