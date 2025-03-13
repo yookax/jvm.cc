@@ -1,6 +1,6 @@
 module;
 #include <cassert>
-#include "../cabin.h"
+#include "../vmdef.h"
 
 export module bytecode_reader;
 

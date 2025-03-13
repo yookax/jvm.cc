@@ -1,4 +1,4 @@
-#include "../cabin.h"
+#include "../vmdef.h"
 #include "../jni.h"
 
 import vmstd;

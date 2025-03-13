@@ -1,5 +1,5 @@
 module;
-#include "cabin.h"
+#include "vmdef.h"
 #include "jni.h"
 
 module vmstd;

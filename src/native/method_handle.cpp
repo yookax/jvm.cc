@@ -1,4 +1,4 @@
-#include "../cabin.h"
+#include "../vmdef.h"
 
 import std.core;
 import vmstd;

@@ -1,7 +1,7 @@
 #include <cassert>
 #include <cstdio>
 #include <ctime>
-#include "cabin.h"
+#include "vmdef.h"
 #include "jni.h"
 #include "jmm.h"
 

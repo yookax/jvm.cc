@@ -1,5 +1,5 @@
 module;
-#include "../cabin.h"
+#include "../vmdef.h"
 
 export module heap;
 

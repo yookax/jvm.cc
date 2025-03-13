@@ -1,7 +1,7 @@
 module;
 #include <cassert>
 //#include <pthread.h>
-#include "cabin.h"
+#include "vmdef.h"
 
 module vmstd;
 

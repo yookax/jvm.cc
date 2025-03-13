@@ -50,7 +50,6 @@ export {
     void accSetSynthetic(int &access_flags) { access_flags |= JVM_ACC_SYNTHETIC; }
 }
 
-
 /* Used in newarray instruction. */
 
 export enum ArrayType {

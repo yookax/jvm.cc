@@ -1,13 +1,11 @@
-#ifndef CABIN_CABIN_H
-#define CABIN_CABIN_H
+#ifndef VMDEF_H
+#define VMDEF_H
 
 #include <cstdio>
 #include <cstdlib>
 #include <cstdint>
 #include <climits>
 #include <cassert>
-//#include <iostream>
-#include <vector>
 #include <string>
 
 #ifndef PATH_MAX
@@ -22,8 +20,8 @@
 #define JAVA_COMPAT_VERSION "1.8.0_162" // todo
 
 // jvm 最大支持的classfile版本
-#define JVM_MUST_SUPPORT_CLASSFILE_MAJOR_VERSION 60
-#define JVM_MUST_SUPPORT_CLASSFILE_MINOR_VERSION 65535
+#define JVM_MAX_CLASSFILE_MAJOR_VERSION 60
+#define JVM_MAX_CLASSFILE_MINOR_VERSION 65535
 
 // size of heap
 #define VM_HEAP_SIZE (512*1024*1024) // 512Mb
@@ -31,7 +29,7 @@
 // every thread has a vm stack
 #define VM_STACK_SIZE (16*1024*1024) // 16Mb
 
-// jni 局部引用表默认最大容量 
+// jni 局部引用表默认最大容量
 #define JNI_LOCAL_REFERENCE_TABLE_MAX_CAPACITY 512
 
 /*
@@ -84,12 +82,6 @@ typedef jref jarrRef; // Array 的引用。
 typedef jref jobjArrRef; // java.lang.Object Array 的引用。
 typedef jref jclsRef; // java.lang.Class 的引用。
 
-template <typename T> concept JavaValueType = std::is_same_v<T, jint>
-                        || std::is_same_v<T, jbyte> || std::is_same_v<T, jbool>
-                        || std::is_same_v<T, jchar> || std::is_same_v<T, jshort>
-                        || std::is_same_v<T, jfloat> || std::is_same_v<T, jlong>
-                        || std::is_same_v<T, jdouble> || std::is_same_v<T, jref>;
-
 typedef char utf8_t;
 typedef jchar unicode_t;
 
@@ -110,66 +102,19 @@ extern Object *g_platform_class_loader;
 
 extern bool g_vm_initing;
 
-struct Property {
-    const utf8_t *name;
-    const utf8_t *value;
-    Property(const utf8_t *name0, const utf8_t *value0): name(name0), value(value0) 
-    {
-        assert(name != nullptr);
-        assert(value != nullptr);
-    }
-};
-
-extern std::vector<Property> g_properties;
-
-struct InitArgs {
-    bool asyncgc = false;
-    bool verbosegc = false;
-    bool verbosedll = false;
-    bool verboseclass = false;
-
-    // Whether compaction has been given on the command line, and the value if it has
-    bool compact_specified = false; 
-    int do_compact = false;
-    bool trace_jni_sigs = false;
-
-    char *classpath = nullptr;
-
-    char *bootpath = nullptr;
-    char *bootpath_a = nullptr;
-    char *bootpath_p = nullptr;
-    char *bootpath_c = nullptr;
-    char *bootpath_v = nullptr;
-
-    int java_stack = VM_STACK_SIZE;
-    unsigned long min_heap = VM_HEAP_SIZE;
-    unsigned long max_heap = VM_HEAP_SIZE;
-
-    Property *commandline_props;
-    int props_count = 0;
-
-    void *main_stack_base;
-
-    /* JNI invocation API hooks */
-    
-    int (* vfprintf)(FILE *stream, const char *fmt, va_list ap) = std::vfprintf;
-    void (* exit)(int status) = std::exit;
-    void (* abort)() = std::abort;
-};
-
 /* This number, mandated by the JVM spec as 255,
- * is the maximum number of slots 
+ * is the maximum number of slots
  * that any Java method can receive in its argument list.
  * It limits both JVM signatures and method type objects.
  * The longest possible invocation will look like
  * staticMethod(arg1, arg2, ..., arg255) or
  * x.virtualMethod(arg1, arg2, ..., arg254).
- * 
+ *
  * jvms规定函数最多有255个参数，this也算，long和double占两个长度
  */
 #define MAX_JVM_ARITY 255
 
-// jvms数组最大维度为255 
+// jvms数组最大维度为255
 #define ARRAY_MAX_DIMENSIONS 255
 
 #define MAIN_THREAD_NAME "main" // name of main thread
@@ -261,4 +206,4 @@ do { \
     exit(EXIT_CODE_UNIMPLEMENTED); \
 }
 
-#endif //CABIN_CABIN_H
+#endif //VMDEF_H

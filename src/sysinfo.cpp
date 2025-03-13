@@ -6,7 +6,7 @@ module;
 #include <unistd.h>
 #include <sys/time.h>
 #endif
-#include "cabin.h"
+#include "vmdef.h"
 
 module vmstd;
 

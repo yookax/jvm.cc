@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
-#include "cabin.h"
+#include "vmdef.h"
 #include "jni.h"
 
 import std.core;
@@ -19,7 +19,7 @@ using namespace std;
 
 Heap *g_heap;
 
-std::vector<Property> g_properties;
+//std::vector<Property> g_properties;
 
 Object *g_sys_thread_group;
 
@@ -68,7 +68,7 @@ static void init_properties() {
     g_properties.emplace_back("java.vendor.url", "doesn't have");
     g_properties.emplace_back("java.home", g_java_home.c_str());
     ostringstream oss;
-    oss << JVM_MUST_SUPPORT_CLASSFILE_MAJOR_VERSION << "." << JVM_MUST_SUPPORT_CLASSFILE_MINOR_VERSION << ends;
+    oss << JVM_MAX_CLASSFILE_MAJOR_VERSION << "." << JVM_MAX_CLASSFILE_MINOR_VERSION << ends;
     g_properties.emplace_back("java.class.version", oss.str().c_str());
     g_properties.emplace_back("java.class.path", get_classpath());
     g_properties.emplace_back("os.name", os_name());

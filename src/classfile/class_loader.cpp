@@ -1,6 +1,6 @@
 module;
 #include <cassert>
-#include "../cabin.h"
+#include "../vmdef.h"
 #include "../jni.h"
 
 module class_loader;

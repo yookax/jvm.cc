@@ -1,5 +1,5 @@
 #include <cassert>
-#include "../cabin.h"
+#include "../vmdef.h"
 #include "../jni.h"
 
 import std.core;
