@@ -34,7 +34,6 @@ Object *g_platform_class_loader;
 bool g_vm_initing = true;
 
 void init_native();
-const char *get_classpath();
 
 static void *gcLoop(void *dummy) {
     // todo
@@ -315,10 +314,3 @@ void init_jvm(InitArgs *init_args) {
     g_vm_initing = false;
     TRACE("init jvm is over.\n");
 }
-
-TEST_CASE(test_properties, {
-    for (Property &p: g_properties) {
-        printf("%s: %s\n", p.name, p.value);
-    }
-})
-

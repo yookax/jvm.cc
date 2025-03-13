@@ -33,6 +33,12 @@ set (SOURCE_FILES src/slot.cpp src/jvm.cpp src/jni.cpp src/native/init_native.cp
         src/object/allocator.cpp src/sysinfo.cpp
 )
 
+set (TEST_SOURCE_FILES
+        test-cpp/main.cpp test-cpp/convert.cpp test-cpp/slot.cpp test-cpp/foo.cpp
+        test-cpp/descriptor.cpp test-cpp/heap.cpp test-cpp/class_loader.cpp
+        test-cpp/object.cpp test-cpp/class.cpp
+)
+
 if (MSVC)
     add_compile_options("/utf-8")
 endif()
@@ -43,13 +49,16 @@ endif()
 # 如果有函数没有实现，可以在jvm.cpp中实现之。
 # 如果有Debug加载zip.dll和java.dll成功，而Release版失败的情况，可以考虑下是不是Release版是不是把jvm.cpp中没有使用的函数优化掉了。
 # 总之一句话，无论Debug版还是Release版jvm.dll中导出所有zip.dll和java.dll中所依赖的函数。
-add_library(jvm SHARED ${SOURCE_FILES})
+add_library(jvm SHARED ${SOURCE_FILES} ${TEST_SOURCE_FILES})
 
 SET_TARGET_PROPERTIES(jvm PROPERTIES OUTPUT_NAME "jvm" PREFIX "")
 
 # 生成可运行的虚拟机
 add_executable(jvmcc src/vm_client.cpp)
 target_link_libraries(jvmcc jvm)
+
+add_executable(test test-cpp/main.cpp)
+target_link_libraries(test jvm)
 
 # 创建CXX_MODULES类型的FILE_SET
 target_sources(jvm

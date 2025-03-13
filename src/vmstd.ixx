@@ -135,24 +135,28 @@ export const char *get_prim_descriptor_by_wrapper_class_name(const char *wrapper
  * 字节数组bytes按大端存储，长度4.
  */
 export int32_t bytes_to_int32(const uint8_t *bytes);
+export void int32_to_bytes(int32_t value, unsigned char bytes[]);
 
 /*
  * 将字节数组转换为64位整形.
  * 字节数组bytes按大端存储，长度8.
  */
 export int64_t bytes_to_int64(const uint8_t *bytes);
+export void int64_to_bytes(int64_t value, unsigned char bytes[]);
 
 /*
  * 将字节数组转换为32位浮点数.
  * 字节数组bytes按大端存储，长度4.
  */
 export jfloat bytes_to_float(const uint8_t *bytes);
+export void float_to_bytes(float f, unsigned char bytes[]);
 
 /*
  * 将字节数组转换为64位浮点数.
  * 字节数组bytes按大端存储，长度8.
  */
 export jdouble bytes_to_double(const uint8_t *bytes);
+export void double_to_bytes(double d, unsigned char bytes[]);
 
 // -----------------------------------------------------------------------
 

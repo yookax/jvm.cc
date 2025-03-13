@@ -12,6 +12,8 @@ static int main_func_args_count = 0;
 
 void set_classpath(const char *cp);
 
+static bool silent_when_no_main = false;
+
 static void parse_command_line(int argc, char *argv[]) {
     // 可执行程序的名字为 argv[0]
     // const char *vm_name = argv[0];
@@ -19,12 +21,14 @@ static void parse_command_line(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] == '-') {
             const char *name = argv[i];
-            if (strcmp(name, "-cp") == 0 || strcmp(name, "-classpath") == 0) { // parse Class Path
+            if (strcmp(name, "-cp") == 0 || strcmp(name, "-classpath") == 0) {
                 if (++i >= argc) {
                     printf("Error: %s requires class path specification\n", name);
                     exit(EXIT_CODE_UNKNOWN_ERROR);
                 }
                 set_classpath(argv[i]);
+            } else if (strcmp(name, "-silent-when-no-main") == 00) {
+                silent_when_no_main = true;
             } else {
                 printf("Unrecognised option: %s\n", argv[i]);
                 printf("Error: Could not create the Java Virtual Machine.\n");
@@ -45,7 +49,7 @@ static void parse_command_line(int argc, char *argv[]) {
     }
 }
 
-int run_jvm(int argc, char* argv[], bool is_testing = false) {
+int run_jvm(int argc, char* argv[]) {
     auto start = chrono::high_resolution_clock::now();
 
     parse_command_line(argc, argv);
@@ -75,9 +79,9 @@ int run_jvm(int argc, char* argv[], bool is_testing = false) {
     auto main_method = env->GetStaticMethodID(main_class, "main", "([Ljava/lang/String;)V");
 //    Method *main_method = main_class->lookup_method("main", "([Ljava/lang/String;)V");
     if (main_method == nullptr) {
-        if (is_testing) {
+        if (silent_when_no_main) {
             // 是测试代码调用的，没有main函数直接返回即可。
-            return 0;
+            return -1;
         }
         panic("can't find method main.");
     }
@@ -126,97 +130,6 @@ int run_jvm(int argc, char* argv[], bool is_testing = false) {
     return 0;
 }
 
-#define RUN_GVM true
-
 int main(int argc, char* argv[]) {
-#if RUN_GVM
     return run_jvm(argc, argv);
-#else
-    void run_all_tests();
-    run_all_tests();
-#endif
-}
-
-// ----------------------------------- tests ---------------------------------------------
-
-namespace fs = std::filesystem;
-
-#define RUN_TEST_CASE(func_name) void func_name(); func_name();
-
-void run_all_tests() {
-#if 1
-    JNI_CreateJavaVM(nullptr, nullptr, nullptr);
-
-    RUN_TEST_CASE(test_sys_info);
-
-    RUN_TEST_CASE(test_convert_int);
-    RUN_TEST_CASE(test_convert_long);
-    RUN_TEST_CASE(test_convert_float);
-    RUN_TEST_CASE(test_convert_double);
-
-    RUN_TEST_CASE(test_slot);
-
-    RUN_TEST_CASE(test_properties);
-
-    RUN_TEST_CASE(test_method_descriptor);
-
-    RUN_TEST_CASE(test_alloc_continuously);
-    RUN_TEST_CASE(test_heap1);
-
-    RUN_TEST_CASE(test_load_class)
-    RUN_TEST_CASE(test_classloader1);
-
-    RUN_TEST_CASE(test_box);
-
-    RUN_TEST_CASE(test_string1);
-    RUN_TEST_CASE(test_intern);
-    RUN_TEST_CASE(test_equals);
-
-    RUN_TEST_CASE(test_new_array);
-    RUN_TEST_CASE(test_multi_array1);
-    RUN_TEST_CASE(test_multi_array2);
-    RUN_TEST_CASE(test_string_array);
-
-    RUN_TEST_CASE(test_inject_field);
-#endif
-
-//    JavaVM *vm;
-//    JNIEnv *env;
-//    JavaVMInitArgs vm_init_args;
-//    JNI_CreateJavaVM(&vm, &env, &vm_init_args);
-
-    /* Next, test the classes under the specified directory. */
-
-    vector<string> class_files;
-    auto class_path = R"(D:\Code\jvm.cc\test\target\classes)"; // Modify according to the requirements.
-    fs::path p = class_path;
-    if (fs::exists(p) && fs::is_directory(p)) {
-        for (const auto& entry : fs::recursive_directory_iterator(p)) {
-            if (entry.is_regular_file() && entry.path().extension() == ".class") {
-                // 计算相对路径
-                fs::path relative_path = fs::relative(entry.path(), p);
-                string path_str = relative_path.string();
-
-                // 去掉 .class 后缀
-                path_str = path_str.substr(0, path_str.length() - 6);
-
-                // 将路径分隔符替换为 .
-                std::replace(path_str.begin(), path_str.end(), '\\', '.');
-                std::replace(path_str.begin(), path_str.end(), '/', '.');
-
-                class_files.emplace_back(path_str);
-            }
-        }
-    }
-    for (const auto& cf: class_files) {
-        std::cout << cf << std::endl;
-        const char *argv[4];
-        argv[0] = "jvmcc";
-        argv[1] = "-cp";
-        argv[2] = class_path;
-        argv[3] = cf.c_str();
-        run_jvm(4, const_cast<char **>(argv), true);
-    }
-
-    cout << endl << "Testing is over." << endl;
 }

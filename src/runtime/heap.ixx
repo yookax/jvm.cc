@@ -6,7 +6,7 @@ export module heap;
 import std.core;
 import std.threading;
 
-typedef uintptr_t address_t;
+export typedef uintptr_t address_t;
 
 export class Heap {
     const size_t size; // The total size of the heap, measured in bytes.
@@ -26,7 +26,6 @@ export class Heap {
     address_t jump_freelist(address_t p);
 
     void *do_alloc(size_t len);
-
 
 public:
     explicit Heap(size_t heap_size);

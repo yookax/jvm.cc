@@ -782,7 +782,6 @@ struct JNIEnv_ {
                                   jmethodID methodID, const jvalue * args) {
         return functions->CallNonvirtualIntMethodA(this,obj,clazz, methodID,args);
     }
-
     jlong CallNonvirtualLongMethod(jobject obj, jclass clazz, jmethodID methodID, ...) {
         va_list args;
         jlong result;
@@ -807,12 +806,10 @@ struct JNIEnv_ {
         va_end(args);
         return result;
     }
-    jfloat CallNonvirtualFloatMethodV(jobject obj, jclass clazz,
-                                      jmethodID methodID, va_list args) {
+    jfloat CallNonvirtualFloatMethodV(jobject obj, jclass clazz, jmethodID methodID, va_list args) {
         return functions->CallNonvirtualFloatMethodV(this,obj,clazz, methodID,args);
     }
-    jfloat CallNonvirtualFloatMethodA(jobject obj, jclass clazz,
-                                      jmethodID methodID, const jvalue * args) {
+    jfloat CallNonvirtualFloatMethodA(jobject obj, jclass clazz, jmethodID methodID, const jvalue * args) {
         return functions->CallNonvirtualFloatMethodA(this,obj,clazz, methodID,args);
     }
     jdouble CallNonvirtualDoubleMethod(jobject obj, jclass clazz, jmethodID methodID, ...) {
@@ -823,12 +820,10 @@ struct JNIEnv_ {
         va_end(args);
         return result;
     }
-    jdouble CallNonvirtualDoubleMethodV(jobject obj, jclass clazz,
-                                        jmethodID methodID, va_list args) {
+    jdouble CallNonvirtualDoubleMethodV(jobject obj, jclass clazz, jmethodID methodID, va_list args) {
         return functions->CallNonvirtualDoubleMethodV(this,obj,clazz, methodID,args);
     }
-    jdouble CallNonvirtualDoubleMethodA(jobject obj, jclass clazz,
-                                        jmethodID methodID, const jvalue * args) {
+    jdouble CallNonvirtualDoubleMethodA(jobject obj, jclass clazz, jmethodID methodID, const jvalue * args) {
         return functions->CallNonvirtualDoubleMethodA(this,obj,clazz, methodID,args);
     }
     void CallNonvirtualVoidMethod(jobject obj, jclass clazz, jmethodID methodID, ...) {
@@ -837,12 +832,10 @@ struct JNIEnv_ {
         functions->CallNonvirtualVoidMethodV(this,obj,clazz,methodID,args);
         va_end(args);
     }
-    void CallNonvirtualVoidMethodV(jobject obj, jclass clazz,
-                                   jmethodID methodID, va_list args) {
+    void CallNonvirtualVoidMethodV(jobject obj, jclass clazz, jmethodID methodID, va_list args) {
         functions->CallNonvirtualVoidMethodV(this,obj,clazz,methodID,args);
     }
-    void CallNonvirtualVoidMethodA(jobject obj, jclass clazz,
-                                   jmethodID methodID, const jvalue * args) {
+    void CallNonvirtualVoidMethodA(jobject obj, jclass clazz, jmethodID methodID, const jvalue * args) {
         functions->CallNonvirtualVoidMethodA(this,obj,clazz,methodID,args);
     }
     jfieldID GetFieldID(jclass clazz, const char *name, const char *sig) {
@@ -986,8 +979,7 @@ struct JNIEnv_ {
     jint CallStaticIntMethodV(jclass clazz, jmethodID methodID, va_list args) {
         return functions->CallStaticIntMethodV(this,clazz,methodID,args);
     }
-    jint CallStaticIntMethodA(jclass clazz,
-                              jmethodID methodID, const jvalue *args) {
+    jint CallStaticIntMethodA(jclass clazz, jmethodID methodID, const jvalue *args) {
         return functions->CallStaticIntMethodA(this,clazz,methodID,args);
     }
     jlong CallStaticLongMethod(jclass clazz, jmethodID methodID, ...) {

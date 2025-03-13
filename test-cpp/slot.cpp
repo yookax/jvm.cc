@@ -1,0 +1,16 @@
+#include "test.h"
+
+import vmstd;
+
+using namespace slot;
+
+TEST_CASE(test_slot)
+    slot_t s;
+    slot::set<jref>(&s, (jref) 0x123456789);
+    auto x = get<jref>(&s);
+    printf("%p\n", x);
+
+    slot::set<jref>(&s, nullptr);
+    x = get<jref>(&s);
+    printf("%p\n", x);
+}

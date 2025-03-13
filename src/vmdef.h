@@ -132,8 +132,6 @@ do { \
 
 // #define println(...) do { printvm(__VA_ARGS__); printf("\n"); } while(false)
 
-#define TEST_CASE(func_name, func_body) __declspec(dllexport) void func_name() { printf("%s ---->\n", #func_name); func_body }
-
 /* --------------------- 配置日志 -------------------- */
 
 #define LOG_LEVEL_ERR     0

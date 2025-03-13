@@ -595,7 +595,7 @@ JVM_FillInStackTrace(JNIEnv *env, jobject _throwable) {
 
     /*
      * The JVM code sets the depth of the backtrace for later retrieval
-     * todo test on jdk15
+     * todo test-java on jdk15
      * private transient int depth;
      */
     throwable->set_field_value<jint>("depth", backtrace->arr_len);
