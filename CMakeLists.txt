@@ -34,9 +34,9 @@ set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/init_native.cpp src/native/
 )
 
 set (TEST_SOURCE_FILES
-        test-cpp/main.cpp test-cpp/convert.cpp test-cpp/slot.cpp test-cpp/foo.cpp
-        test-cpp/descriptor.cpp test-cpp/heap.cpp test-cpp/class_loader.cpp
-        test-cpp/object.cpp test-cpp/class.cpp
+        test-cpp/main.cpp test-cpp/convert_test.cpp test-cpp/slot_test.cpp test-cpp/foo_test.cpp
+        test-cpp/descriptor_test.cpp test-cpp/heap_test.cpp test-cpp/class_loader_test.cpp
+        test-cpp/object_test.cpp test-cpp/class_test.cpp
 )
 
 if (MSVC)

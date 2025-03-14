@@ -164,9 +164,6 @@ export namespace unicode {
 
 // -----------------------------------------------------------------------
 
-
-// -----------------------------------------------------------------------
-
 export struct UncaughtJavaException: public std::exception {
     Object *java_excep;
     explicit UncaughtJavaException(Object *java_excep0): java_excep(java_excep0) { }
