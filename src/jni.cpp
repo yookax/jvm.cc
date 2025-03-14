@@ -160,7 +160,7 @@ jclass JNICALL Jvmcc_DefineClass(JNIEnv *env,
     if (c != nullptr)
         link_class(c);
 
-    return env->NewLocalRef((jobject) c->java_mirror);
+    return (*env)->NewLocalRef(env, (jobject) c->java_mirror);
 }
 
 jclass JNICALL Jvmcc_FindClass(JNIEnv *env, const char *name) {
@@ -283,7 +283,7 @@ void JNICALL Jvmcc_DeleteLocalRef(JNIEnv *env, jobject obj) {
     Frame *f = get_current_thread()->top_frame;
     for (int i = 0; i < f->jni_local_ref_count; i++) {
         jref *t = f->jni_local_ref_table + i;
-        if (env->IsSameObject((jobject) *t, obj)) {
+        if ((*env)->IsSameObject(env, (jobject) *t, obj)) {
             memmove(t, t + 1, (f->jni_local_ref_count - i)*sizeof(jref));
             f->jni_local_ref_count--;
             return;
@@ -337,7 +337,7 @@ jobject JNICALL Jvmcc_AllocObject(JNIEnv *env, jclass clazz) {
 
     // Make sure it is initialised
     init_class(c);
-    return env->NewLocalRef((jobject) Allocator::object(c));
+    return (*env)->NewLocalRef(env, (jobject) Allocator::object(c));
 //    return (jobject) Allocator::object(c);;
     // return addJNILocalRef(newObject(c));
 }
@@ -345,13 +345,13 @@ jobject JNICALL Jvmcc_AllocObject(JNIEnv *env, jclass clazz) {
 jobject JNICALL Jvmcc_NewObject(JNIEnv *env, jclass clazz, jmethodID methodID, ...) {
     va_list args;
     va_start(args, methodID);
-    jobject o = env->NewObjectV(clazz, methodID, args);
+    jobject o = (*env)->NewObjectV(env, clazz, methodID, args);
     va_end(args);
     return o;
 }
 
 jobject JNICALL Jvmcc_NewObjectV(JNIEnv *env, jclass clazz, jmethodID methodID, va_list args) {
-    jobject o = env->AllocObject(clazz);
+    jobject o = (*env)->AllocObject(env, clazz);
     if (o == nullptr) {
         // todo error
     }
@@ -361,7 +361,7 @@ jobject JNICALL Jvmcc_NewObjectV(JNIEnv *env, jclass clazz, jmethodID methodID, 
 }
 
 jobject JNICALL Jvmcc_NewObjectA(JNIEnv *env, jclass clazz, jmethodID methodID, const jvalue *args) {
-    jobject o = env->AllocObject(clazz);
+    jobject o = (*env)->AllocObject(env, clazz);
     if (o == nullptr) {
         // todo error
     }
@@ -443,7 +443,7 @@ ret_type JNICALL Jvmcc_Call##T##MethodA(JNIEnv *env, \
     DEFINE_CALL_T_METHOD_A(T, ret_type, ret_value)
 
 
-DEFINE_3_CALL_T_METHODS(Object, jobject, env->NewLocalRef((jobject) get<jref>(ret)))
+DEFINE_3_CALL_T_METHODS(Object, jobject, (*env)->NewLocalRef(env, (jobject) get<jref>(ret)))
 DEFINE_3_CALL_T_METHODS(Boolean, jboolean, get<jbool>(ret))
 DEFINE_3_CALL_T_METHODS(Byte, jbyte, get<jbyte>(ret))
 DEFINE_3_CALL_T_METHODS(Char, jchar, get<jchar>(ret))
@@ -503,7 +503,7 @@ ret_type JNICALL Jvmcc_CallNonvirtual##T##MethodA(JNIEnv *env, jobject obj, \
     DEFINE_CALL_NONVIRTUAL_T_METHOD(T, ret_type, ret_value)
 
 
-DEFINE_3_CALL_NONVIRTUAL_T_METHODS(Object, jobject, env->NewLocalRef((jobject) get<jref>(ret)))
+DEFINE_3_CALL_NONVIRTUAL_T_METHODS(Object, jobject, (*env)->NewLocalRef(env, (jobject) get<jref>(ret)))
 DEFINE_3_CALL_NONVIRTUAL_T_METHODS(Boolean, jboolean, get<jbool>(ret))
 DEFINE_3_CALL_NONVIRTUAL_T_METHODS(Byte, jbyte, get<jbyte>(ret))
 DEFINE_3_CALL_NONVIRTUAL_T_METHODS(Char, jchar, get<jchar>(ret))
@@ -561,7 +561,7 @@ ret_type JNICALL Jvmcc_CallStatic##T##MethodA(JNIEnv *env, \
     DEFINE_CALL_STATIC_T_METHOD_V(T, ret_type, ret_value) \
     DEFINE_CALL_STATIC_T_METHOD_A(T, ret_type, ret_value)
 
-DEFINE_3_CALL_STATIC_T_METHODS(Object, jobject, env->NewLocalRef((jobject) get<jref>(ret)))
+DEFINE_3_CALL_STATIC_T_METHODS(Object, jobject, (*env)->NewLocalRef(env, (jobject) get<jref>(ret)))
 DEFINE_3_CALL_STATIC_T_METHODS(Boolean, jboolean, get<jbool>(ret))
 DEFINE_3_CALL_STATIC_T_METHODS(Byte, jbyte, get<jbyte>(ret))
 DEFINE_3_CALL_STATIC_T_METHODS(Char, jchar, get<jchar>(ret))
@@ -661,7 +661,7 @@ void JNICALL Jvmcc_SetStaticObjectField(JNIEnv *env, jclass clazz, jfieldID fiel
 
 jstring JNICALL Jvmcc_NewString(JNIEnv *env, const jchar *unicode, jsize len) {
     jstrRef str = Allocator::string(unicode, len);
-    return env->NewLocalRef((jobject) str);
+    return (*env)->NewLocalRef(env, (jobject) str);
 }
 
 jsize JNICALL Jvmcc_GetStringLength(JNIEnv *env, jstring str) {
@@ -691,7 +691,7 @@ void JNICALL Jvmcc_ReleaseStringChars(JNIEnv *env, jstring str, const jchar *cha
 
 jstring JNICALL Jvmcc_NewStringUTF(JNIEnv *env, const char *utf) {
     jstrRef str = Allocator::string(utf);
-    return env->NewLocalRef((jobject) str);
+    return (*env)->NewLocalRef(env, (jobject) str);
 }
 
 jsize JNICALL Jvmcc_GetStringUTFLength(JNIEnv *env, jstring str) {
@@ -735,7 +735,7 @@ jobjectArray JNICALL Jvmcc_NewObjectArray(JNIEnv *env, jsize len, jclass element
         }
     }
 
-    return (jobjectArray) env->NewLocalRef((jobject) arr);
+    return (jobjectArray) (*env)->NewLocalRef(env, (jobject) arr);
 }
 
 jobject JNICALL Jvmcc_GetObjectArrayElement(JNIEnv *env, jobjectArray array, jsize index) {
@@ -765,7 +765,7 @@ jarray JNICALL Jvmcc_New##Type##Array(JNIEnv *env, jsize len) { \
     } \
  \
     jarrRef arr = Allocator::array(BOOT_CLASS_LOADER, class_name, len); \
-    return env->NewLocalRef((jobject) arr); \
+    return (*env)->NewLocalRef(env, (jobject) arr); \
 }
 
 NEW_TYPE_ARRAY(Byte, "[B")
@@ -1420,8 +1420,8 @@ jint parseJvmInitArgs(JavaVMInitArgs *vm_args, InitArgs *args) {
 void init_jvm(InitArgs *);
 
 jint JNICALL JNI_CreateJavaVM(JavaVM **pvm, JNIEnv **penv, JavaVMInitArgs *args) {
-    java_vm.functions = &Jvmcc_JNIInvokeInterface;
-    jni_env.functions = &Jvmcc_JNINativeInterface;
+    java_vm = &Jvmcc_JNIInvokeInterface;
+    jni_env = &Jvmcc_JNINativeInterface;
 
     if (pvm != nullptr)
         *pvm = &java_vm;

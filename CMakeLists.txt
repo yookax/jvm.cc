@@ -34,9 +34,10 @@ set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/init_native.cpp src/native/
 )
 
 set (TEST_SOURCE_FILES
-        test-cpp/main.cpp test-cpp/convert_test.cpp test-cpp/slot_test.cpp test-cpp/foo_test.cpp
+        test-cpp/main.cpp test-cpp/convert_test.cpp test-cpp/slot_test.cpp
         test-cpp/descriptor_test.cpp test-cpp/heap_test.cpp test-cpp/class_loader_test.cpp
-        test-cpp/object_test.cpp test-cpp/class_test.cpp
+        test-cpp/object_test.cpp test-cpp/class_test.cpp test-cpp/foo_test.cpp
+        test-cpp/encoding_test.cpp
 )
 
 if (MSVC)
@@ -71,7 +72,7 @@ target_sources(jvm
         src/classfile/bytecode_reader.ixx src/classfile/invoke.ixx
         src/classfile/class_loader.ixx src/classfile/poly.ixx src/sysinfo.ixx
         src/runtime/heap.ixx src/reference.ixx src/dll.ixx src/convert.ixx
-        src/interpreter.ixx
+        src/interpreter.ixx src/encoding.ixx
 )
 
 #target_sources(jvmcc

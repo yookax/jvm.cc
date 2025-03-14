@@ -25,9 +25,9 @@ TEST_CASE(test_box)
 // --------------------------------------
 
 static const utf8_t *utf8s[] = {
-        "Hello, world",
-        "你好，世界",
-        "こんにちは、世界",
+        "Hello, World!",
+        "你好，世界！",
+        "こんにちは、世界！",
 };
 
 TEST_CASE(test_string1)

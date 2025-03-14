@@ -9,6 +9,7 @@ import classfile;
 import heap;
 import object;
 import invoke;
+import encoding;
 import class_loader;
 
 #define TEST_CASE(func_name) \

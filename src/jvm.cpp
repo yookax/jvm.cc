@@ -1130,7 +1130,7 @@ JVM_GetArrayLength(JNIEnv *env, jobject arr) {
         JNI_THROW_IllegalArgumentException(env, "Argument is not an array");
         return -1;
     }
-    return env->GetArrayLength(arr);
+    return (*env)->GetArrayLength(env, arr);
     // return array->arr_len;
 }
 

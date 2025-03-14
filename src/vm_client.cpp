@@ -68,7 +68,7 @@ int run_jvm(int argc, char* argv[]) {
     JavaVMInitArgs vm_init_args;
     JNI_CreateJavaVM(&vm, &env, &vm_init_args);
 
-    auto main_class = env->FindClass(main_class_name);
+    auto main_class = (*env)->FindClass(env, main_class_name);
 //    Class *main_class = loadClass(g_app_class_loader, utf8::dot_2_slash(main_class_name));
     if (main_class == nullptr) {
         panic("main_class == NULL"); // todo
@@ -76,7 +76,7 @@ int run_jvm(int argc, char* argv[]) {
 
   //  init_class(main_class);
 
-    auto main_method = env->GetStaticMethodID(main_class, "main", "([Ljava/lang/String;)V");
+    auto main_method = (*env)->GetStaticMethodID(env, main_class, "main", "([Ljava/lang/String;)V");
 //    Method *main_method = main_class->lookup_method("main", "([Ljava/lang/String;)V");
     if (main_method == nullptr) {
         if (silent_when_no_main) {
@@ -99,17 +99,17 @@ int run_jvm(int argc, char* argv[]) {
 //    execJava(main_method, { slot::rslot(args) });
 
     // Create the String array holding the command line args
-    auto string_class = env->FindClass("java/lang/String");
-    auto args = env->NewObjectArray(main_func_args_count, string_class, nullptr);
+    auto string_class = (*env)->FindClass(env, "java/lang/String");
+    auto args = (*env)->NewObjectArray(env, main_func_args_count, string_class, nullptr);
     for (int i = 0; i < main_func_args_count; i++) {
-        auto a = env->NewStringUTF(main_func_args[i]);
-        env->SetObjectArrayElement(args, i, a);
+        auto a = (*env)->NewStringUTF(env, main_func_args[i]);
+        (*env)->SetObjectArrayElement(env, args, i, a);
     }
 
     jvalue v;
     v.l = (jobject) args;
     // Call the main method
-    env->CallStaticVoidMethodA(main_class, main_method, &v);
+    (*env)->CallStaticVoidMethodA(env, main_class, main_method, &v);
 
     // todo 如果有其他的非后台线程在执行，则main线程需要在此wait
     // todo main_thread 退出，做一些清理工作。

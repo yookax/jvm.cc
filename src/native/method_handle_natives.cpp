@@ -472,5 +472,5 @@ static JNINativeMethod MethodHandleNatives_natives[] = {
 };
 
 void MethodHandleNatives_registerNatives(JNIEnv *env, jclass cls) {
-    env->RegisterNatives(cls, MethodHandleNatives_natives, std::size(MethodHandleNatives_natives));
+    (*env)->RegisterNatives(env, cls, MethodHandleNatives_natives, std::size(MethodHandleNatives_natives));
 }

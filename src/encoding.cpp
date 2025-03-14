@@ -3,7 +3,7 @@ module;
 //#include <pthread.h>
 #include "vmdef.h"
 
-module vmstd;
+module encoding;
 
 import std.core;
 
@@ -166,6 +166,49 @@ static size_t utf8_bytes_count(const unicode_t *unicode, size_t len) {
     }
 
     return count;
+}
+
+// Unicode 转 UTF-8
+u8string unicode_to_utf8(const unicode_t *wstr, size_t len) {
+    u8string utf8_str;
+    for (size_t i = 0; i < len; i++) {
+        unicode_t wc = wstr[i];
+        if (wc <= 0x7F) {
+            // 单字节字符
+            utf8_str.push_back(static_cast<char8_t>(wc));
+        } else if (wc <= 0x7FF) {
+            // 双字节字符
+            utf8_str.push_back(static_cast<char8_t>(0xC0 | ((wc >> 6) & 0x1F)));
+            utf8_str.push_back(static_cast<char8_t>(0x80 | (wc & 0x3F)));
+        } else if (wc <= 0xFFFF) {
+            // 三字节字符
+            utf8_str.push_back(static_cast<char8_t>(0xE0 | ((wc >> 12) & 0x0F)));
+            utf8_str.push_back(static_cast<char8_t>(0x80 | ((wc >> 6) & 0x3F)));
+            utf8_str.push_back(static_cast<char8_t>(0x80 | (wc & 0x3F)));
+        }
+    }
+    return utf8_str;
+}
+
+// Unicode 转 UTF-8
+u8string unicode_to_utf8(const wstring& wstr) {
+    u8string utf8_str;
+    for (wchar_t wc : wstr) {
+        if (wc <= 0x7F) {
+            // 单字节字符
+            utf8_str.push_back(static_cast<char8_t>(wc));
+        } else if (wc <= 0x7FF) {
+            // 双字节字符
+            utf8_str.push_back(static_cast<char8_t>(0xC0 | ((wc >> 6) & 0x1F)));
+            utf8_str.push_back(static_cast<char8_t>(0x80 | (wc & 0x3F)));
+        } else if (wc <= 0xFFFF) {
+            // 三字节字符
+            utf8_str.push_back(static_cast<char8_t>(0xE0 | ((wc >> 12) & 0x0F)));
+            utf8_str.push_back(static_cast<char8_t>(0x80 | ((wc >> 6) & 0x3F)));
+            utf8_str.push_back(static_cast<char8_t>(0x80 | (wc & 0x3F)));
+        }
+    }
+    return utf8_str;
 }
 
 utf8_t *unicode::to_utf8(const unicode_t *unicode, size_t len) {

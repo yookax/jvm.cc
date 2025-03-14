@@ -16,5 +16,5 @@ static JNINativeMethod ScopedMemoryAccess_natives[] = {
 };
 
 void ScopedMemoryAccess_registerNatives(JNIEnv *env, jclass cls) {
-    env->RegisterNatives(cls, ScopedMemoryAccess_natives, std::size(ScopedMemoryAccess_natives));
+    (*env)->RegisterNatives(env, cls, ScopedMemoryAccess_natives, std::size(ScopedMemoryAccess_natives));
 }

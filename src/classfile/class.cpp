@@ -38,9 +38,9 @@ bool BootstrapMethod::resolve_args(jobjArrRef &result) {
 
         switch (cp.get_type(i)) {
             case JVM_CONSTANT_String:
-            case JVM_CONSTANT_ResolvedString: o = cp.resolve_string(i);             break;
+            case JVM_CONSTANT_ResolvedString: o = cp.resolve_string(i);              break;
             case JVM_CONSTANT_Class:
-            case JVM_CONSTANT_ResolvedClass:  o = cp.resolve_class(i)->java_mirror; break;
+            case JVM_CONSTANT_ResolvedClass:  o = cp.resolve_class(i)->java_mirror;  break;
             case JVM_CONSTANT_Integer:        o = int_box(cp.get_int(i));            break;
             case JVM_CONSTANT_Float:          o = float_box(cp.get_float(i));        break;
             case JVM_CONSTANT_Long:           o = long_box(cp.get_long(i));          break;

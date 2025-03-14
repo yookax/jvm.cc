@@ -596,6 +596,6 @@ static JNINativeMethod Unsafe_natives[] = {
 };
 
 void Unsafe_registerNatives(JNIEnv *env, jclass cls) {
-    env->RegisterNatives(cls, Unsafe_natives, std::size(Unsafe_natives));
+    (*env)->RegisterNatives(env, cls, Unsafe_natives, std::size(Unsafe_natives));
 }
 
