@@ -38,5 +38,5 @@ jboolean phantomReferenceRefersTo(jref phantom_ref, jref obj) {
 }
 
 void referenceClear(jref ref) {
-    return; // todo
+    // todo
 }

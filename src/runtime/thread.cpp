@@ -6,7 +6,6 @@ module runtime;
 
 import std.core;
 import std.threading;
-import vmstd;
 import object;
 import class_loader;
 import interpreter;

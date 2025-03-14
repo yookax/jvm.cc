@@ -2,7 +2,7 @@ module;
 #include <cassert>
 #include "vmdef.h"
 
-module vmstd;
+module exception;
 
 import std.core;
 import slot;

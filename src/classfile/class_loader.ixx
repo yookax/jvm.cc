@@ -5,7 +5,9 @@ module;
 export module class_loader;
 
 import std.core;
-import vmstd;
+import encoding;
+import constants;
+import classfile;
 
 export void set_bootstrap_classpath(const char *bcp);
 //

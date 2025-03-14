@@ -4,7 +4,8 @@ module;
 module object;
 
 import std.core;
-import vmstd;
+import primitive;
+import exception;
 
 using namespace std;
 

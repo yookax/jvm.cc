@@ -4,10 +4,10 @@ module;
 
 module object;
 
-import vmstd;
 import interpreter;
 import classfile;
 import class_loader;
+import constants;
 
 using namespace std;
 using namespace slot;

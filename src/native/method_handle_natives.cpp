@@ -1,10 +1,12 @@
 #include "../vmdef.h"
 #include "../jni.h"
 
-import vmstd;
 import slot;
 import object;
 import classfile;
+import constants;
+import encoding;
+import exception;
 import class_loader;
 import interpreter;
 

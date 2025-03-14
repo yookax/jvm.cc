@@ -1,8 +1,8 @@
 #include "../vmdef.h"
 
 import std.core;
-import vmstd;
 import slot;
+import constants;
 
 using namespace std;
 using namespace slot;

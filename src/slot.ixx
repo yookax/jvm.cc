@@ -4,7 +4,7 @@ module;
 
 export module slot;
 
-import vmstd;
+import std.core;
 
 // 一个slot_t类型必须可以容纳 jbool, jbyte, jchar, jshort，jint，jfloat, jref 称为类型一
 // jlong, jdouble 称为类型二，占两个slot

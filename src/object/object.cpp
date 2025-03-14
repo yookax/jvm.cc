@@ -5,8 +5,8 @@ module;
 module object;
 
 import std.core;
-import vmstd;
 import heap;
+import primitive;
 
 using namespace std;
 

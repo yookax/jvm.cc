@@ -7,8 +7,9 @@ export module classfile;
 export import poly;
 
 import std.core;
-import vmstd;
 import slot;
+import encoding;
+import constants;
 import bytecode_reader;
 
 

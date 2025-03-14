@@ -7,6 +7,7 @@
 #include <climits>
 #include <cassert>
 #include <string>
+#include <vector>
 
 #ifndef PATH_MAX
     #ifdef MAX_PATH
@@ -40,34 +41,36 @@
  * 4. 对于long类型， 取值范围[-2e63, 2e63 - 1]。
  * 5. 对于char类型， 取值范围[0, 65535]。
  */
-typedef int8_t   jbyte;
-typedef jbyte    jboolean; // 本虚拟机实现，byte 和 boolean 用同一类型
-typedef jboolean jbool;
-typedef uint16_t jchar;
-typedef int16_t  jshort;
-typedef int32_t  jint;
-typedef int64_t  jlong;
-typedef float    jfloat;
-typedef double   jdouble;
+using jbyte    = int8_t;
+using jboolean = jbyte; // 本虚拟机实现，byte 和 boolean 用同一类型
+using jbool    = jboolean;
+using jchar    = uint16_t;
+using jshort   = int16_t;
+using jint     = int32_t;
+using jlong    = int64_t;
+using jfloat   = float;
+using jdouble  = double;
 
 #define jtrue  1
 #define jfalse 0
 
-typedef jint jsize;
+using jsize = jint;
 
 #define JINT_TO_JBOOL(_i)  ((_i) != 0 ? true : false)
 #define JINT_TO_JBYTE(_i)  ((jbyte)((_i) & 0xff))
 #define JINT_TO_JCHAR(_i)  ((jchar)((_i) & 0xffff))
 #define JINT_TO_JSHORT(_i) ((jshort)((_i) & 0xffff))
 
-typedef int8_t  s1;  // s: signed
-typedef int16_t s2;
-typedef int32_t s4;
+// s: signed
+using s1 = int8_t;
+using s2 = int16_t;
+using s4 = int32_t;
 
-typedef uint8_t  u1; // u: unsigned
-typedef uint16_t u2;
-typedef uint32_t u4;
-typedef uint64_t u8;
+// u: unsigned
+using u1 = uint8_t;
+using u2 = uint16_t;
+using u4 = uint32_t;
+using u8 = uint64_t;
 
 class Object;
 class Class;
@@ -76,11 +79,11 @@ class Method;
 class Field;
 class Annotation;
 
-typedef Object* jref; // JVM 中的引用类型。
-typedef jref jstrRef; // java.lang.String 的引用。
-typedef jref jarrRef; // Array 的引用。
-typedef jref jobjArrRef; // java.lang.Object Array 的引用。
-typedef jref jclsRef; // java.lang.Class 的引用。
+using jref       = Object*; // JVM 中的引用类型
+using jstrRef    = jref;    // java.lang.String 的引用
+using jarrRef    = jref;    // Array 的引用
+using jobjArrRef = jref;    // java.lang.Object Array 的引用
+using jclsRef    = jref;    // java.lang.Class 的引用
 
 typedef char utf8_t;
 typedef jchar unicode_t;
@@ -102,6 +105,59 @@ extern Object *g_platform_class_loader;
 
 extern bool g_vm_initing;
 
+template <typename T> concept
+JavaValueType = std::is_same_v<T, jint>
+                || std::is_same_v<T, jbyte> || std::is_same_v<T, jbool>
+                || std::is_same_v<T, jchar> || std::is_same_v<T, jshort>
+                || std::is_same_v<T, jfloat> || std::is_same_v<T, jlong>
+                || std::is_same_v<T, jdouble> || std::is_same_v<T, jref>;
+
+struct Property {
+    const utf8_t *name;
+    const utf8_t *value;
+    Property(const utf8_t *name0, const utf8_t *value0): name(name0), value(value0) {
+        assert(name != nullptr);
+        assert(value != nullptr);
+    }
+};
+
+extern std::vector<Property> g_properties;
+
+struct InitArgs {
+    bool asyncgc = false;
+    bool verbosegc = false;
+    bool verbosedll = false;
+    bool verboseclass = false;
+
+    // Whether compaction has been given on the command line, and the value if it has
+    bool compact_specified = false;
+    int do_compact = false;
+    bool trace_jni_sigs = false;
+
+    char *classpath = nullptr;
+
+    char *bootpath = nullptr;
+    char *bootpath_a = nullptr;
+    char *bootpath_p = nullptr;
+    char *bootpath_c = nullptr;
+    char *bootpath_v = nullptr;
+
+    int java_stack = VM_STACK_SIZE;
+    unsigned long min_heap = VM_HEAP_SIZE;
+    unsigned long max_heap = VM_HEAP_SIZE;
+
+    Property *commandline_props;
+    int props_count = 0;
+
+    void *main_stack_base;
+
+    /* JNI invocation API hooks */
+
+    int (* vfprintf)(FILE *stream, const char *fmt, va_list ap) = std::vfprintf;
+    void (* exit)(int status) = std::exit;
+    void (* abort)() = std::abort;
+};
+
 /* This number, mandated by the JVM spec as 255,
  * is the maximum number of slots
  * that any Java method can receive in its argument list.
@@ -119,8 +175,6 @@ extern bool g_vm_initing;
 
 #define MAIN_THREAD_NAME "main" // name of main thread
 #define GC_THREAD_NAME "gc"     // name of gc thread
-
-// #define ARRAY_LENGTH(arr) (sizeof(arr)/sizeof(*(arr)))
 
 #define FILE_LINE_STR (__FILE__ + std::string(": ") + std::to_string(__LINE__))
 

@@ -5,7 +5,6 @@ module;
 module interpreter;
 
 import std.core;
-import vmstd;
 import slot;
 import runtime;
 import object;
@@ -13,6 +12,9 @@ import classfile;
 import bytecode_reader;
 import class_loader;
 import dll;
+import constants;
+import encoding;
+import exception;
 
 using namespace std;
 using namespace slot;

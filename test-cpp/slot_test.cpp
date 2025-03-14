@@ -1,6 +1,5 @@
 #include "test.h"
 
-import vmstd;
 import slot;
 
 using namespace slot;

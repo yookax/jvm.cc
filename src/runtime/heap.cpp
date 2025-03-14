@@ -5,7 +5,6 @@ module;
 module heap;
 
 import std.core;
-import vmstd;
 import slot;
 import runtime;
 import object;

@@ -5,9 +5,9 @@ module;
 module poly;
 
 import std.core;
-import vmstd;
 import classfile;
 import invoke;
+import encoding;
 import class_loader;
 
 using namespace std;

@@ -4,7 +4,7 @@ module;
 
 export module bytecode_reader;
 
-import vmstd;
+import convert;
 
 export class BytecodeReader {
     const u1 *bytecode;

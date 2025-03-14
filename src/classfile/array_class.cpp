@@ -5,8 +5,8 @@ module;
 module classfile;
 
 import std.core;
-import vmstd;
 import object;
+import primitive;
 import class_loader;
 
 using namespace std;

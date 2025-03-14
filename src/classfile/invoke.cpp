@@ -3,11 +3,11 @@ module;
 
 module invoke;
 
-import vmstd;
 import slot;
 import runtime;
 import object;
 import classfile;
+import encoding;
 import class_loader;
 import interpreter;
 

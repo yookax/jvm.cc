@@ -1,7 +1,6 @@
 #include "vmdef.h"
 #include "jni.h"
 
-import vmstd;
 import slot;
 import runtime;
 import object;

@@ -5,7 +5,7 @@
 
 import std.core;
 import std.filesystem;
-import vmstd;
+import sysinfo;
 import runtime;
 import object;
 import heap;
@@ -41,6 +41,8 @@ static void *gcLoop(void *dummy) {
     // gc(g_heap);
     return nullptr;
 }
+
+vector<Property> g_properties;
 
 /*
  * System properties. The following properties are guaranteed to be defined:

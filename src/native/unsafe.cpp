@@ -4,10 +4,10 @@
 
 import std.core;
 import std.threading;
-import vmstd;
 import slot;
 import object;
 import classfile;
+import constants;
 import class_loader;
 
 using namespace slot;

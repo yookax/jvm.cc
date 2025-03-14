@@ -2,6 +2,8 @@
 
 using namespace std;
 
+import convert;
+
 TEST_CASE(test_convert_int)
     vector <jint> ints;
     ints.push_back(0);

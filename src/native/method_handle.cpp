@@ -1,9 +1,9 @@
 #include "../vmdef.h"
 
 import std.core;
-import vmstd;
 import slot;
 import invoke;
+import constants;
 
 using namespace std;
 using namespace slot;

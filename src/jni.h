@@ -101,14 +101,12 @@ typedef enum _jobjectType {
 /*
  * JNI Native Method Interface.
  */
-
 struct JNINativeInterface_;
 typedef const struct JNINativeInterface_ *JNIEnv;
 
 /*
  * JNI Invocation Interface.
  */
-
 struct JNIInvokeInterface_;
 typedef const struct JNIInvokeInterface_ *JavaVM;
 

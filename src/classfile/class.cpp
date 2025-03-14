@@ -5,10 +5,11 @@ module;
 module classfile;
 
 import std.core;
-import vmstd;
 import interpreter;
 import object;
+import primitive;
 import class_loader;
+import exception;
 
 using namespace std;
 using namespace slot;

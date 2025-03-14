@@ -4,12 +4,13 @@
 #include "../src/vmdef.h"
 
 import std.core;
-import vmstd;
 import classfile;
 import heap;
 import object;
 import invoke;
 import encoding;
+import sysinfo;
+import primitive;
 import class_loader;
 
 #define TEST_CASE(func_name) \

@@ -68,11 +68,11 @@ target_sources(jvm
         BASE_DIRS src
         FILES
         src/classfile/classfile.ixx src/runtime/runtime.ixx src/slot.ixx
-        src/object/object.ixx src/vmstd.ixx src/constants.ixx src/primitive.ixx
+        src/object/object.ixx src/constants.ixx src/primitive.ixx
         src/classfile/bytecode_reader.ixx src/classfile/invoke.ixx
         src/classfile/class_loader.ixx src/classfile/poly.ixx src/sysinfo.ixx
         src/runtime/heap.ixx src/reference.ixx src/dll.ixx src/convert.ixx
-        src/interpreter.ixx src/encoding.ixx
+        src/interpreter.ixx src/encoding.ixx src/exception.ixx
 )
 
 #target_sources(jvmcc

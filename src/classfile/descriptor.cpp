@@ -5,9 +5,10 @@ module;
 module classfile;
 
 import std.core;
-import vmstd;
 import object;
 import invoke;
+import primitive;
+import exception;
 import class_loader;
 
 using namespace std;

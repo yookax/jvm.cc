@@ -7,11 +7,13 @@ module class_loader;
 
 import std.core;
 import std.filesystem;
-import vmstd;
+import sysinfo;
 import slot;
+import primitive;
 import object;
 import classfile;
 import dll;
+import exception;
 import interpreter;
 
 using namespace std;

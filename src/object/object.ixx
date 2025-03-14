@@ -5,9 +5,9 @@ export module object;
 
 import std.core;
 import std.threading;
-import vmstd;
 import slot;
 import classfile;
+import encoding;
 import class_loader;
 
 export class Object {

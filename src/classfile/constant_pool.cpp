@@ -5,10 +5,10 @@ module;
 module classfile;
 
 import std.core;
-import vmstd;
 import slot;
 import object;
 import invoke;
+import convert;
 import class_loader;
 import interpreter;
 
