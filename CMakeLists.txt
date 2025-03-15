@@ -9,11 +9,11 @@ project(jvmcc)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#set(CMAKE_CXX_EXTENSIONS OFF)
-#set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+# set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+# set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(jvm PRIVATE -fmodules-ts)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -72,7 +72,7 @@ target_sources(jvm
         src/classfile/bytecode_reader.ixx src/classfile/invoke.ixx
         src/classfile/class_loader.ixx src/classfile/poly.ixx src/sysinfo.ixx
         src/runtime/heap.ixx src/reference.ixx src/dll.ixx src/convert.ixx
-        src/interpreter.ixx src/encoding.ixx src/exception.ixx
+        src/interpreter.ixx src/encoding.ixx src/exception.ixx src/util/access_flags.ixx
 )
 
 #target_sources(jvmcc

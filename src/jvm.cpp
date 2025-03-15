@@ -1910,7 +1910,7 @@ JVM_GetClassInterfaces(JNIEnv *env, jclass cls) {
 JNIEXPORT jboolean JNICALL
 JVM_IsInterface(JNIEnv *env, jclass cls) {
     TRACE("JVM_IsInterface(env=%p, cls=%p)", env, cls);
-    return JVM_MIRROR(cls)->is_interface() ? JNI_TRUE : JNI_FALSE;
+    return JVM_MIRROR(cls)->access_flags.is_interface() ? JNI_TRUE : JNI_FALSE;
 }
 
 /*
@@ -2000,7 +2000,7 @@ JVM_IsHiddenClass(JNIEnv *env, jclass cls) {
 JNIEXPORT jint JNICALL
 JVM_GetClassModifiers(JNIEnv *env, jclass cls) {
     TRACE("JVM_GetClassModifiers(env=%p, cls=%p)", env, cls);
-    return JVM_MIRROR(cls)->access_flags; // todo
+    return JVM_MIRROR(cls)->access_flags.get(); // todo
 }
 
 /*
@@ -2206,7 +2206,7 @@ JVM_GetClassDeclaredMethods(JNIEnv *env, jclass of_class, jboolean public_only) 
 
     for (size_t i = 0; i < c->methods.size(); i++) {
         Method *m = c->methods[i];
-        if (public_only && !m->isPublic())
+        if (public_only && !m->access_flags.is_public())
             continue;
         if ((strcmp(m->name, "<clinit>") == 0) || (strcmp(m->name, "<init>") == 0))
             continue;
@@ -2224,7 +2224,7 @@ JVM_GetClassDeclaredMethods(JNIEnv *env, jclass of_class, jboolean public_only) 
                 rslot(m->get_parameter_types()),                          // parameter types
                 rslot(m->get_return_type()),                              // return type
                 rslot(m->get_exception_types()),                          // checked exceptions
-                islot(m->access_flags),                                 // modifiers todo
+                islot(m->access_flags.get()),                                 // modifiers todo
                 islot(i),                                               // slot
                 rslot(sig),                                             // signature
                 rslot(get_annotation_as_byte_array(m->rt_visi_annos)),      // annotations
@@ -2262,7 +2262,7 @@ JVM_GetClassDeclaredFields(JNIEnv *env, jclass ofClass, jboolean public_only) {
     // invoke constructor of class java/lang/reflect/Field
     for (size_t i = 0; i < c->fields.size(); i++) {
         auto f = c->fields[i];
-        if (public_only && !f->isPublic())
+        if (public_only && !f->access_flags.is_public())
             continue;
 
         Object *o = Allocator::object(field_reflect_class);
@@ -2276,9 +2276,9 @@ JVM_GetClassDeclaredFields(JNIEnv *env, jclass ofClass, jboolean public_only) {
                 // 参见 java/lang/reflect/Field 的说明
                 rslot(intern(Allocator::string(f->name))),               // name
                 rslot(f->get_type()),                               // type
-                islot(f->access_flags),                            // modifiers todo
-                islot(f->isFinal() ? jtrue : jfalse),              // trusted Final todo
-                islot(f->isStatic() ? i : f->id),                  // slot
+                islot(f->access_flags.get()),                            // modifiers todo
+                islot(f->access_flags.is_final() ? jtrue : jfalse),              // trusted Final todo
+                islot(f->access_flags.is_static() ? i : f->id),                  // slot
                 rslot(sig),                                        // signature
                 rslot(get_annotation_as_byte_array(f->rt_visi_annos)), // annotations
         });
@@ -2326,7 +2326,7 @@ JVM_GetClassDeclaredConstructors(JNIEnv *env, jclass ofClass, jboolean public_on
                 rslot(c->java_mirror),                                     // declaring class
                 rslot(cons->get_parameter_types()),                          // parameter types
                 rslot(cons->get_exception_types()),                          // checked exceptions
-                islot(cons->access_flags),                                 // modifiers todo
+                islot(cons->access_flags.get()),                                 // modifiers todo
                 islot(i),                                                  // slot
                 rslot(sig),                                                // signature
                 rslot(get_annotation_as_byte_array(cons->rt_visi_annos)),      // annotations
@@ -2346,7 +2346,7 @@ JVM_GetClassDeclaredConstructors(JNIEnv *env, jclass ofClass, jboolean public_on
 JNIEXPORT jint JNICALL
 JVM_GetClassAccessFlags(JNIEnv *env, jclass cls) {
     TRACE("JVM_GetClassAccessFlags(env=%p, cls=%p)", env, cls);
-    return JVM_MIRROR(cls)->access_flags; // todo
+    return JVM_MIRROR(cls)->access_flags.get(); // todo
 }
 
 /* Nestmates - since JDK 11 */

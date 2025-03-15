@@ -1,0 +1,15 @@
+jvm在jdk安装目录的位置：
+	windows：jdk1.8.0_221\jre\bin\server\jvm.dll
+	linux: jdk1.8.0_291-linux-x64\jre\lib\amd64\server\libjvm.so
+
+
+所有native函数的实现：
+\java.base\share\native
+
+java.base\share\native\include\jni.h
+java.base\unix\native\include\jni_md.h
+java.base\windows\native\include\jni_md.h
+
+hotspot\share\include\jvm.h
+hotspot\share\include\cds.h
+hotspot\share\include\jmm.h

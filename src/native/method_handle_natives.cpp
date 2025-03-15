@@ -38,9 +38,9 @@ using namespace java_lang_String;
 #define REFERENCE_KIND_MASK  (0xf000000 >> REFERENCE_KIND_SHIFT)
 
 static int methodFlags(Method *m) {
-    int flags = m->access_flags;
+    int flags = m->access_flags.get();
 
-    if(m->access_flags & MB_CALLER_SENSITIVE)
+    if(flags & MB_CALLER_SENSITIVE)
         flags |= CALLER_SENSITIVE;
 
     return flags;
@@ -263,7 +263,7 @@ static jref MN_resolve(JNIEnv *env, jclsRef cls, jref self /*MemberName*/,
                 throw java_lang_NoSuchFieldError("resolve member name, FIELD");
             }
 
-            flags |= f->access_flags;
+            flags |= f->access_flags.get();
             self->set_field_value<jint>(MN_flags_field, flags);
             jref resolved = new_resolved_method_name((jref) (void *) f, nullptr); // todo RMN_vmholder_field怎么设置
             self->set_field_value<jref>(MN_method_field, resolved);
@@ -321,7 +321,7 @@ static jint MN_getMembers(JNIEnv *env, jclsRef cls, jclsRef defc, jstrRef match_
                 count++;
                 int flags = methodFlags(m) | IS_METHOD;
 
-                flags |= (m->isStatic() ? JVM_REF_invokeStatic : JVM_REF_invokeVirtual) << REFERENCE_KIND_SHIFT;
+                flags |= (m->access_flags.is_static() ? JVM_REF_invokeStatic : JVM_REF_invokeVirtual) << REFERENCE_KIND_SHIFT;
 
                 member_name->set_field_value<jint>(MN_flags_field, flags);
                 member_name->set_field_value<jref>(MN_clazz_field, m->clazz->java_mirror);

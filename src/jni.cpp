@@ -49,7 +49,7 @@ static void deleteJNIGlobalRef(Object *ref) {
 
 static slot_t *execJavaV(Method *m, jref _this, va_list args) {
     assert(m != nullptr);
-    if (m->isStatic()) {
+    if (m->access_flags.is_static()) {
         init_class(m->clazz);
     }
 
@@ -97,7 +97,7 @@ static slot_t *execJavaV(Method *m, jref _this, va_list args) {
 
 static slot_t *execJavaA(Method *m, jref _this, const jvalue *args) {
     assert(m != nullptr);
-    if (m->isStatic()) {
+    if (m->access_flags.is_static()) {
         init_class(m->clazz);
     }
 
@@ -200,7 +200,7 @@ jobject JNICALL Jvmcc_ToReflectedMethod(JNIEnv *env, jclass cls,
  */
 jclass JNICALL Jvmcc_GetSuperclass(JNIEnv *env, jclass sub) {
     Class *c = ((jclsRef) sub)->jvm_mirror;
-    if (c->is_interface() || c->is_prim_class() || c->check_class_name("void"))
+    if (c->access_flags.is_interface() || c->is_prim_class() || c->check_class_name("void"))
         return nullptr;
     if (c->super_class == nullptr)
         return nullptr;
@@ -329,7 +329,7 @@ jint JNICALL Jvmcc_EnsureLocalCapacity(JNIEnv *env, jint capacity) {
 
 jobject JNICALL Jvmcc_AllocObject(JNIEnv *env, jclass clazz) {
     Class *c = JVM_MIRROR(clazz);
-    if (c->is_abstract() || c->is_interface()) {
+    if (c->access_flags.is_abstract() || c->access_flags.is_interface()) {
         // Can not be instantiated
         JNI_THROW(env, "java.lang.InstantiationException", c->name);
     }
@@ -637,14 +637,14 @@ void JNICALL Jvmcc_SetObjectField(JNIEnv *env, jobject obj, jfieldID fieldID, jo
 
 jmethodID JNICALL Jvmcc_GetStaticMethodID(JNIEnv *env, jclass clazz, const char *name, const char *sig) {
     Method *m = JVM_MIRROR(clazz)->lookup_method(name, sig);
-    if (m == nullptr || !m->isStatic())
+    if (m == nullptr || !m->access_flags.is_static())
         return nullptr;
     return (jmethodID) m;
 }
 
 jfieldID JNICALL Jvmcc_GetStaticFieldID(JNIEnv *env, jclass clazz, const char *name, const char *sig) {
     Field *f = JVM_MIRROR(clazz)->lookup_field(name, sig);
-    if (f == nullptr || !f->isStatic())
+    if (f == nullptr || !f->access_flags.is_static())
         return nullptr;
     return (jfieldID) f;
 }
@@ -876,7 +876,7 @@ jint JNICALL Jvmcc_RegisterNatives(JNIEnv *env, jclass clazz,
             // 直接忽略就好了。
             continue;
         }
-        if (!m->is_native()) {
+        if (!m->access_flags.is_native()) {
             UNREACHABLE("%s, %s, %s", c->name, m->name, m->signature);
         }
         m->native_method = methods[i].fnPtr;

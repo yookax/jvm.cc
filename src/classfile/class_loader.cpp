@@ -372,7 +372,7 @@ Class *define_class(Class *lookup, const char *name, const jbyte *buf,
         unimplemented; // todo
     }
 
-    c->access_flags = flags; // todo 对不对
+    c->access_flags.set(flags);
 
     jref co = c->java_mirror;
     co->protection_domain = pd;
@@ -445,7 +445,7 @@ Object *get_platform_classloader() {
 
     // public static ClassLoader getPlatformClassLoader();
     Method *get = c->get_method("getPlatformClassLoader", "()Ljava/lang/ClassLoader;");
-    if (get == nullptr || !get->isStatic()) {
+    if (get == nullptr || !get->access_flags.is_static()) {
         // todo error
     }
     return execJavaR(get);
@@ -456,7 +456,7 @@ Object *get_app_classloader() {
 
     // public static ClassLoader getSystemClassLoader();
     Method *get = c->get_method("getSystemClassLoader", "()Ljava/lang/ClassLoader;");
-    if (get == nullptr || !get->isStatic()) {
+    if (get == nullptr || !get->access_flags.is_static()) {
         // todo error
     }
     return execJavaR(get);

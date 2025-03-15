@@ -212,7 +212,7 @@ Method::Method(Class *c, BytecodeReader &r) {
     clazz = c;
     ConstantPool &cp = *(c->cp);
 
-    access_flags = r.readu2();
+    access_flags.set(r.readu2());
     name = cp.utf8(r.readu2());
     descriptor = cp.utf8(r.readu2());
     u2 attr_count = r.readu2();
@@ -230,7 +230,7 @@ Method::Method(Class *c, BytecodeReader &r) {
         } else if (strcmp("Deprecated", attr_name) == 0) {
             deprecated = true;
         } else if (strcmp("Synthetic", attr_name) == 0) {
-            setSynthetic();
+            access_flags.set_synthetic();
         } else if (strcmp("Signature", attr_name) == 0) {
             signature = cp.utf8(r.readu2());
         } else if (strcmp("MethodParameters", attr_name) == 0) {
@@ -281,7 +281,7 @@ Method::Method(Class *c, BytecodeReader &r) {
 
     determine_ret_type();
 
-    if (is_native()) {        
+    if (access_flags.is_native()) {
         gen_native_method_info();
     }
 }
@@ -291,7 +291,7 @@ Method::Method(Class *c, const utf8_t *name0, const utf8_t *descriptor0, int acc
     assert(acc > 0 && native_method0 != nullptr);
 
     clazz = c;
-    access_flags = acc;
+    access_flags.set(acc);
     name = name0;
     descriptor = descriptor0;
     native_method = native_method0;
@@ -304,7 +304,7 @@ Method::Method(Class *c, const utf8_t *name0, const utf8_t *descriptor0, int acc
 
 jint Method::get_line_number(int pc) const {
     // native函数没有字节码
-    if (is_native()) {
+    if (access_flags.is_native()) {
         return -2;
     }
 
@@ -373,8 +373,8 @@ pair<const utf8_t *, const utf8_t *> Method::find_local_variable(u2 pc, u2 index
 string Method::toString() const {
     ostringstream oss;
     oss << "method" 
-        << (is_native() ? "(native)" : "") 
-        << (isStatic() ? "(static)" : "(nonstatic)") 
+        << (access_flags.is_native() ? "(native)" : "")
+        << (access_flags.is_static() ? "(static)" : "(nonstatic)")
         << ": " 
         << clazz->name << "~" << name <<  "~" << descriptor;
     return oss.str();

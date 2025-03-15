@@ -2,6 +2,7 @@
 
 import std.core;
 import slot;
+import access_flags;
 import constants;
 
 using namespace std;

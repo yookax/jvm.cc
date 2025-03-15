@@ -68,7 +68,7 @@ jarrRef get_inner_classes_as_class_array(Class *c, bool public_only) {
         } 
 
         assert(inner != nullptr);
-        if (!public_only || accIsPublic(inner->inner_access_flags)) {
+        if (!public_only || inner->inner_access_flags.is_public()) {
             inners[count++] = inner;
         }
     }
@@ -96,7 +96,7 @@ jint field_offset(jref fo) {
 
 jint field_offset(Field *f) {
     assert(f != nullptr);
-    if (!f->isStatic())
+    if (!f->access_flags.is_static())
         return f->id;
 
     for (size_t i = 0; i < f->clazz->fields.size(); i++) {

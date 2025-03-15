@@ -65,7 +65,7 @@ void Class::calc_fields_id() {
     }
 
     for (Field *f: fields) {
-        if (!f->isStatic()) {
+        if (!f->access_flags.is_static()) {
             f->id = ins_id++;
             if (f->category_two)
                 ins_id++;
@@ -111,7 +111,7 @@ void Class::parse_attribute(BytecodeReader &r, u2 this_idx) {
         if (strcmp("Signature", attr_name) == 0) {
             signature = cp->utf8(r.readu2());
         } else if (strcmp("Synthetic", attr_name) == 0) {
-            setSynthetic();
+            access_flags.set_synthetic();
         } else if (strcmp("Deprecated", attr_name) == 0) {
             deprecated = true;
         } else if (strcmp("SourceFile", attr_name) == 0) {
@@ -149,7 +149,7 @@ void Class::parse_attribute(BytecodeReader &r, u2 this_idx) {
                     // if (inner_name_index == 0) { // 无效
                     //     access_flags |= ANONYMOUS;  // 匿名类
                     // }
-                    inner_access_flags = inner_class_access_flags;
+                     inner_access_flags.set(inner_class_access_flags);
                 } else if (outer_class_info_index == this_idx) {
                     inner_classes.emplace_back(false, inner_class_info_index);
                 } else {
@@ -258,7 +258,7 @@ void Class::ITable::add(const ITable &itable0) {
 }
 
 Method *Class::findFromITable(Class *interface_class, int itable_index) {
-    if(interface_class != nullptr && interface_class->is_interface()) {
+    if(interface_class != nullptr && interface_class->access_flags.is_interface()) {
         for (auto &itf_offset: itable.itf_offsets) {
             if (itf_offset.first->equals(interface_class)) {
                 size_t offset = itf_offset.second;
@@ -271,7 +271,7 @@ Method *Class::findFromITable(Class *interface_class, int itable_index) {
 }
 
 void Class::create_itable() {
-    if (is_interface()) {
+    if (access_flags.is_interface()) {
         // 接口间的继承虽然用 extends 关键字（可以同时继承多个接口），但被继承的接口不是子接口的 super_class，
         // 而是在子接口的 itf_offsets 里面。所以接口的 super_class 就是 java/lang/Object
 
@@ -396,7 +396,8 @@ Class::Class(jref class_loader, const u1 *bytecode, size_t len): loader(class_lo
     }
 
     cp = new ConstantPool(this, r);
-    access_flags = r.readu2();
+//    access_flags = r.readu2();
+    access_flags.set(r.readu2());
     u2 this_idx = r.readu2();
     name = cp->class_name(this_idx);
     generate_pkg_name();
@@ -503,7 +504,8 @@ Class::Class(const char *class_name): loader(BOOT_CLASS_LOADER), super_class(g_o
     assert(g_object_class != nullptr);
 
     name = utf8::dup(class_name); /* 形参class_name可能非持久，复制一份 */
-    access_flags = JVM_ACC_PUBLIC;
+//    access_flags = JVM_ACC_PUBLIC;
+    access_flags.set(JVM_ACC_PUBLIC);
 
     cp = new ConstantPool(this); // todo
 
@@ -597,7 +599,7 @@ bool Class::check_cast(Class *t) {
         return is_subclass_of(t);
     }
     // this is array type
-    if (t->is_interface()) {
+    if (t->access_flags.is_interface()) {
         // 数组实现了两个接口，看看t是不是其中之一。
         return is_subclass_of(t);
     } else if (t->is_array_class()) { // this and t are both array type
@@ -641,7 +643,7 @@ Field *Class::get_field(const char *_name, const char *descriptor) const {
 
 Field *Class::get_field(int id) const {
     for (Field *f: fields) {
-        if (!f->isStatic() && f->id == id)
+        if (!f->access_flags.is_static() && f->id == id)
             return f;
     }
 
@@ -710,7 +712,7 @@ bool Class::inject_inst_field(const utf8_t *_name, const utf8_t *descriptor) {
     for (Class *clazz = super_class; clazz != nullptr; clazz = clazz->super_class) {
         for (Field *f: clazz->fields) {
             // 在父类查找时只查子类可以看见的field，即非private field            
-            if (!f->isPrivate() && utf8::equals(f->name, _name)) {
+            if (!f->access_flags.is_private() && utf8::equals(f->name, _name)) {
                 // throw runtime_error(_name); // todo
                 return false;
             }
@@ -778,7 +780,7 @@ vector<Method *> Class::get_declared_methods(const utf8_t *_name, bool public_on
     vector<Method *> declared_methods;
 
     for (Method *m: methods) {
-        if ((!public_only || m->isPublic()) && (utf8::equals(m->name, _name)))
+        if ((!public_only || m->access_flags.is_public()) && (utf8::equals(m->name, _name)))
             declared_methods.push_back(m);
     }
 
@@ -868,14 +870,14 @@ string Class::toString() const {
 
     oss << "\tdeclared static fields: " << ends;
     for (Field *f: fields) {
-        if (f->isStatic()) {
+        if (f->access_flags.is_static()) {
             oss << "\t\t" << f->name << "~" << f->descriptor << ends;
         }
     }
 
     oss << "\tdeclared instance fields: " << ends;
     for (Field *f: fields) {
-        if (!f->isStatic()) {
+        if (!f->access_flags.is_static()) {
             oss << "\t\t" << f->name << "~" << f->descriptor << " | " << f->id << ends;
         }
     }

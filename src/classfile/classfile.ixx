@@ -8,6 +8,7 @@ export import poly;
 
 import std.core;
 import slot;
+import access_flags;
 import encoding;
 import constants;
 import bytecode_reader;
@@ -197,7 +198,8 @@ public:
     // name of Class, Field and Method
     // if is class name, 必须是全限定类名，包名之间以 '/' 分隔。
     const utf8_t *name = nullptr;
-    int access_flags = 0;
+//    int access_flags = 0;
+    AccessFlags access_flags;
     bool deprecated = false;
     const utf8_t *signature = nullptr;
 
@@ -209,16 +211,6 @@ public:
 
     Annotation rt_visi_type_annos;  // Runtime Visible Type Annotations
     Annotation rt_invisi_type_annos;// Runtime Invisible Type Annotations
-
-public:
-    [[nodiscard]] bool isPublic() const    { return accIsPublic(access_flags); }
-    [[nodiscard]] bool isProtected() const { return accIsProtected(access_flags); }
-    [[nodiscard]] bool isPrivate() const   { return accIsPrivate(access_flags); }
-    [[nodiscard]] bool isStatic() const    { return accIsStatic(access_flags); }
-    [[nodiscard]] bool isFinal() const     { return accIsFinal(access_flags); }
-    [[nodiscard]] bool isSynthetic() const { return accIsSynthetic(access_flags); }
-
-    void setSynthetic() { accSetSynthetic(access_flags); }
 };
 
 export struct BootstrapMethod {
@@ -330,7 +322,7 @@ public:
 
     // if this class is a inner class，下面两项有效
     u2 declaring_class = 0; // index in constant pool, CONSTANT_Class_info
-    u2 inner_access_flags = 0;
+    AccessFlags inner_access_flags;
 
     // Inner classes of this class
     // If not resolved, pair.first is 'false', pair.second is "u2", index in constant pool, CONSTANT_Class_info
@@ -484,12 +476,6 @@ public:
 
     bool is_ref_array_class() const { return (is_array_class() && !is_type_array_class()); }
 
-    bool is_interface() const { return accIsInterface(access_flags); }
-    bool is_abstract() const  { return accIsAbstract(access_flags); }
-    bool is_strict() const    { return accIsStrict(access_flags); }
-    bool is_super() const     { return accIsSuper(access_flags); }
-    bool is_module() const    { return accIsModule(access_flags); }
-
     // @descriptor 用于找打Field后检测类型是否匹配，如不想检测传NULL即可。
     Field *get_field(const char *name, const char *descriptor = nullptr) const;
     Field *get_field(int id) const;
@@ -602,9 +588,6 @@ public:
     Field(Class *c, BytecodeReader &r);
 
     Field(Class *, const utf8_t *name, const utf8_t *descriptor, int access_flags);
-
-    bool is_transient() const { return accIsTransient(access_flags); }
-    bool is_volatile() const  { return accIsVolatile(access_flags); }
 
     bool is_prim_field() const;
 
@@ -750,15 +733,6 @@ private:
 public:
     Method(Class *c, BytecodeReader &r);
 
-    bool is_abstract() const     { return accIsAbstract(access_flags); }
-    bool is_synchronized() const { return accIsSynchronized(access_flags); }
-    bool is_native() const       {
-        return (access_flags & JVM_ACC_NATIVE) != 0;
-//        return accIsNative(access_flags);
-    }
-    bool is_strict() const       { return accIsStrict(access_flags); }
-    bool is_varargs() const      { return accIsVarargs(access_flags); }
-
     /*
      * 判断此方法是否由 invokevirtual 指令调用，
      * final方法虽然非虚，但也由 invokevirtual 调用。
@@ -767,7 +741,8 @@ public:
      * 参考 https://www.zhihu.com/question/45131640
      */
     [[nodiscard]] bool is_virtual() const {
-        return !isPrivate() && !isStatic() && !utf8::equals(name, "<init>");
+        return !access_flags.is_private() && !access_flags.is_static() && !utf8::equals(name, "<init>");
+//        return !isPrivate() && !isStatic() && !utf8::equals(name, "<init>");
     }
 
     // is <clinit>?
@@ -783,7 +758,7 @@ public:
     static u2 cal_args_slots_count(const utf8_t *descriptor, bool is_static);
 
     void cal_args_slots_count() {
-        arg_slots_count = cal_args_slots_count(descriptor, isStatic());
+        arg_slots_count = cal_args_slots_count(descriptor, access_flags.is_static());
     }
 
     // [Ljava/lang/Class;

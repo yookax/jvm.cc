@@ -18,7 +18,7 @@ ArrayClass::ArrayClass(Object *loader0, const char *class_name): Class(loader0) 
     name = utf8::dup(class_name); /* 形参class_name可能非持久，复制一份 */
     while (name[dimension] == '[')
         dimension++;
-    access_flags = JVM_ACC_PUBLIC;
+    access_flags.set(JVM_ACC_PUBLIC);
 //    inited = true;
     super_class = g_object_class;
 

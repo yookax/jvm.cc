@@ -300,7 +300,7 @@ static void analysis_class(Class *c) {
 
     // 1. 分析类静态属性引用的对象
     for (Field *f: c->fields) {
-        if (!f->isStatic() || f->is_prim_field())
+        if (!f->access_flags.is_static() || f->is_prim_field())
             continue;
 
         // static and reference field of a class

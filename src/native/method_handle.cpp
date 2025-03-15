@@ -3,6 +3,7 @@
 import std.core;
 import slot;
 import invoke;
+import access_flags;
 import constants;
 
 using namespace std;
