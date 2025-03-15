@@ -42,7 +42,7 @@ static void parse_command_line(int argc, char *argv[]) {
                 // main function's arguments
                 main_func_args[main_func_args_count++] = argv[i];
                 if (main_func_args_count > MAX_JVM_ARITY) {
-                    panic(" "); // todo many args!!! abort!
+                    panic("too many args!");
                 }
             }
         }
@@ -80,8 +80,8 @@ int run_jvm(int argc, char* argv[]) {
 //    Method *main_method = main_class->lookup_method("main", "([Ljava/lang/String;)V");
     if (main_method == nullptr) {
         if (silent_when_no_main) {
-            // 是测试代码调用的，没有main函数直接返回即可。
-            return -1;
+            // 是测试代码调用的，没有main函数直接退出即可。
+            exit(-10);
         }
         panic("can't find method main.");
     }

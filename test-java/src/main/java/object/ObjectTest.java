@@ -57,6 +57,6 @@ public class ObjectTest {
     }
 
     public static void main(String[] args) {
-        System.out.println(test() && testEquals() && testInheritance());
+        System.out.println(test() && testEquals() && testInheritance() ? "passed" : "failed");
     }
 }

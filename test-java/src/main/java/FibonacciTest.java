@@ -3,9 +3,9 @@ public class FibonacciTest {
 
     public static void main(String[] args) {
         if (fib(20) != 6765) {
-            System.out.println("Failed");
+            System.out.println("failed");
         } else {
-            System.out.println("Passed");
+            System.out.println("passed");
         }
     }
 

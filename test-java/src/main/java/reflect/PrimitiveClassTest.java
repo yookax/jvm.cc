@@ -27,7 +27,7 @@ public class PrimitiveClassTest {
         boolean b5 = (0 == c.getMethods().length);
         boolean b6 = (0 == c.getDeclaredMethods().length);
         boolean b7 = "java.base".equals(c.getModule().getName());
-        System.out.println((b1 && b2 && b3 && b4 && b5 && b6 && b7) ? "Pass. " : "Fail. ");
+        System.out.println((b1 && b2 && b3 && b4 && b5 && b6 && b7) ? "passed" : "failed");
     }
     
 }

@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
  */
 public class Demo02 {
 	public static void main(String[] args) {
-		String path = "se.reflection.bean.User";
+		String path = "reflect.bean.User";
 		
 		try {
 			Class clazz = Class.forName(path);

@@ -28,6 +28,6 @@ public class GenericTest {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(typeParameter() && fieldGenericType());
+        System.out.println(typeParameter() && fieldGenericType() ? "passed" : "failed");
     }
 }

@@ -7,7 +7,7 @@ package reflect;
 public class Demo01 {
 	
 	public static void main(String[] args) {
-		String path = "se.reflection.bean.User";
+		String path = "reflect.bean.User";
 		
 		try {
 			Class clazz = Class.forName(path);
@@ -33,8 +33,6 @@ public class Demo01 {
 			System.out.println(arr02.getClass().hashCode());
 			System.out.println(arr03.getClass().hashCode());
 			System.out.println(arr04.getClass().hashCode());
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

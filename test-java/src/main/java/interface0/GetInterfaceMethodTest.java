@@ -6,10 +6,10 @@ public class GetInterfaceMethodTest {
 
     interface Foo {
         default void test() { }
+        void bar();
     }
 
     public static void main(String[] args) {
-        System.out.println("Expect output: [public default void interface0.GetInterfaceMethodTest$Foo.test()]");
         System.out.println(Arrays.toString(Foo.class.getDeclaredMethods()));
     }
 }

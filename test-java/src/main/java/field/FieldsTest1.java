@@ -24,7 +24,7 @@ public class FieldsTest1 {
         sub.a = 2;
         boolean b1 = sub.getA() == 1;
         boolean b2 = sub.a == 2;
-        System.out.println(b1 && b2);
+        System.out.println(b1 && b2 ? "passed" : "failed");
     }
     
 }

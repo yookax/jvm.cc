@@ -24,10 +24,10 @@ public class CheckCast {
             sArray();
             sArray_tArray();
         } catch (ClassCastException e) {
-            System.out.println("Failed");
+            System.out.println("failed");
             return;
         }
-        System.out.println("Passed");
+        System.out.println("passed");
     }
     
     private static void sClass() {

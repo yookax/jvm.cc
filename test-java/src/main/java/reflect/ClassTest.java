@@ -18,11 +18,11 @@ public class ClassTest implements Runnable {
 
         for (boolean b: list) {
             if (!b) {
-                System.out.println("Failed");
+                System.out.println("failed");
                 return;
             }
         }
-        System.out.println("Passed");
+        System.out.println("passed");
     }
 
     public static void _package() {

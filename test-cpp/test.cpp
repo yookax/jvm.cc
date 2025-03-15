@@ -95,17 +95,30 @@ void run_all_java_tests() {
         }
     }
 
+    // 未通过测试用例
+    // object.StringTest1
+    // PrintTest
+    // RecordTest
+    // invoke.MethodHandleTest
+    // invoke.MethodHandleNativesTest
+    // NumberFormatTest
+    // method.ArgsPassTest
+    // method.ArgsPassTest
+    // reflect.Demo01
+    // reflect.Demo02
+    // reflect.NestTest
+    // classloader.Demo01
+    // stream.TestDefaultInterface
+    // reflect.ArrayGetTest
+    // reflect.ArrayLengthTest
+    // reflect.ReflectTest
+    // reflect.ArraySetTest
+
     string exclude[] = {
-            "field.FieldAccessTest",
-            "method.ArgsPassTest",
             "network.InetAddressTest",
             "network.SocketConnectTest",
             "network.SocketListenTest",
             "network.UrlTest",
-            "reflect.ArrayGetTest",
-            "reflect.ArrayLengthTest",
-            "reflect.ArraySetTest",
-            "reflect.GenericTest",
             "thread.AliveTest",
             "thread.DaemonTest",
             "thread.DumpAllThreads",
@@ -117,7 +130,6 @@ void run_all_java_tests() {
             "thread.SynchronizedTest",
             "thread.ThreadSubClassTest",
             "thread.WaitTest",
-            "ReflectTest",
     };
 
     jvmcc.append(" -silent-when-no-main -cp ").append(class_path).append(" ");
@@ -139,7 +151,7 @@ void run_all_java_tests() {
             continue;
 
         string s = jvmcc + cf;
-        printf("jvmcc %s\n", cf.c_str());
+        printf("-------------------- %s --------------------\n", cf.c_str());
         std::system(s.c_str());
     }
 }

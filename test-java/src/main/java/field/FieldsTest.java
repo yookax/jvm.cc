@@ -33,7 +33,7 @@ public class FieldsTest {
         FieldsTest ft = new FieldsTest();
         boolean b1 = ft.instanceFields();
         boolean b2 = ft.staticFields();
-        System.out.println(b1 && b2);
+        System.out.println(b1 && b2 ? "passed" : "failed");
     }
     
 }

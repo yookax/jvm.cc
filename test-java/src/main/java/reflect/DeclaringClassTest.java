@@ -29,7 +29,7 @@ public class DeclaringClassTest {
         boolean bb = (A.B.C.class.getDeclaringClass() == A.B.class);
         boolean bc = (A.B.C.class.getDeclaredClasses().length == 0);
 
-        System.out.println(b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8 && b9 && ba && bb && bc);
+        System.out.println(b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8 && b9 && ba && bb && bc ? "passed" : "failed");
     }
     
 }

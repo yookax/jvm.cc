@@ -32,7 +32,7 @@ public class InterfaceDefaultMethodTest {
     public static void main(String[] args) {
         test1();
         test2();
-        System.out.println(passed);
+        System.out.println(passed ? "passed" : "failed");
     }
 
     private static void checkResult(String s) {

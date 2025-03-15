@@ -10,16 +10,14 @@ public class PrimaryTest {
         var t = new PrimaryTest();
         long l = 8682522807148012L;
         t.l = l;
-        System.out.println(t.getLong() == l);
-        System.out.println(t.getLong());
+        System.out.println(t.getLong() == l ? "passed" : "failed");
     }
 
     public static void testDouble() {
         var t = new PrimaryTest();
         double d = 4349790087343.9483948938493;
         t.d = d;
-        System.out.println(t.getDouble() == d);
-        System.out.println(t.getDouble());
+        System.out.println(t.getDouble() == d ? "passed" : "failed");
     }
 
     public static void main(String[] args) {

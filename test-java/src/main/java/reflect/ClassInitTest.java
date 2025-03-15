@@ -14,7 +14,7 @@ public class ClassInitTest {
     public void getStatic() {
         try {
             Integer a = (Integer) A.class.getField("a").get(null);
-            System.out.println(a == 100);
+            System.out.println(a == 100 ? "passed" : "failed");
         } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }

@@ -8,7 +8,7 @@ public class FileDescriptorTest {
     
     public static void main(String[] args) throws IOException {
         FileOutputStream fdOut = new FileOutputStream(FileDescriptor.out);
-        fdOut.write("Passed\n".getBytes());
+        fdOut.write("passed\n".getBytes());
     }
     
 }

@@ -3,9 +3,9 @@ public class Ackermann {
 
     public static void main(String[] args) {
         if (ackermann(3L, 5L) != 253) {
-            System.out.println("Failed");
+            System.out.println("failed");
         } else {
-            System.out.println("Passed");
+            System.out.println("passed");
         }
     }
 

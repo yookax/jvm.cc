@@ -28,6 +28,6 @@ public class WideInstruction {
         return k57;
     }
     public static void main(String[] args) {
-        System.out.println(WideInstruction.largeVarIndex() == 42);
+        System.out.println(WideInstruction.largeVarIndex() == 42 ? "passed" : "failed");
     }
 }

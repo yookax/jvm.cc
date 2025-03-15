@@ -33,6 +33,6 @@ public class LambdaTest2 {
                 flag = false;
         }
 
-        System.out.println(flag);
+        System.out.println(flag ? "passed" : "failed");
     }
 }

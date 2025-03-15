@@ -14,6 +14,6 @@ public class InterfaceMethodTest3 {
     private static class B extends A implements Father { }
 
     public static void main(String[] args) {
-        System.out.println(new B().t().equals("Son")); // Should be "Son" not "Father"
+        System.out.println(new B().t().equals("Son") ? "passed" : "failed"); // Should be "Son" not "Father"
     }
 }

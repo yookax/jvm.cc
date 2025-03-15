@@ -666,7 +666,7 @@ Field *Class::lookup_field(const utf8_t *_name, const utf8_t *descriptor) {
     //     if ((f = itf_offsets[i]->lookupField(_name, descriptor)) != nullptr)
     //         return f;
     // }
-    for (Class *itf: interfaces) {
+    for (Class *itf: mssis) {
         if ((f = itf->lookup_field(_name, descriptor)) != nullptr)
             return f;
     }

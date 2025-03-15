@@ -10,7 +10,7 @@ public class ArrayGetTest {
         var b3 = getArrayBadIndex();
         var b4 = getObjectArray();
         var b5 = getPrimitiveArray();
-        System.out.println(b1 && b2 && b3 && b4 && b5);
+        System.out.println(b1 && b2 && b3 && b4 && b5 ? "passed" : "failed");
     }
 
     public static boolean getNullArray() {

@@ -30,7 +30,7 @@ public class InterfaceMethodTest {
     
     public static void main(String[] args) {
         InterfaceMethodTest t = new InterfaceMethodTest();
-        System.out.println(t.defaultMethod() && t.staticMethod());
+        System.out.println(t.defaultMethod() && t.staticMethod() ? "passed" : "failed");
     }
 
     public boolean staticMethod() {

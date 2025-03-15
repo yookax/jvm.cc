@@ -16,6 +16,6 @@ public class InterfaceField {
     }
 
     public static void main(String[] args) {
-        System.out.println(C.i == 1 && D.i == 3);
+        System.out.println(C.i == 1 && D.i == 3 ? "passed" : "failed");
     }
 }

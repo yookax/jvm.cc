@@ -72,10 +72,10 @@ public class MathTest {
 
         for (var b: list) {
             if (!b) {
-                System.out.println("Failed");
+                System.out.println("failed");
                 return;
             }
         }
-        System.out.println("Passed");
+        System.out.println("passed");
     }
 }

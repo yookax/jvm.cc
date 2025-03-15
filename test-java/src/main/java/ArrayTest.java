@@ -1,7 +1,5 @@
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 public class ArrayTest {
 
@@ -215,6 +213,10 @@ public class ArrayTest {
         boolean bb = ArrayTest.arrayClass();
         boolean bc = ArrayTest.testArray();
         boolean bd = ArrayTest.bubbleSort();
-        System.out.println(b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8 && b9 && ba && bb && bc && bd);
+
+        if (b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8 && b9 && ba && bb && bc && bd)
+            System.out.println("passed");
+        else
+            System.out.println("failed");
     }
 }

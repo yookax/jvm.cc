@@ -49,12 +49,12 @@ public class ConstantStaticFieldsTest {
 
         for (var b: list) {
             if (!b) {
-                System.out.println("Failed");
+                System.out.println("failed");
                 return;
             }
         }
 
-        System.out.println("Passed");
+        System.out.println("passed");
     }
     
     private static Object getFieldValue(String name) {

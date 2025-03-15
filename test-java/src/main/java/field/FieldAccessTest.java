@@ -28,7 +28,7 @@ public class FieldAccessTest {
         boolean b3 = (3 == B.k);
         boolean b4 = (4 == B.a);
         boolean b5 = (5 == B.b);
-        System.out.println(b1 && b2 && b3 && b4 && b5);
+        System.out.println(b1 && b2 && b3 && b4 && b5 ? "passed" : "failed");
     }
     
     public static void main(String[] args) {

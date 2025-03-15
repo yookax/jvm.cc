@@ -89,8 +89,4 @@ public class NetClassLoader extends ClassLoader {
 		}
 		
 	}
-	
-	
-	
-	
 }

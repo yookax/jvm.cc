@@ -13,6 +13,7 @@ public class ArraySetTest {
                 && setPrimitiveArray()
                 && setNullValue()
                 && setWrongTypeValue()
+                        ? "passed" : "failed"
         );
     }
 

@@ -6,18 +6,18 @@ public class QuickSortTest {
         int[] arr = quicksort(intArr, 0, intArr.length - 1);
         int[] sortedArr = {-2066, 1, 3, 6, 7, 9, 12, 13, 14, 16, 17, 19, 20, 21, 23, 24, 25, 26, 1025};
         if (intArr == sortedArr) {
-            System.out.println("Fail");
+            System.out.println("failed");
             return;
         }
 
         for (int ix = 0; ix < arr.length; ++ix) {
             if (arr[ix] != sortedArr[ix]) {
-                System.out.println("Fail: " + ix); // error
+                System.out.println("failed: " + ix); // error
                 return;
             }
         }
 
-        System.out.println("Pass");
+        System.out.println("passed");
     }
 
     public static int[] quicksort(int[] arr, int l, int r) {

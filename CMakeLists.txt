@@ -34,7 +34,7 @@ set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/init_native.cpp src/native/
 )
 
 set (TEST_SOURCE_FILES
-        test-cpp/main.cpp test-cpp/convert_test.cpp test-cpp/slot_test.cpp
+        test-cpp/test.cpp test-cpp/convert_test.cpp test-cpp/slot_test.cpp
         test-cpp/descriptor_test.cpp test-cpp/heap_test.cpp test-cpp/class_loader_test.cpp
         test-cpp/object_test.cpp test-cpp/class_test.cpp test-cpp/foo_test.cpp
         test-cpp/encoding_test.cpp
@@ -58,8 +58,8 @@ SET_TARGET_PROPERTIES(jvm PROPERTIES OUTPUT_NAME "jvm" PREFIX "")
 add_executable(jvmcc src/vm_client.cpp)
 target_link_libraries(jvmcc jvm)
 
-add_executable(test test-cpp/main.cpp)
-target_link_libraries(test jvm)
+add_executable(jvmcc-test test-cpp/test.cpp)
+target_link_libraries(jvmcc-test jvm)
 
 # 创建CXX_MODULES类型的FILE_SET
 target_sources(jvm

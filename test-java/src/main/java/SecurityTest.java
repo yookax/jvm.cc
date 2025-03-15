@@ -25,6 +25,6 @@ public class SecurityTest {
     }
 
     public static void main(String[] args) {
-        System.out.println(getReflectionFoo() != null);
+        System.out.println(getReflectionFoo() != null ? "passed" : "failed");
     }
 }

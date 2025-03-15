@@ -31,6 +31,6 @@ public class InterfaceMethodTest2 {
         Itf2 itf2 = (Itf2) b;
         System.out.println(a.t().equals("Interface2")
                 && itf1.t().equals("Interface2")
-                && itf2.t().equals("Interface2"));
+                && itf2.t().equals("Interface2") ? "passed" : "failed");
     }
 }

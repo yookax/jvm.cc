@@ -17,7 +17,7 @@ public class ArrayClassTest {
         boolean b9 = testArrayClass(int[][].class,   "[[I");
         boolean b10 = testArrayClass(Object[].class,  "[Ljava.lang.Object;");
         boolean b11 = testArrayClass(Object[][].class,"[[Ljava.lang.Object;");
-        System.out.println((b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8 && b9 && b10 && b11));
+        System.out.println((b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8 && b9 && b10 && b11) ? "passed" : "failed");
     }
     
     private static boolean testArrayClass(Class<?> c, String name) {

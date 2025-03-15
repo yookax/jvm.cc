@@ -15,7 +15,7 @@ public class CatchTest {
         if (f3() != 3) {
             System.out.println("f3() failed!");
         }
-        System.out.println("Pass");
+        System.out.println("passed");
     }
     
     private static int f0() {
