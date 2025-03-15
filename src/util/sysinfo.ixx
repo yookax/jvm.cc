@@ -7,7 +7,7 @@ module;
 #include <unistd.h>
 #include <sys/time.h>
 #endif
-#include "vmdef.h"
+#include "../vmdef.h"
 
 export module sysinfo;
 

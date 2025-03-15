@@ -1,5 +1,5 @@
 module;
-#include "vmdef.h"
+#include "../vmdef.h"
 
 export module convert;
 
