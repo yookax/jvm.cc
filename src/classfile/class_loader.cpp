@@ -212,7 +212,7 @@ Class *load_boot_class(const utf8_t *name) {
     }
 
     Class *c = nullptr;
-    if (is_prim_class_name(name)) {
+    if (PRIMITIVE::check_class_name(name)) {
         c = new Class(name);
         addClassToClassLoader(BOOT_CLASS_LOADER, c);
     } else {

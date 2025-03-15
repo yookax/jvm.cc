@@ -75,7 +75,7 @@ const char *arr_class_name_2_elt_class_name(const utf8_t *arr_class_name) {
     const utf8_t *elt_name = arr_class_name;
     while (*++elt_name == '[');
 
-    const utf8_t *prim_class_name = get_prim_class_name(*elt_name);
+    const utf8_t *prim_class_name = PRIMITIVE::d2c(*elt_name);
     if (prim_class_name != nullptr) {  // primitive type
         return prim_class_name;
     }

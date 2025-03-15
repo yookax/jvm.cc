@@ -122,13 +122,13 @@ jclsRef Field::get_type() {
 
     // primitive
     assert(strlen(descriptor) == 1);
-    const utf8_t *n = get_prim_class_name(*descriptor);
+    const utf8_t *n = PRIMITIVE::d2c(*descriptor);
     assert(n != nullptr);
     return load_boot_class(n)->java_mirror;
 }
 
 bool Field::is_prim_field() const {
-    return get_prim_class_name(*descriptor) != nullptr;
+    return PRIMITIVE::d2c(*descriptor) != nullptr;
 }
 
 string Field::toString() const {

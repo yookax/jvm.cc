@@ -500,7 +500,7 @@ Class::Class(jref class_loader, const u1 *bytecode, size_t len): loader(class_lo
 // 创建 primitive class，由虚拟机直接生成。
 Class::Class(const char *class_name): loader(BOOT_CLASS_LOADER), super_class(g_object_class) {
     assert(class_name != nullptr);
-    assert(is_prim_class_name(class_name));
+    assert(PRIMITIVE::check_class_name(class_name));
     assert(g_object_class != nullptr);
 
     name = utf8::dup(class_name); /* 形参class_name可能非持久，复制一份 */
@@ -855,7 +855,7 @@ ArrayClass *Class::generate_array_class() const {
 
     // 基本类型
     // todo 判断class是不是void，如果是void不能创建数组
-    const char *tmp = get_prim_array_class_name(name);
+    const char *tmp = PRIMITIVE::c2a(name);
     if (tmp != nullptr)
         return load_array_class(loader, tmp);
 
@@ -920,8 +920,8 @@ int Class::inherited_depth() const {
     return depth;
 }
 
-bool Class::is_prim_class() const { return is_prim_class_name(name); }
-bool Class::is_prim_wrapper_class() { return is_prim_wrapper_class_name(name); }
+bool Class::is_prim_class() const { return PRIMITIVE::check_class_name(name); }
+bool Class::is_prim_wrapper_class() { return PRIMITIVE::check_wrapper_class_name(name); }
 
 bool Class::is_type_array_class() const {
     if (strlen(name) != 2 || name[0] != '[')

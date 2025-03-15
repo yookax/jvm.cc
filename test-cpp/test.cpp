@@ -103,7 +103,6 @@ void run_all_java_tests() {
     // invoke.MethodHandleNativesTest
     // NumberFormatTest
     // method.ArgsPassTest
-    // method.ArgsPassTest
     // reflect.Demo01
     // reflect.Demo02
     // reflect.NestTest

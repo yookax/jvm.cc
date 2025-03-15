@@ -90,7 +90,7 @@ Class *ArrayClass::get_component_class() {
         return comp_class;
     }
 
-    const utf8_t *prim_class_name = get_prim_class_name(*comp_name);
+    const utf8_t *prim_class_name = PRIMITIVE::d2c(*comp_name);
     if (prim_class_name != nullptr) {  // primitive type
         comp_class = load_boot_class(prim_class_name);
         return comp_class;

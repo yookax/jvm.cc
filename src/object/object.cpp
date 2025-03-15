@@ -98,7 +98,7 @@ const slot_t *Object::unbox() const {
     }
 
     // value 的描述符就是基本类型的类名。比如，private final boolean value;
-    Field *f = c->lookup_field("value", get_prim_descriptor_by_wrapper_class_name(c->name));
+    Field *f = c->lookup_field("value", PRIMITIVE::w2d(c->name));
     return data + f->id;
 }
 
