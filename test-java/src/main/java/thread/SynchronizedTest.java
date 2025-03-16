@@ -17,7 +17,7 @@ public class SynchronizedTest {
     }
     
     private void bar() {
-        System.out.println("Pass!");
+        System.out.println("passed");
     }
     
 }

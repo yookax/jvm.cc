@@ -95,10 +95,13 @@ void run_all_java_tests() {
         }
     }
 
-    // 未通过测试用例
+    /*--- 未通过测试用例 ---*/
+    // datetime.DateTimeTest
     // object.StringTest1
     // PrintTest
+    // Base64Test
     // RecordTest
+    // UnicodeTest
     // invoke.MethodHandleTest
     // invoke.MethodHandleNativesTest
     // NumberFormatTest
@@ -107,28 +110,25 @@ void run_all_java_tests() {
     // reflect.Demo02
     // reflect.NestTest
     // classloader.Demo01
+    // stream.StreamTest1
     // stream.TestDefaultInterface
     // reflect.ArrayGetTest
     // reflect.ArrayLengthTest
     // reflect.ReflectTest
     // reflect.ArraySetTest
+    // network.UrlTest
+    // network.InetAddressTest
+    // thread.AliveTest
+    // thread.DumpAllThreads
+    // thread.InterruptFlagTest
+    // thread.InterruptionTest
 
     string exclude[] = {
-            "network.InetAddressTest",
-            "network.SocketConnectTest",
             "network.SocketListenTest",
-            "network.UrlTest",
-            "thread.AliveTest",
-            "thread.DaemonTest",
-            "thread.DumpAllThreads",
-            "thread.InterruptFlagTest",
-            "thread.InterruptionTest",
-            "thread.MainThreadTest",
+            "network.SocketConnectTest",
             "thread.RunnableTest",
             "thread.SleepTest",
-            "thread.SynchronizedTest",
             "thread.ThreadSubClassTest",
-            "thread.WaitTest",
     };
 
     jvmcc.append(" -silent-when-no-main -cp ").append(class_path).append(" ");

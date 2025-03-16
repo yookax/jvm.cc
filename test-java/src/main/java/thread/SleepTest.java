@@ -11,7 +11,7 @@ public class SleepTest {
         }
         long afterSleep = System.currentTimeMillis();
         if (afterSleep - beforeSleep >= 100)
-            System.out.println("Pass");
+            System.out.println("passed");
     }
 
 }

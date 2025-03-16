@@ -34,7 +34,7 @@ public class AliveTest {
             return;
         }
         
-        System.out.println("Pass");
+        System.out.println("passed");
     }
     
 }

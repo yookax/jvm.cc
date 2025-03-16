@@ -14,6 +14,7 @@ public class MappingDemo {
         nameByAge.forEach((k,v)->System.out.println("Age:"+k +"  Persons: "+v));
     }
 }
+
 class Person {
     private String name;
     private int age;
