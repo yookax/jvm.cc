@@ -17,7 +17,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /experimental:module")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8 /experimental:module /W4")
 endif()
 
 set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/init_native.cpp src/native/unsafe.cpp
@@ -39,10 +39,6 @@ set (TEST_SOURCE_FILES
         test-cpp/object_test.cpp test-cpp/class_test.cpp test-cpp/foo_test.cpp
         test-cpp/encoding_test.cpp
 )
-
-if (MSVC)
-    add_compile_options("/utf-8")
-endif()
 
 # 这里生成 jvm.dll
 # jdk/bin/zip.dll 和 jdk/bin/java.dll 均依赖此dll
