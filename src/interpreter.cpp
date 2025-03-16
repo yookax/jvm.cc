@@ -23,8 +23,6 @@ using namespace utf8;
 #define PRINT_OPCODE VERBOSE("%d(0x%x), %s, pc = %d", \
                         opcode, opcode, opcode_names[opcode], (int)frame->reader.pc);
 
-//static const u1 opcode_length[JVM_OPC_MAX + 1] = JVM_OPCODE_LENGTH_INITIALIZER;
-
 static void call_native_method(Frame *frame);
 
 /*
@@ -179,7 +177,7 @@ do { \
                 goto _ldc;
             case JVM_OPC_ldc_w:
                 index = reader->readu2();
-_ldc:
+            _ldc:
                 switch (u1 type = cp->get_type(index)) {
                     case JVM_CONSTANT_Integer:
                         frame->pushi(cp->get_int(index));
@@ -333,16 +331,16 @@ _ldc:
             case JVM_OPC_fstore:
             case JVM_OPC_astore:
                 index = reader->readu1();
-_istore:
-_fstore:
-_astore:
+            _istore:
+            _fstore:
+            _astore:
                 lvars[index] = *--frame->ostack;
                 break;
             case JVM_OPC_lstore:
             case JVM_OPC_dstore:
                 index = reader->readu1();
-_lstore:
-_dstore: 
+            _lstore:
+            _dstore:
                 lvars[index + 1] = *--frame->ostack;
                 lvars[index] = *--frame->ostack;
                 break;
@@ -412,7 +410,7 @@ _dstore:
                 } else if (arr->clazz->is_bool_array_class()) {
                     arr->setBoolElt(index, JINT_TO_JBOOL(value));
                 } else {
-                    UNREACHABLE(arr->clazz->name);
+                    UNREACHABLE("%s\n", arr->clazz->name);
                 }
                 break;
             }
@@ -491,7 +489,6 @@ _dstore:
                 slot_t tmp = frame->ostack[-1];
                 frame->ostack[-1] = frame->ostack[-2];
                 frame->ostack[-2] = tmp;
-                // swap(frame->ostack[-1], frame->ostack[-2]);
                 break;
             }
 
@@ -502,7 +499,6 @@ _dstore:
     frame->push##t(v1 oper v2); \
     break; \
 }
-
             case JVM_OPC_iadd: BINARY_OP(jint, i, +);
             case JVM_OPC_ladd: BINARY_OP(jlong, l, +);
             case JVM_OPC_fadd: BINARY_OP(jfloat, f, +);
@@ -763,7 +759,7 @@ do { \
             case JVM_OPC_jsr:
                 UNREACHABLE("jsr doesn't support after jdk 6.");
             case JVM_OPC_ret:
-opc_ret:
+            opc_ret:
                 UNREACHABLE("ret doesn't support after jdk 6.");
             case JVM_OPC_tableswitch: {
                 // 实现当各个case值跨度比较小时的 switch 语句
@@ -780,7 +776,6 @@ opc_ret:
 
                 // 跳转偏移量表，对应于各个 case 的情况
                 s4 jump_offset_count = height - low + 1;
-//                s4 jump_offsets[jump_offset_count];
                 auto jump_offsets = new s4[jump_offset_count];
                 reader->reads4s(jump_offset_count, jump_offsets);
 
@@ -815,7 +810,6 @@ opc_ret:
                 assert(npairs >= 0); // The npairs must be greater than or equal to 0.
 
                 // match_offsets 有点像 Map，它的 key 是 case 值，value 是跳转偏移量。
-//                s4 match_offsets[npairs * 2];
                 auto match_offsets = new s4[npairs * 2];
                 reader->reads4s(npairs * 2, match_offsets);
 
@@ -845,7 +839,7 @@ opc_ret:
                 goto _method_return;
             case JVM_OPC_return: {
                 ret_value_slots_count = 0;
-_method_return:
+            _method_return:
                 TRACE("will return: %s", frame->toString().c_str());
                 thread->pop_frame();
                 Frame *invoke_frame = thread->top_frame;
@@ -906,17 +900,7 @@ _method_return:
                 index = reader->readu2();
                 Field *field = cp->resolve_field(index);
                 if (field->access_flags.is_static()) {
-                    // cout << cp->toString().c_str() << endl;
-                    // cout << frame->method->getBytecodeString().c_str() << endl;
                     throw java_lang_IncompatibleClassChangeError(field->toString());
-
-                        // init_class(field->clazz);
-
-                        //     *frame->ostack++ = field->static_value.data[0];
-                        //     if (field->category_two) {
-                        //         *frame->ostack++ = field->static_value.data[1];
-                        //     }
-                        //     break;
                 }
 
                 jref obj = frame->popr();
@@ -1105,11 +1089,9 @@ _method_return:
                     panic(" ");
                         // goto throwException;  todo
                 }
-
                 if (appendix != nullptr) {
                     frame->pushr(appendix);
                 }
-
                 frame->ostack -= invoker->arg_slots_count;
                 resolved_method = invoker;
                 goto _invoke_method;
@@ -1133,7 +1115,6 @@ _method_return:
                     frame->pushr(jni_excep);
                     Thread::jni_exception_clear(frame);
                     goto opc_athrow;
-//                    throw jni_excep;
                 }
 
                 //    if (frame->method->isSynchronized()) {
@@ -1141,18 +1122,6 @@ _method_return:
                 //    }
                 break;
             }
-//opc_invokehandle: {
-//    assert(resolved_method);
-//    Frame *new_frame = thread->allocFrame(resolved_method, false);
-//    TRACE("Alloc new frame: %s", new_frame->toString().c_str());
-//
-//    new_frame->lvars = frame->ostack; // todo 什么意思？？？？？？？？
-//    CHANGE_FRAME(new_frame)
-//    if (IS_SYNCHRONIZED(resolved_method)) {
-////        _this->unlock(); // todo why unlock 而不是 lock ................................................
-//    }
-//    goto opc_invokenative;
-//}
             _invoke_method: {
                 assert(resolved_method);
                 Frame *new_frame = thread->alloc_frame(resolved_method, false);
@@ -1163,11 +1132,10 @@ _method_return:
 
                 CHANGE_FRAME(new_frame);
                 if (resolved_method->access_flags.is_synchronized()) {
-            //        _this->unlock(); // todo why unlock 而不是 lock ................................................
+            //        _this->unlock(); // todo why unlock 而不是 lock ............
                 }
                 break;
             }
-
             case JVM_OPC_new: {
                 // new指令专门用来创建类实例。数组由专门的指令创建
                 // 如果类还没有被初始化，会触发类的初始化。
@@ -1216,13 +1184,11 @@ _method_return:
                     throw java_lang_UnknownError("The dimensions must be greater than or equal to 1.");
                 }
 
-//                jint lens[dim];
                 auto lens = new jint[dim];
                 for (int i = dim - 1; i >= 0; i--) {
                     lens[i] = frame->popi();
                     if (lens[i] < 0) {
                         throw java_lang_NegativeArraySizeException("len is %d" + to_string(lens[i]));
-                        // HANDLE_EXCEPTION(S(java_lang_NegativeArraySizeException), nullptr);  // todo msg
                     }
                 }
                 frame->pushr(Allocator::multi_array(ac, dim, lens));
@@ -1256,17 +1222,6 @@ _method_return:
                     // } catch (NullPointerException e) {
                     //     e.printStackTrace();
                     // }
-
-                    // int opc_readed_offset = 1;
-                    // int index_in_lvars = getPrevAloadOpcIndex(reader, opc_readed_offset);
-                    // if (index_in_lvars < 0) {
-                    //     ShouldNotReachHere(" "); // todo  throw java_lang_NullPointerException(FILE_LINE_STR); ???
-                    // }
-                    // auto [name, descriptor] = frame->method->findLocalVariable(reader->pc - opc_readed_offset, (u2) index_in_lvars);
-                    // throw java_lang_NullPointerException(
-                    //         "Cannot throw exception because \"" + string(name) + "\" is null");
-
-
                     throw java_lang_NullPointerException(FILE_LINE_STR);
                 }
 
@@ -1274,7 +1229,7 @@ _method_return:
                 while (true) {
                     int handler_pc = frame->method->find_exception_handler(
                             eo->clazz, reader->pc - 1); // instruction length todo 好像是错的
-                    if (handler_pc >= 0) {  // todo 可以等于0吗
+                    if (handler_pc >= 0) {
                         /*
                          * 找到可以处理的代码块了
                          * 操作数栈清空 // todo 为啥要清空操作数栈
@@ -1292,7 +1247,6 @@ _method_return:
                     if (frame->vm_invoke) {
                         // frame 由虚拟机调用，将异常交由虚拟机处理
                         excep = eo;
-                        // return nullptr;
                         throw UncaughtJavaException(eo);
                     }
 
@@ -1302,7 +1256,6 @@ _method_return:
                     if (frame->prev == nullptr) {
                         // 虚拟机栈已空，还是无法处理异常，交由虚拟机处理
                         excep = eo;
-                        // return nullptr;
                         throw UncaughtJavaException(eo);
                     }
 
@@ -1375,8 +1328,7 @@ _method_return:
                     case JVM_OPC_dstore: goto _dstore;
                     case JVM_OPC_ret:    goto opc_ret;
                     case JVM_OPC_iinc:   goto _wide_iinc;
-                    default:
-                        UNREACHABLE(" "); // todo msg
+                    default:             UNREACHABLE("%d\n", opcode);
                 }
             case JVM_OPC_ifnull: {
                 s2 offset = reader->reads2();
@@ -1397,10 +1349,14 @@ _method_return:
                 reader->skip(offset - opcode_length[JVM_OPC_goto_w]);
                 break;
             }
-            case JVM_OPC_jsr_w: UNREACHABLE("jsr_w doesn't support after jdk 6."); break;
-            case JVM_OPC_breakpoint: UNREACHABLE("breakpoint doesn't support in this jvm.");  break;
-            case JVM_OPC_impdep2: UNREACHABLE("opc_impdep2 isn't used."); break;
-            default: UNREACHABLE(("This instruction isn't used. " + to_string(opcode)).c_str()); break;
+            case JVM_OPC_jsr_w:
+                UNREACHABLE("jsr_w doesn't support after jdk 6.");
+            case JVM_OPC_breakpoint:
+                UNREACHABLE("breakpoint doesn't support in this jvm.");
+            case JVM_OPC_impdep2:
+                UNREACHABLE("opc_impdep2 isn't used.");
+            default:
+                UNREACHABLE("%s\n", ("This instruction isn't used. " + to_string(opcode)).c_str());
         }
     }
 }
@@ -1430,20 +1386,16 @@ slot_t *execJava(Method *method, const slot_t *args) {
         } catch (UncaughtJavaException &e) {
             print_stack_trace(e.java_excep);
             get_current_thread()->terminate(EXIT_CODE_UNCAUGHT_JAVA_EXCEPTION);
-        } 
-        // catch (...) {
-        //     ShouldNotReachHere(" "); // todo msg
-        // }
+        }
     }
 }
 
-jref execJavaR(Method *method, const slot_t *args)
-{
-    assert(method != nullptr);
-    slot_t *slots = execJava(method, args);
-    assert(slots != nullptr);
-    return slot::get<jref>(slots);
-}
+//jref execJavaR(Method *method, const slot_t *args) {
+//    assert(method != nullptr);
+//    slot_t *slots = execJava(method, args);
+//    assert(slots != nullptr);
+//    return slot::get<jref>(slots);
+//}
 
 // variant<jint, jfloat, jlong, jdouble, jref, monostate>
 // exec_java_method(Method *method, const slot_t *args) {
@@ -1452,38 +1404,30 @@ jref execJavaR(Method *method, const slot_t *args)
 //     return va;
 // }
 
-slot_t *execJava(Method *method, std::initializer_list<slot_t> args)
-{
-    assert(method != nullptr);
-    assert(method->arg_slots_count == args.size());
+//slot_t *execJava(Method *method, std::initializer_list<slot_t> args) {
+//    assert(method != nullptr);
+//    assert(method->arg_slots_count == args.size());
+//
+//    auto slots = new slot_t[args.size()];
+//    int i = 0;
+//    for (slot_t arg: args) {
+//        slots[i++] = arg;
+//    }
+//    return execJava(method, slots);
+//}
 
-//    slot_t slots[args.size()];
-    auto slots = new slot_t[args.size()];
-    int i = 0;
-    for (slot_t arg: args) {
-        slots[i++] = arg;
-    }
+//jref execJavaR(Method *m, std::initializer_list<slot_t> args) {
+//    assert(m != nullptr);
+//
+//    auto slots = new slot_t[args.size()];
+//    int i = 0;
+//    for (slot_t arg: args) {
+//        slots[i++] = arg;
+//    }
+//    return execJavaR(m, slots);
+//}
 
-    return execJava(method, slots);
-}
-
-jref execJavaR(Method *m, std::initializer_list<slot_t> args)
-{
-    assert(m != nullptr);
-
-//    slot_t slots[args.size()];
-    auto slots = new slot_t[args.size()];
-
-    int i = 0;
-    for (slot_t arg: args) {
-        slots[i++] = arg;
-    }
-
-    return execJavaR(m, slots);
-}
-
-slot_t *execJava(Method *m, jref _this, jarrRef args)
-{
+slot_t *execJava(Method *m, jref _this, jarrRef args) {
     assert(m != nullptr);
 
     // If m is static, this is NULL.
@@ -1533,7 +1477,6 @@ jref execJavaR(Method *m, jref _this, jarrRef args) {
     const slot_t *slots = execJava(m, _this, args);
     return slot::get<jref>(slots);
 }
-
 
 #undef ET
 #undef ARG_LIST

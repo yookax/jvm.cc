@@ -168,7 +168,7 @@ Thread *Thread::from(Object *tobj) {
     assert(tobj != nullptr);
     assert(0 <= eetop_id && eetop_id < tobj->clazz->inst_fields_count);
 
-    jlong eetop = tobj->get_field_value<jlong>(eetop_id);
+    auto eetop = tobj->get_field_value<jlong>(eetop_id);
     auto t = (Thread *)eetop;
 
     assert(t != nullptr && t->tobj == tobj);

@@ -5,6 +5,7 @@
 
 import std.core;
 import std.filesystem;
+import slot;
 import sysinfo;
 import runtime;
 import object;
@@ -20,8 +21,6 @@ using namespace std;
 
 Heap *g_heap;
 
-//std::vector<Property> g_properties;
-
 Object *g_sys_thread_group;
 
 string g_java_home;
@@ -35,12 +34,6 @@ Object *g_platform_class_loader;
 bool g_vm_initing = true;
 
 void init_native();
-
-static void *gcLoop(void *dummy) {
-    // todo
-    // gc(g_heap);
-    return nullptr;
-}
 
 vector<Property> g_properties;
 
@@ -306,14 +299,6 @@ void init_jvm(InitArgs *init_args) {
     // Main Thread Set ContextClassLoader
     g_main_thread->tobj->set_field_value<jref>("contextClassLoader",
                                      "Ljava/lang/ClassLoader;", g_app_class_loader);
-                                     
-    // gc thread
-//    pthread_t tid;
-//    int ret = pthread_create(&tid, nullptr, gcLoop, nullptr);
-//    if (ret != 0) {
-//        panic("create Thread failed"); // todo
-//    }
-    
     g_vm_initing = false;
     TRACE("init jvm is over.\n");
 }

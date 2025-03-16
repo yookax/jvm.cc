@@ -90,15 +90,6 @@ int run_jvm(int argc, char* argv[]) {
     TRACE("begin to execute main function.\n");
 
     // Create the String array holding the command line args
-//    jarrRef args = Allocator::string_array(main_func_args_count);
-//    for (int i = 0; i < main_func_args_count; i++) {
-//        args->setRefElt(i, Allocator::string(main_func_args[i]));
-//    }
-//
-//    // Call the main method
-//    execJava(main_method, { slot::rslot(args) });
-
-    // Create the String array holding the command line args
     auto string_class = (*env)->FindClass(env, "java/lang/String");
     auto args = (*env)->NewObjectArray(env, main_func_args_count, string_class, nullptr);
     for (int i = 0; i < main_func_args_count; i++) {
@@ -114,19 +105,9 @@ int run_jvm(int argc, char* argv[]) {
     // todo 如果有其他的非后台线程在执行，则main线程需要在此wait
     // todo main_thread 退出，做一些清理工作。
 
-    /* Finally, print the running time of JVM and the JDK version. */
-
-//    string jdk_version = g_java_home;
-//    size_t last_slash = g_java_home.find_last_of("/\\");
-//    if (last_slash != std::string::npos) {
-//        jdk_version = g_java_home.substr(last_slash + 1);
-//    }
-//
     auto end = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     printf("\n--- Powered by jvmcc(%.2fs) ---\n", duration / 1000.0);
-//    printf("\n--- Powered by jvmcc on %s(%.2fs) ---\n", jdk_version.c_str(), duration / 1000.0);
-
     return 0;
 }
 

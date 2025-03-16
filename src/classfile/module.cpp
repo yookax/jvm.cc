@@ -12,7 +12,6 @@ using namespace std;
 using namespace utf8;
 using namespace java_lang_Module;
 
-
 static jref boot_loader_unnamed_module = nullptr;
 
 static vector<DefinedModule> all_modules;

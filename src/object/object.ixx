@@ -13,18 +13,13 @@ import class_loader;
 export class Object {
 public:
     bool reachable; // gc时判断对象是否可达
-
     Class *clazz = nullptr;
-
 private:
     explicit Object(Class *c);
     Object(ArrayClass *arr_cls, jint arr_len);
     Object(ArrayClass *, jint dim, const jint lens[]);
 
     std::recursive_mutex mutex;
-
-// private:
-//     Field *lookupField(const char *name, const char *descriptor);
 public:
     void lock() { mutex.lock(); }
     void unlock() { mutex.unlock(); }
@@ -34,7 +29,6 @@ public:
 
     union {
         Class *jvm_mirror; // present only if Object of java.lang.Class
-
         jsize arr_len; // present only if Object of Array
 
         // present only if object of java/lang/ClassLoader
