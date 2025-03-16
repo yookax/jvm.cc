@@ -1193,7 +1193,7 @@ JVM_GetPrimitiveArrayElement(JNIEnv *env, jobject arr, jint index, jint wCode) {
     }
 
     if (index < 0 || index >= array->arr_len) {
-        JNI_THROW_NegativeArraySizeException(env, nullptr); // todo msg
+        JNI_THROW_ArrayIndexOutOfBoundsException(env, nullptr); // todo msg
         return v;
     }
 
@@ -1248,7 +1248,7 @@ JVM_SetArrayElement(JNIEnv *env, jobject arr, jint index, jobject val) {
     }
 
     if (index < 0 || index >= array->arr_len) {
-        JNI_THROW_NegativeArraySizeException(env, nullptr); // todo msg
+        JNI_THROW_ArrayIndexOutOfBoundsException(env, nullptr); // todo msg
         return;
     }
 
@@ -1349,7 +1349,7 @@ JVM_SetPrimitiveArrayElement(JNIEnv *env, jobject arr, jint index, jvalue v, uns
     }
 
     if (index < 0 || index >= array->arr_len) {
-        JNI_THROW_NegativeArraySizeException(env, nullptr); // todo msg
+        JNI_THROW_ArrayIndexOutOfBoundsException(env, nullptr); // todo msg
         return;
     }
 

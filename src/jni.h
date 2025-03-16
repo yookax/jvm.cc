@@ -498,6 +498,7 @@ JNIEnv *getJNIEnv();
 #define JNI_THROW_IllegalArgumentException(_env, msg) \
     JNI_THROW(_env, "java/lang/IllegalArgumentException", msg)
 
+// Thrown if an application tries to create an array with negative size.
 #define JNI_THROW_NegativeArraySizeException(_env, msg) \
     JNI_THROW(_env, "java/lang/NegativeArraySizeException", msg)
 

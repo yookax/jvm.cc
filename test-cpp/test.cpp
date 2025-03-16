@@ -109,13 +109,10 @@ void run_all_java_tests() {
     // reflect.Demo01
     // reflect.Demo02
     // reflect.NestTest
+    // reflect.ReflectTest
     // classloader.Demo01
     // stream.StreamTest1
     // stream.TestDefaultInterface
-    // reflect.ArrayGetTest
-    // reflect.ArrayLengthTest
-    // reflect.ReflectTest
-    // reflect.ArraySetTest
     // network.UrlTest
     // network.InetAddressTest
     // thread.AliveTest

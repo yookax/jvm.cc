@@ -299,55 +299,41 @@ jarrRef Thread::dump(int max_depth) const {
     return arr;
 }
 
-void Thread::jniThrow(jref excep) {
-    get_current_thread()->jni_excep = excep; 
+void Thread::jni_throw(jref excep) {
+    auto t = get_current_thread();
+    t->jni_exceptions.emplace_back(t->top_frame, excep);
 }
 
-void Thread::jniThrow(Class *excep_class, const char *msg) {
+void Thread::jni_throw(Class *excep_class, const char *msg) {
     assert(excep_class != nullptr);
 
-    Thread *t = get_current_thread();
-    // t->jni_excep_class = excep_class;
-    // if (msg != nullptr)
-    //     t->jni_excep_msg = msg;
     init_class(excep_class);
-    t->jni_excep = Allocator::object(excep_class);
-    assert(t->jni_excep != nullptr);
+    jref o = Allocator::object(excep_class);
     if (msg == nullptr) {
-        execJava(excep_class->get_constructor("()V"), { rslot(t->jni_excep) });
+        execJava(excep_class->get_constructor("()V"), { rslot(o) });
     } else {
         Method *constructor = excep_class->get_constructor("(Ljava/lang/String;)V");
-        execJava(constructor, { rslot(t->jni_excep), rslot(Allocator::string(msg)) });
+        execJava(constructor, { rslot(o), rslot(Allocator::string(msg)) });
     }
+
+    jni_throw(o);
 }
 
-jref Thread::jniExceptionOccurred() {
-    return get_current_thread()->jni_excep;
-    // Thread *t = getCurrentThread();
-    // if (t->jni_excep != nullptr) {
-    //     return t->jni_excep;
-    // }
-
-    // if (t->jni_excep_class != nullptr) {
-    //     init_class(t->jni_excep_class);
-    //     t->jni_excep = t->jni_excep_class->allocObject();
-    //     assert(t->jni_excep != nullptr);
-    //     if (t->jni_excep_msg.empty()) {
-    //         execJava(t->jni_excep_class->getConstructor("()V"), { rslot(t->jni_excep) });
-    //     } else {
-    //         Method *constructor = t->jni_excep_class->getConstructor(S(_java_lang_String__V));
-    //         execJava(constructor, { rslot(t->jni_excep), rslot(allocString(t->jni_excep_msg.c_str())) });
-    //     }
-
-    //     return t->jni_excep;
-    // }
-    
-    // return nullptr;
+jref Thread::jni_exception_occurred(Frame *f) {
+    for (auto &e: get_current_thread()->jni_exceptions) {
+        if (e.f == f)
+            return e.o;
+    }
+    return nullptr;
 }
 
-void Thread::jniExceptionClear() {
-    Thread *t = get_current_thread();
-    t->jni_excep = nullptr;
-    // t->jni_excep_class = nullptr;
-    // t->jni_excep_msg.clear();
+bool Thread::jni_exception_clear(Frame *f) {
+    auto &e = get_current_thread()->jni_exceptions;
+    for (auto iter = e.begin(); iter != e.end(); iter++) {
+        if (iter->f == f) {
+            e.erase(iter);
+            return true;
+        }
+    }
+    return false;
 }

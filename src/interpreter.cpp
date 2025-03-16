@@ -1128,9 +1128,10 @@ _method_return:
                 frame->jni_local_ref_count = 0;
 
                 // 处理JNI异常
-                jref jni_excep = Thread::jniExceptionOccurred();
+                jref jni_excep = Thread::jni_exception_occurred(frame);
                 if (jni_excep != nullptr) {
                     frame->pushr(jni_excep);
+                    Thread::jni_exception_clear(frame);
                     goto opc_athrow;
 //                    throw jni_excep;
                 }

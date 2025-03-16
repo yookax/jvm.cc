@@ -4,19 +4,17 @@ import java.lang.reflect.Array;
 
 public class ArraySetTest {
     public static void main(String[] args) {
-        System.out.println(setNullArray());
-        return;
-//        System.out.println(
-//                setNullArray()
-//                && setNonArray()
-//                && setArrayTypeMismatch()
-//                && setArrayBadIndex()
-//                && setObjectArray()
-//                && setPrimitiveArray()
-//                && setNullValue()
-//                && setWrongTypeValue()
-//                        ? "passed" : "failed"
-//        );
+        System.out.println(
+                setNullArray()
+                && setNonArray()
+                && setArrayTypeMismatch()
+                && setArrayBadIndex()
+                && setObjectArray()
+                && setPrimitiveArray()
+                && setNullValue()
+                && setWrongTypeValue()
+                        ? "passed" : "failed"
+        );
     }
 
     public static boolean setNullArray() {

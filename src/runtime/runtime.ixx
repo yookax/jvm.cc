@@ -86,14 +86,18 @@ public:
     jbool interrupted = false;
 
 private:
-    jref jni_excep = nullptr;
-public:
-    static void jniThrow(jref excep);
-    static void jniThrow(Class *excep_class, const char *msg);
-    static jref jniExceptionOccurred();
-    static void jniExceptionClear();
+    struct JniException {
+        Frame *f = nullptr; // 发生jni异常的frame
+        jref o = nullptr;
+        JniException(Frame *f, jref o): f(f), o(o) {}
+    };
+    std::vector<JniException> jni_exceptions;
 
-    // Thread *next = nullptr;
+public:
+    static void jni_throw(jref excep);
+    static void jni_throw(Class *excep_class, const char *msg);
+    static jref jni_exception_occurred(Frame *f);
+    static bool jni_exception_clear(Frame *f);
 
     Thread();
 

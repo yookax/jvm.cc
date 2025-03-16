@@ -219,18 +219,18 @@ jobject JNICALL Jvmcc_ToReflectedField(JNIEnv *env, jclass cls,
 
 jint JNICALL Jvmcc_Throw(JNIEnv *env, jthrowable obj) {
     // set_exception((jref) obj);
-    Thread::jniThrow((jref) obj);
+    Thread::jni_throw((jref) obj);
     return JNI_TRUE;
 }
 
 jint JNICALL Jvmcc_ThrowNew(JNIEnv *env, jclass clazz, const char *msg) {
     Class *c = JVM_MIRROR(clazz);
-    Thread::jniThrow(c, msg);
+    Thread::jni_throw(c, msg);
     return JNI_TRUE;
 }
 
 jthrowable JNICALL Jvmcc_ExceptionOccurred(JNIEnv *env) {
-    return (jthrowable) Thread::jniExceptionOccurred();
+    return (jthrowable) Thread::jni_exception_occurred(get_current_thread()->top_frame);
 }
 
 void JNICALL Jvmcc_ExceptionDescribe(JNIEnv *env) {
@@ -238,7 +238,7 @@ void JNICALL Jvmcc_ExceptionDescribe(JNIEnv *env) {
 }
 
 void JNICALL Jvmcc_ExceptionClear(JNIEnv *env) {
-    Thread::jniExceptionClear();
+    Thread::jni_exception_clear(get_current_thread()->top_frame);
 }
 
 void JNICALL Jvmcc_FatalError(JNIEnv *env, const char *msg) {
@@ -965,7 +965,7 @@ void JNICALL Jvmcc_DeleteWeakGlobalRef(JNIEnv *env, jweak ref) {
 
 jboolean JNICALL Jvmcc_ExceptionCheck(JNIEnv *env) {
     Thread *t = get_current_thread();
-    return t->jniExceptionOccurred() != nullptr;
+    return t->jni_exception_occurred(t->top_frame) != nullptr;
 }
 
 jobject JNICALL Jvmcc_NewDirectByteBuffer(JNIEnv *env, void *address, jlong capacity) {
