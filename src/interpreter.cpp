@@ -1069,7 +1069,7 @@ _method_return:
                 reader->readu1();
 
                 Method *m = cp->resolve_interface_method(index);
-                assert(m->clazz->_access_flags.is_interface());
+                assert(m->clazz->access_flags.is_interface());
 
                 /* todo 本地方法 */
 
@@ -1130,7 +1130,9 @@ _method_return:
                 // 处理JNI异常
                 jref jni_excep = Thread::jniExceptionOccurred();
                 if (jni_excep != nullptr) {
-                    throw jni_excep;
+                    frame->pushr(jni_excep);
+                    goto opc_athrow;
+//                    throw jni_excep;
                 }
 
                 //    if (frame->method->isSynchronized()) {
@@ -1150,7 +1152,7 @@ _method_return:
 //    }
 //    goto opc_invokenative;
 //}
-_invoke_method: {
+            _invoke_method: {
                 assert(resolved_method);
                 Frame *new_frame = thread->alloc_frame(resolved_method, false);
                 TRACE("Alloc new frame: %s\n", new_frame->toString().c_str());
@@ -1242,7 +1244,7 @@ _invoke_method: {
                 break;
             }
             case JVM_OPC_athrow: {
-opc_athrow:
+            opc_athrow:
                 jref eo = frame->popr(); // exception object
                 if (eo == nullptr) {
                     // 异常对象有可能为空
@@ -1486,10 +1488,10 @@ slot_t *execJava(Method *m, jref _this, jarrRef args)
     // If m is static, this is NULL.
     if (args == nullptr) {
         if (_this != nullptr) {
-            assert(!m->isStatic());
+            assert(!m->access_flags.is_static());
             return execJava(m, { rslot(_this) });
         } else {
-            assert(m->isStatic());
+            assert(m->access_flags.is_static());
             return execJava(m, nullptr);
         } 
     }
@@ -1503,7 +1505,7 @@ slot_t *execJava(Method *m, jref _this, jarrRef args)
     auto real_args = new slot_t[2*types->arr_len + 1];
     int k = 0;
     if (_this != nullptr) {
-        assert(!m->isStatic());
+        assert(!m->access_flags.is_static());
         slot::set<jref>(real_args, _this);
         k++;
     }

@@ -320,7 +320,7 @@ jint Method::get_line_number(int pc) const {
     return -1;
 }
 
-int Method::find_exception_handler(Class *exceptionType, size_t pc) {
+int Method::find_exception_handler(Class *exception_type, size_t pc) {
     for (auto t : exception_tables) {
         // jvms: The start pc is inclusive and end pc is exclusive
         if (t.start_pc <= pc && pc < t.end_pc) {
@@ -330,7 +330,7 @@ int Method::find_exception_handler(Class *exceptionType, size_t pc) {
                 t.catch_type->clazz = loadClass(clazz->loader, t.catch_type->class_name);
                 t.catch_type->resolved = true;
             }
-            if (exceptionType->is_subclass_of(t.catch_type->clazz))
+            if (exception_type->is_subclass_of(t.catch_type->clazz))
                 return t.handler_pc;
         }
     }

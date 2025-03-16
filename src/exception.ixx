@@ -1,4 +1,6 @@
 module;
+#include <utility>
+
 #include "vmdef.h"
 
 export module exception;

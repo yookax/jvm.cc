@@ -322,7 +322,7 @@ Class *loadClass(Object *class_loader, const utf8_t *name) {
     // public Class<?> loadClass(String name) throws ClassNotFoundException
     Method *m = class_loader->clazz->lookup_method("loadClass",
                                    "(Ljava/lang/String;)Ljava/lang/Class;");
-    assert(m != nullptr && !m->isStatic());
+    assert(m != nullptr && !m->access_flags.is_static());
 
     utf8_t *dot_name = slash_2_dot_dup(name);
     slot_t *slot = execJava(m, { rslot(class_loader), rslot(Allocator::string(dot_name)) });

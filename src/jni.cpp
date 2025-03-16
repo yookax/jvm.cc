@@ -61,7 +61,7 @@ static slot_t *execJavaV(Method *m, jref _this, va_list args) {
     auto real_args = new slot_t[2*args_count + 1];
     int k = 0;
     if (_this != nullptr) {
-        assert(!m->isStatic());
+        assert(!m->access_flags.is_static());
         set<jref>(real_args, _this);
         k++;
     }
@@ -109,7 +109,7 @@ static slot_t *execJavaA(Method *m, jref _this, const jvalue *args) {
     auto real_args = new slot_t[2*args_count + 1];
     int k = 0;
     if (_this != nullptr) {
-        assert(!m->isStatic());
+        assert(!m->access_flags.is_static());
         set<jref>(real_args, _this);
         k++;
     }

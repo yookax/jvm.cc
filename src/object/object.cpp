@@ -62,7 +62,7 @@ Object *Object::clone() {
 }
 
 void Object::set_field_value_raw(Field *f, const slot_t *value) {
-    assert(f != nullptr && !f->isStatic() && value != nullptr);
+    assert(f != nullptr && !f->access_flags.is_static() && value != nullptr);
 
     data[f->id] = value[0];
     if (f->category_two) {
