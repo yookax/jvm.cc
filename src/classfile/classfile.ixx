@@ -13,7 +13,6 @@ import encoding;
 import constants;
 import bytecode_reader;
 
-
 // 从 1 开始计数，第0位无效
 export class ConstantPool {
     Class *owner = nullptr;

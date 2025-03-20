@@ -27,7 +27,6 @@ export jref execJavaR(Method *method, const slot_t *args = nullptr) {
 //export slot_t *execJava(Method *, std::initializer_list<slot_t> args);
 export slot_t *execJava(Method *method, std::initializer_list<slot_t> args) {
     assert(method != nullptr);
-    assert(method->arg_slots_count == args.size());
 
     auto slots = new slot_t[args.size()];
     int i = 0;
