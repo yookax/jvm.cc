@@ -20,7 +20,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8 /experimental:module /W4")
 endif()
 
-set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/init_native.cpp src/native/unsafe.cpp
+set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/jmm.cpp src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
         src/encoding.cpp src/classfile/poly.cpp src/reference.cpp
         src/runtime/thread.cpp src/runtime/heap.cpp src/classfile/method.cpp
@@ -31,6 +31,14 @@ set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/init_native.cpp src/native/
         src/classfile/invoke.cpp src/native/method_handle_natives.cpp
         src/native/scoped_memory_access.cpp src/native/var_handle.cpp src/native/method_handle.cpp
         src/object/allocator.cpp
+        src/native/java/lang/Thread.cpp
+        src/native/native.cpp
+        src/native/java/lang/Class.cpp
+        src/native/java/lang/Object.cpp
+        src/native/java/lang/reflect/Array.cpp
+        src/native/java/lang/System.cpp
+        src/native/java/lang/Runtime.cpp
+        src/native/java/lang/Float.cpp
 )
 
 set (TEST_SOURCE_FILES
@@ -69,6 +77,7 @@ target_sources(jvm
         src/classfile/class_loader.ixx src/classfile/poly.ixx src/util/sysinfo.ixx
         src/runtime/heap.ixx src/reference.ixx src/dll.ixx src/util/convert.ixx
         src/interpreter.ixx src/encoding.ixx src/exception.ixx src/util/access_flags.ixx
+        src/native/native.ixx
 )
 
 #target_sources(jvmcc

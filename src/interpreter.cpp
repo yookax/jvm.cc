@@ -12,6 +12,7 @@ import classfile;
 import bytecode_reader;
 import class_loader;
 import dll;
+import native;
 import constants;
 import encoding;
 import exception;
@@ -1698,6 +1699,18 @@ static void call_native_method(Frame *frame) {
     if (!m->access_flags.is_native()) {
         // todo
         unimplemented
+    }
+
+    //cout << m->clazz->name << ", " << m->name << ", " << m->descriptor << endl;
+
+    auto native = find_native(m->clazz->name, m->name, m->descriptor);
+    if (native == nullptr) {
+        // todo error
+    } else {
+        auto n = (void(*)(Frame*))native;
+        n(frame);
+        if(strcmp(m->name, "registerNatives") != 0)
+            return;
     }
 
     slot_t *args = frame->lvars; 

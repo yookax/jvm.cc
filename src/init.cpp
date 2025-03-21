@@ -15,6 +15,7 @@ import invoke;
 import class_loader;
 import reference;
 import dll;
+import native;
 import interpreter;
 
 using namespace std;
@@ -32,8 +33,6 @@ Object *g_app_class_loader;
 Object *g_platform_class_loader;
 
 bool g_vm_initing = true;
-
-void init_native();
 
 vector<Property> g_properties;
 
