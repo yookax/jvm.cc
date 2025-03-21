@@ -1701,10 +1701,9 @@ static void call_native_method(Frame *frame) {
         unimplemented
     }
 
-    //cout << m->clazz->name << ", " << m->name << ", " << m->descriptor << endl;
-
     auto native = find_native(m->clazz->name, m->name, m->descriptor);
     if (native == nullptr) {
+        cout << m->clazz->name << ", " << m->name << ", " << m->descriptor << endl;
         // todo error
     } else {
         auto n = (void(*)(Frame*))native;

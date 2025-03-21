@@ -66,11 +66,11 @@ void ScopedMemoryAccess_registerNatives(JNIEnv *, jclass );
 
 void init_native() {
     Class *c = load_boot_class("java/lang/Object");
-    c->get_method("hashCode", "()I")->native_method = (void *) JVM_IHashCode;
-    c->get_method("clone", "()" OBJ)->native_method = (void *) JVM_Clone;
-    c->get_method("notifyAll", "()V")->native_method = (void *) JVM_MonitorNotifyAll;
-    c->get_method("notify", "()V")->native_method = (void *) JVM_MonitorNotify;
-    c->get_method("wait", "(J)V")->native_method = (void *) JVM_MonitorWait;
+//    c->get_method("hashCode", "()I")->native_method = (void *) JVM_IHashCode;
+//    c->get_method("clone", "()" OBJ)->native_method = (void *) JVM_Clone;
+//    c->get_method("notifyAll", "()V")->native_method = (void *) JVM_MonitorNotifyAll;
+//    c->get_method("notify", "()V")->native_method = (void *) JVM_MonitorNotify;
+//    c->get_method("wait", "(J)V")->native_method = (void *) JVM_MonitorWait;
 
     c = load_boot_class("jdk/internal/misc/Unsafe");
     c->get_method("registerNatives", "()V")->native_method = (void *) Unsafe_registerNatives;
@@ -81,10 +81,11 @@ void init_native() {
     c = load_boot_class("jdk/internal/misc/ScopedMemoryAccess");
     c->get_method("registerNatives", "()V")->native_method = (void *) ScopedMemoryAccess_registerNatives;
 
-    //REGISTRY("java/lang/Class", "registerNatives", "()V", java_lang_Class_registerNatives);
+    REGISTRY("java/lang/Class", "registerNatives", "()V", java_lang_Class_registerNatives);
     //REGISTRY("java/lang/Thread", "registerNatives", "()V", java_lang_Thread_registerNatives);
     REGISTRY("java/lang/System", "registerNatives", "()V", java_lang_System_registerNatives);
 
+    REGISTRY_NOW(java_lang_Object_registerNatives);
     REGISTRY_NOW(java_lang_Float_registerNatives);
     REGISTRY_NOW(java_lang_reflect_Array_registerNatives);
 }
