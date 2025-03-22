@@ -42,6 +42,15 @@ set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/native/jdk/internal/misc/Unsafe.cpp
         src/native/jdk/internal/misc/CDS.cpp
         src/native/java/lang/ClassLoader.cpp
+        src/native/java/lang/Module.cpp
+        src/native/java/lang/Throwable.cpp
+        src/native/java/lang/String.cpp
+        src/native/jdk/internal/reflect/Reflection.cpp
+        src/native/java/io/FileInputStream.cpp
+        src/native/java/io/FileOutputStream.cpp
+        src/native/java/io/FileDescriptor.cpp
+        src/native/java/lang/ref/Reference.cpp
+        src/native/java/lang/invoke/MethodHandleNatives.cpp
 )
 
 set (TEST_SOURCE_FILES

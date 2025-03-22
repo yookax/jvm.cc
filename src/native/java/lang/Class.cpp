@@ -493,11 +493,11 @@ void getClassAccessFlagsRaw0(Frame *f) {
 }
 
 // Called after security check for system loader access checks have been made.
-//private static native Class<?> forName0(String name, boolean initialize,
+// private static native Class<?> forName0(String classname, boolean initialize,
 //                        ClassLoader loader, Class<?> caller) throws ClassNotFoundException;
 void forName0(Frame *f) {
     slot_t *args = f->lvars;
-    auto name = slot::get<jref>(args++);
+    auto classname = slot::get<jref>(args++);
     auto initialize = slot::get<jbool>(args++);
     auto loader = slot::get<jref>(args++);
     auto caller = slot::get<jref>(args);

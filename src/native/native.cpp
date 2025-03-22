@@ -86,9 +86,18 @@ void init_native() {
     REGISTRY("java/lang/Thread", "registerNatives", "()V", java_lang_Thread_registerNatives);
     REGISTRY("java/lang/System", "registerNatives", "()V", java_lang_System_registerNatives);
     REGISTRY("jdk/internal/misc/Unsafe", "registerNatives", "()V", jdk_internal_misc_Unsafe_registerNatives);
+    REGISTRY("java/lang/invoke/MethodHandleNatives", "registerNatives", "()V", java_lang_invoke_MethodHandleNatives_registerNatives);
 
     REGISTRY_NOW(java_lang_Object_registerNatives);
+    REGISTRY_NOW(java_lang_String_registerNatives);
     REGISTRY_NOW(java_lang_Float_registerNatives);
+    REGISTRY_NOW(java_lang_Module_registerNatives);
+    REGISTRY_NOW(java_lang_Throwable_registerNatives);
+    REGISTRY_NOW(java_lang_ref_Reference_registerNatives);
     REGISTRY_NOW(java_lang_reflect_Array_registerNatives);
+    REGISTRY_NOW(java_io_FileDescriptor_registerNatives);
+    REGISTRY_NOW(java_io_FileInputStream_registerNatives);
+    REGISTRY_NOW(java_io_FileOutputStream_registerNatives);
     REGISTRY_NOW(jdk_internal_misc_CDS_registerNatives);
+    REGISTRY_NOW(jdk_internal_reflect_Reflection_registerNatives);
 }

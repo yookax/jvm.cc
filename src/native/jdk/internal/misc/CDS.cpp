@@ -64,7 +64,6 @@ void dumpDynamicArchive(Frame *f) {
     unimplemented
 }
 
-
 void jdk_internal_misc_CDS_registerNatives() {
 #undef R
 #define R(method, method_descriptor) \
