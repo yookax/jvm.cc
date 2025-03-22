@@ -256,34 +256,36 @@ static void objectFieldOffset1(Frame *f) {
     f->pushl(field_offset(field));
 }
 
-
-
-#if 0
-
-#define OBJ_SETTER_AND_GETTER(jtype, type, Type, t) \
-static j##type _obj_get_##type##_(Frame *f) { \
+#define OBJ_SETTER_AND_GETTER(jtype, type, Type, t, t0, jtype0) \
+static void _obj_get_##type##_(Frame *f) { \
     slot_t *args = f->lvars; \
     args++; /* jump 'this' */ \
     auto o = slot::get<jref>(args++); \
     auto offset = slot::get<jlong>(args); \
     /* o == nullptr 时get内存中的值， offset就是地址 */ \
     if (o == nullptr) { \
-        return *(j##type *) (intptr_t) offset; \
+        f->push##t0(*(j##type *) (intptr_t) offset); return;\
     } \
     if ((o)->is_array_object()) { /* get value from array */ \
         assert(0 <= offset && offset < o->arr_len); \
-        return (o)->getElt<j##type>(offset); \
+        f->push##t0((o)->getElt<j##type>(offset)); return;\
     } else if ((o)->is_class_object()) { /* get static filed value */ \
         Class *c = o->jvm_mirror; \
         init_class(c);  \
-        return c->fields.at(offset)->static_value.t; \
+        f->push##t0(c->fields.at(offset)->static_value.t); return; \
     } else { \
         assert(0 <= offset && offset < o->clazz->inst_fields_count); \
-        return slot::get<jtype>(o->data + offset); \
+        f->push##t0(slot::get<jtype>(o->data + offset)); return; \
     } \
 } \
 \
-static void _obj_put_##type##_(jref o, jlong offset, j##type x) { \
+static void _obj_put_##type##_(Frame *f) { \
+    slot_t *args = f->lvars; \
+    args++; /* jump 'this' */  \
+    auto o = slot::get<jref>(args++); \
+    auto offset = slot::get<jlong>(args); \
+    args += 2; \
+    auto x = (jtype)slot::get<jtype0>(args); \
     /* o == nullptr 时put值到内存中， offset就是地址 */ \
     if (o == nullptr) { \
         *(j##type *) (intptr_t) offset = x; \
@@ -302,29 +304,47 @@ static void _obj_put_##type##_(jref o, jlong offset, j##type x) { \
     } \
 }
 
-OBJ_SETTER_AND_GETTER(jbool, boolean, Bool, z)
-OBJ_SETTER_AND_GETTER(jbyte, byte, Byte, b)
-OBJ_SETTER_AND_GETTER(jchar, char, Char, c)
-OBJ_SETTER_AND_GETTER(jshort, short, Short, s)
-OBJ_SETTER_AND_GETTER(jint, int, Int, i)
-OBJ_SETTER_AND_GETTER(jlong, long, Long, j)
-OBJ_SETTER_AND_GETTER(jfloat, float, Float, f)
-OBJ_SETTER_AND_GETTER(jdouble, double, Double, d)
-OBJ_SETTER_AND_GETTER(jref, ref, Ref, r)
+OBJ_SETTER_AND_GETTER(jbool, boolean, Bool, z, i, jint)
+OBJ_SETTER_AND_GETTER(jbyte, byte, Byte, b, i, jint)
+OBJ_SETTER_AND_GETTER(jchar, char, Char, c, i, jint)
+OBJ_SETTER_AND_GETTER(jshort, short, Short, s, i, jint)
+OBJ_SETTER_AND_GETTER(jint, int, Int, i, i, jint)
+OBJ_SETTER_AND_GETTER(jlong, long, Long, j, l, jlong)
+OBJ_SETTER_AND_GETTER(jfloat, float, Float, f, f, jfloat)
+OBJ_SETTER_AND_GETTER(jdouble, double, Double, d, d, jdouble)
+OBJ_SETTER_AND_GETTER(jref, ref, Ref, r, r, jref)
 
 #undef OBJ_SETTER_AND_GETTER
 
+//public native int getInt(Object o, long offset);
+//public native void putInt(Object o, long offset, int x);
+//public native Object getReference(Object o, long offset);
+//public native void putReference(Object o, long offset, Object x);
+//public native boolean getBoolean(Object o, long offset);
+//public native void putBoolean(Object o, long offset, boolean x);
+//public native byte getByte(Object o, long offset);
+//public native void putByte(Object o, long offset, byte x);
+//public native short getShort(Object o, long offset);
+//public native void putShort(Object o, long offset, short x);
+//public native char getChar(Object o, long offset);
+//public native void putChar(Object o, long offset, char x);
+//public native long getLong(Object o, long offset);
+//public native void putLong(Object o, long offset, long x);
+//public native float getFloat(Object o, long offset);
+//public native void putFloat(Object o, long offset, float x);
+//public native double getDouble(Object o, long offset);
+//public native void putDouble(Object o, long offset, double x);
+
+
 #define OBJ_SETTER_AND_GETTER_VOLATILE(type) \
-static j##type _obj_get_##type##_volatile(JNIEnv *env, jref _this, jref o, jlong offset) \
-{ \
+static void _obj_get_##type##_volatile(Frame *f) { \
     /* todo Volatile */ \
-    return _obj_get_##type##_(env, _this, o, offset);  \
+    _obj_get_##type##_(f);  \
 } \
  \
-static void _obj_put_##type##_volatile(JNIEnv *env, jref _this, jref o, jlong offset, j##type x) \
-{ \
+static void _obj_put_##type##_volatile(Frame *f) { \
     /* todo Volatile */ \
-    _obj_put_##type##_(env, _this, o, offset, x); \
+    _obj_put_##type##_(f); \
 }
 
 OBJ_SETTER_AND_GETTER_VOLATILE(boolean)
@@ -340,23 +360,36 @@ OBJ_SETTER_AND_GETTER_VOLATILE(double)
 
 // -------------------------
 // public native Object getObjectVolatile(Object o, long offset);
-static jref getObjectVolatile(JNIEnv *env, jref _this, jref o, jlong offset) {
+static void getObjectVolatile(Frame *f) {
     // todo Volatile
 
+    slot_t *args = f->lvars;
+    args++; /* jump 'this' */
+    auto o = slot::get<jref>(args++);
+    auto offset = slot::get<jlong>(args);
+
     if (o->is_array_object()) {
-        return o->getElt<jref>(offset);
+        f->pushr(o->getElt<jref>(offset));
     } else if (o->is_class_object()) {
         Class *c = o->jvm_mirror;
-        return c->fields.at(offset)->static_value.r;
+        f->pushr(c->fields.at(offset)->static_value.r);
     } else {
         assert(0 <= offset && offset < o->clazz->inst_fields_count);
-        return *(jref *)(o->data + offset);//o->getInstFieldValue<jref>(offset);  // todo
+        f->pushr(*(jref *)(o->data + offset));//o->getInstFieldValue<jref>(offset);  // todo
     }
 }
 
 // public native void putObjectVolatile(Object o, long offset, Object x);
-static void putObjectVolatile(JNIEnv *env, jref _this, jref o, jlong offset, jref x) {
+static void putObjectVolatile(Frame *f) {
     // todo Volatile
+
+    slot_t *args = f->lvars;
+    args++; /* jump 'this' */
+    auto o = slot::get<jref>(args++);
+    auto offset = slot::get<jlong>(args);
+    args += 2;
+    auto x = slot::get<jref>(args);
+
     if (o->is_array_object()) {
         o->setRefElt(offset, x);
     } else {
@@ -364,30 +397,42 @@ static void putObjectVolatile(JNIEnv *env, jref _this, jref o, jlong offset, jre
     }
 }
 
+
 /*************************************    unsafe memory    ************************************/
-// todo 说明 unsafe memory
 
 /*
  * todo
  * 分配内存方法还有重分配内存方法都是分配的堆外内存，
  * 返回的是一个long类型的地址偏移量。这个偏移量在你的Java程序中每块内存都是唯一的。
  */
-// public native long allocateMemory(long bytes);
-static jlong allocateMemory(JNIEnv *env, jref _this, jlong bytes) {
+// public native long allocateMemory0(long bytes);
+static void allocateMemory0(Frame *f) {
+    slot_t *args = f->lvars;
+    args++; // jump 'this'
+    auto bytes = slot::get<jlong>(args);
+
     u1 *p = (u1 *) malloc(sizeof(char)*bytes);
     if (p == nullptr) {
         // todo error
     }
-    return (jlong) (intptr_t) p;
+    f->pushl((jlong) (intptr_t) p);
 }
 
-// public native long reallocateMemory(long address, long bytes);
-static jlong reallocateMemory(JNIEnv *env, jref _this, jlong address, jlong bytes) {
-    return (jlong) (intptr_t) realloc((void *) (intptr_t) address, (size_t) bytes); // 有内存泄漏  todo
+// public native long reallocateMemory0(long address, long bytes);
+static void reallocateMemory0(Frame *f) {
+    slot_t *args = f->lvars;
+    args++; // jump 'this'
+    auto address = slot::get<jlong>(args);
+    args += 2;
+    auto bytes = slot::get<jlong>(args);
+    f->pushl((jlong) (intptr_t) realloc((void *) (intptr_t) address, (size_t) bytes)); // 有内存泄漏  todo
 }
 
-// public native void freeMemory(long address);
-static void freeMemory(JNIEnv *env, jref _this, jlong address) {
+// public native void freeMemory0(long address);
+static void freeMemory0(Frame *f) {
+    slot_t *args = f->lvars;
+    args++; // jump 'this'
+    auto address = slot::get<jlong>(args);
     free((void *) (intptr_t) address);
 }
 
@@ -421,8 +466,17 @@ static void *getPoint__(jref o, jlong offset) {
  * If the effective address and length are (resp.) even modulo 4 or 2,
  * the stores take place in units of 'int' or 'short'.
  */
-// public native void setMemory(Object o, long offset, long bytes, byte value);
-static void setMemory(JNIEnv *env, jref _this, jref o, jlong offset, jlong bytes, jbyte value) {
+// public native void setMemory0(Object o, long offset, long bytes, byte value);
+static void setMemory0(Frame *f) {
+    slot_t *args = f->lvars;
+    args++; // jump 'this'
+    auto o = slot::get<jref>(args++);
+    auto offset = slot::get<jlong>(args);
+    args += 2;
+    auto bytes = slot::get<jlong>(args);
+    args += 2;
+    auto value = slot::get<jbyte>(args);
+
     void *p = getPoint__(o, offset);
     assert(p != nullptr);
     memset(p, value, bytes);
@@ -442,10 +496,18 @@ static void setMemory(JNIEnv *env, jref _this, jref o, jlong offset, jlong bytes
  * If the effective addresses and length are (resp.) even modulo 4 or 2,
  * the transfer takes place in units of 'int' or 'short'.
  */
-// public native void copyMemory(Object srcBase, long srcOffset, Object destBase, long destOffset, long bytes);
-static void copyMemory(JNIEnv *env, jref _this,
-                       jref src_base, jlong src_offset,
-                       jref dest_base, jlong dest_offset, jlong bytes) {
+// public native void copyMemory0(Object srcBase, long srcOffset, Object destBase, long destOffset, long bytes);
+static void copyMemory0(Frame *f) {
+    slot_t *args = f->lvars;
+    args++; // jump 'this'
+    auto src_base = slot::get<jref>(args++);
+    auto src_offset = slot::get<jlong>(args);
+    args += 2;
+    auto dest_base = slot::get<jref>(args++);
+    auto dest_offset = slot::get<jlong>(args);
+    args += 2;
+    auto bytes = slot::get<jlong>(args);
+
     void *src_p = getPoint__(src_base, src_offset);
     void *dest_p = getPoint__(dest_base, dest_offset);
 
@@ -456,9 +518,7 @@ static void copyMemory(JNIEnv *env, jref _this,
 
 // private native void copySwapMemory0(Object srcBase, long srcOffset, Object destBase,
 //                                long destOffset, long bytes, long elemSize);
-static void copySwapMemory(JNIEnv *env, jref _this,
-                           jref src_base, jlong src_offset,
-                           jref dest_base, jlong dest_offset, jlong bytes, jlong elemSize) {
+static void copySwapMemory0(Frame *f) {
     unimplemented
 }
 
@@ -477,17 +537,21 @@ static void copySwapMemory(JNIEnv *env, jref _this,
 * @return the number of samples actually retrieved; or -1
 *         if the load average is unobtainable.
 */
-// public native int getLoadAverage(double[] loadavg, int nelems);
-static jint getLoadAverage(JNIEnv *env, jref _this, jref loadavg, jint nelems) {
+// private native int getLoadAverage0(double[] loadavg, int nelems);
+static void getLoadAverage0(Frame *f) {
     unimplemented
 }
 
-// (Ljava/lang/Class;)Z
-static jboolean shouldBeInitialized(JNIEnv *env, jref _this, jclsRef c) {
+// private native boolean shouldBeInitialized0(Class<?> c);
+static void shouldBeInitialized0(Frame *f) {
     // todo
-    return c->jvm_mirror->state >= Class::State::INITED ? jtrue : jfalse;
+    slot_t *args = f->lvars;
+    args++; // jump 'this'
+    auto co = slot::get<jref>(args);
+    jbool b = co->jvm_mirror->state >= Class::State::INITED ? jtrue : jfalse;
+    f->pushi(b);
 }
-
+#if 0
 /**
  * Define a class but do not make it known to the class loader or system dictionary.
  *
@@ -563,16 +627,19 @@ static void fullFence(Frame *f) {
 
 void jdk_internal_misc_Unsafe_registerNatives(Frame *f) {
 #undef R
+#undef R0
 #define R(method, method_descriptor) \
     registry("jdk/internal/misc/Unsafe", #method, method_descriptor, method)
+#define R0(method_name, method_descriptor, method) \
+    registry("jdk/internal/misc/Unsafe", method_name, method_descriptor, method)
 
     R(park, "(ZJ)V");
     R(unpark, _OBJ ")V");
 
     // compare and swap
-//    R("compareAndSetInt", _OBJ "JII)Z", (void *) compareAndSwapInt },
-//    R("compareAndSetLong", _OBJ "JJJ)Z", (void *) compareAndSwapLong },
-//    R("compareAndSetReference", _OBJ "J" OBJ OBJ_ "Z", (void *) compareAndSwapObject },
+//    R("compareAndSetInt", _OBJ "JII)Z", compareAndSwapInt },
+//    R("compareAndSetLong", _OBJ "JJJ)Z", compareAndSwapLong },
+//    R("compareAndSetReference", _OBJ "J" OBJ OBJ_ "Z", compareAndSwapObject },
 
     // class
     R(allocateInstance, _CLS_ OBJ);
@@ -586,60 +653,60 @@ void jdk_internal_misc_Unsafe_registerNatives(Frame *f) {
     R(arrayIndexScale0, _CLS_"I");
     R(objectFieldOffset0, "(Ljava/lang/reflect/Field;)J");
     R(objectFieldOffset1, _CLS STR ")J");
-//
-//    R("getBoolean", _OBJ "J)Z", (void *) _obj_get_boolean_ },
-//    R("putBoolean", _OBJ "JZ)V", (void *) _obj_put_boolean_ },
-//    R("getByte", _OBJ "J)B", (void *) _obj_get_byte_ },
-//    R("putByte", _OBJ "JB)V", (void *) _obj_put_byte_ },
-//    R("getChar", _OBJ "J)C", (void *) _obj_get_char_ },
-//    R("putChar", _OBJ "JC)V", (void *) _obj_put_char_ },
-//    R("getShort", _OBJ "J)S", (void *) _obj_get_short_ },
-//    R("putShort", _OBJ "JS)V", (void *) _obj_put_short_ },
-//    R("getInt", _OBJ "J)I", (void *) _obj_get_int_ },
-//    R("putInt", _OBJ "JI)V", (void *) _obj_put_int_ },
-//    R("getLong", _OBJ "J)J", (void *) _obj_get_long_ },
-//    R("putLong", _OBJ "JJ)V", (void *) _obj_put_long_ },
-//    R("getFloat", _OBJ "J)F", (void *) _obj_get_float_ },
-//    R("putFloat", _OBJ "JF)V", (void *) _obj_put_float_ },
-//    R("getDouble", _OBJ "J)D", (void *) _obj_get_double_ },
-//    R("putDouble", _OBJ "JD)V",(void *)  _obj_put_double_ },
-//    R("getReference", _OBJ "J)" OBJ, (void *) _obj_get_ref_ },
-//    R("putReference", _OBJ "J" OBJ_ "V", (void *) _obj_put_ref_ },
-//
-//    R("putIntVolatile", _OBJ "JI)V", (void *) _obj_put_int_volatile },
-//    R("putBooleanVolatile", _OBJ "JZ)V", (void *) _obj_put_boolean_volatile },
-//    R("putByteVolatile", _OBJ "JB)V", (void *) _obj_put_byte_volatile },
-//    R("putShortVolatile", _OBJ "JS)V", (void *) _obj_put_short_volatile },
-//    R("putCharVolatile", _OBJ "JC)V", (void *) _obj_put_char_volatile },
-//    R("putLongVolatile", _OBJ "JJ)V", (void *) _obj_put_long_volatile },
-//    R("putFloatVolatile", _OBJ "JF)V", (void *) _obj_put_float_volatile },
-//    R("putDoubleVolatile", _OBJ "JD)V", (void *) _obj_put_double_volatile },
-//    R("putReferenceVolatile", _OBJ "J" OBJ_ "V", (void *) putObjectVolatile },
-//
-//    R("getCharVolatile", _OBJ "J)C", (void *) _obj_get_char_volatile },
-//    R("getIntVolatile", _OBJ "J)I", (void *) _obj_get_int_volatile },
-//    R("getBooleanVolatile", _OBJ "J)Z", (void *) _obj_get_boolean_volatile },
-//    R("getByteVolatile", _OBJ "J)B", (void *) _obj_get_byte_volatile },
-//    R("getShortVolatile", _OBJ "J)S", (void *) _obj_get_short_volatile },
-//    R("getLongVolatile", _OBJ "J)J", (void *) _obj_get_long_volatile },
-//    R("getFloatVolatile", _OBJ "J)F", (void *) _obj_get_float_volatile },
-//    R("getDoubleVolatile", _OBJ "J)D", (void *) _obj_get_double_volatile },
-//    R("getReferenceVolatile", _OBJ "J)" OBJ, (void *) getObjectVolatile },
-//
+
+    R0("getBoolean", _OBJ "J)Z", _obj_get_boolean_);
+    R0("putBoolean", _OBJ "JZ)V",  _obj_put_boolean_);
+    R0("getByte", _OBJ "J)B", _obj_get_byte_);
+    R0("putByte", _OBJ "JB)V", _obj_put_byte_);
+    R0("getChar", _OBJ "J)C", _obj_get_char_);
+    R0("putChar", _OBJ "JC)V", _obj_put_char_);
+    R0("getShort", _OBJ "J)S", _obj_get_short_);
+    R0("putShort", _OBJ "JS)V", _obj_put_short_);
+    R0("getInt", _OBJ "J)I", _obj_get_int_);
+    R0("putInt", _OBJ "JI)V", _obj_put_int_);
+    R0("getLong", _OBJ "J)J", _obj_get_long_);
+    R0("putLong", _OBJ "JJ)V", _obj_put_long_);
+    R0("getFloat", _OBJ "J)F", _obj_get_float_);
+    R0("putFloat", _OBJ "JF)V", _obj_put_float_);
+    R0("getDouble", _OBJ "J)D", _obj_get_double_);
+    R0("putDouble", _OBJ "JD)V", _obj_put_double_);
+    R0("getReference", _OBJ "J)" OBJ, _obj_get_ref_);
+    R0("putReference", _OBJ "J" OBJ_ "V", _obj_put_ref_);
+
+    R0("putIntVolatile", _OBJ "JI)V", _obj_put_int_volatile);
+    R0("putBooleanVolatile", _OBJ "JZ)V", _obj_put_boolean_volatile);
+    R0("putByteVolatile", _OBJ "JB)V", _obj_put_byte_volatile);
+    R0("putShortVolatile", _OBJ "JS)V", _obj_put_short_volatile);
+    R0("putCharVolatile", _OBJ "JC)V", _obj_put_char_volatile);
+    R0("putLongVolatile", _OBJ "JJ)V", _obj_put_long_volatile);
+    R0("putFloatVolatile", _OBJ "JF)V", _obj_put_float_volatile);
+    R0("putDoubleVolatile", _OBJ "JD)V", _obj_put_double_volatile);
+    R0("putReferenceVolatile", _OBJ "J" OBJ_ "V", putObjectVolatile);
+
+    R0("getCharVolatile", _OBJ "J)C", _obj_get_char_volatile);
+    R0("getIntVolatile", _OBJ "J)I", _obj_get_int_volatile);
+    R0("getBooleanVolatile", _OBJ "J)Z",_obj_get_boolean_volatile);
+    R0("getByteVolatile", _OBJ "J)B", _obj_get_byte_volatile);
+    R0("getShortVolatile", _OBJ "J)S", _obj_get_short_volatile);
+    R0("getLongVolatile", _OBJ "J)J", _obj_get_long_volatile);
+    R0("getFloatVolatile", _OBJ "J)F", _obj_get_float_volatile);
+    R0("getDoubleVolatile", _OBJ "J)D", _obj_get_double_volatile);
+    R0("getReferenceVolatile", _OBJ "J)" OBJ, getObjectVolatile);
+
 //    // unsafe memory
-//    R("allocateMemory0", "(J)J", (void *) allocateMemory },
-//    R("reallocateMemory0", "(JJ)J", (void *) reallocateMemory },
-//    R("setMemory0", _OBJ "JJB)V", (void *) setMemory },
-//    R("copyMemory0", _OBJ "JLjava/lang/Object;JJ)V", (void *) copyMemory },
-//    R("copySwapMemory0", _OBJ "JLjava/lang/Object;JJJ)V", (void *) copySwapMemory },
-//    R("freeMemory0", "(J)V", (void *) freeMemory },
-//
-//    R("shouldBeInitialized0", _CLS_ "Z", (void *) shouldBeInitialized },
-//    R("getLoadAverage0", "([DI)I", (void *) getLoadAverage },
-//    R("defineAnonymousClass0", _CLS "[B[" OBJ_ CLS, (void *) defineAnonymousClass },
+    R(allocateMemory0, "(J)J");
+    R(reallocateMemory0, "(JJ)J");
+    R(setMemory0, _OBJ "JJB)V");
+    R(copyMemory0, _OBJ "JLjava/lang/Object;JJ)V");
+    R(copySwapMemory0, _OBJ "JLjava/lang/Object;JJJ)V");
+    R(freeMemory0, "(J)V");
+
+    R(shouldBeInitialized0, _CLS_ "Z");
+    R(getLoadAverage0, "([DI)I");
+//    R("defineAnonymousClass0", _CLS "[B[" OBJ_ CLS, defineAnonymousClass);
     R(throwException, "(Ljava/lang/Throwable;)V");
 //
-//    R("loadFence", "()V", (void *) loadFence },
-//    R("storeFence", "()V", (void *) storeFence },
+//    R("loadFence", "()V", loadFence);
+//    R("storeFence", "()V", storeFence);
     R(fullFence, "()V");
 }
