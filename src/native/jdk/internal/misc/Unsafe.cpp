@@ -64,12 +64,18 @@ static void unpark(Frame *f) {
  * public final native boolean compareAndSwapInt(Object o, long offset, int expected, int x);
  */
 
-#if 0
-
 static std::mutex mtx;
 
-static jboolean compareAndSwapInt(JNIEnv *env, jref _this,
-                                  jref o, jlong offset, jint expected, jint x) {
+//public final native boolean compareAndSetInt(Object o, long offset, int expected, int x);
+static void compareAndSetInt(Frame *f) {
+    slot_t *args = f->lvars;
+    args++; // jump 'this'
+    auto o = slot::get<jref>(args++);
+    auto offset = slot::get<jlong>(args);
+    args += 2;
+    auto expected = slot::get<jint>(args++);
+    auto x = slot::get<jint>(args);
+
     jint *old;
 
     if (o == nullptr) {
@@ -93,11 +99,20 @@ static jboolean compareAndSwapInt(JNIEnv *env, jref _this,
     }
 //#endif
 
-    return b ? jtrue : jfalse;
+    f->pushi(b ? jtrue : jfalse);
 }
 
-static jboolean compareAndSwapLong(JNIEnv *env, jref _this,
-                                   jref o, jlong offset, jlong expected, jlong x) {
+//public final native boolean compareAndSetLong(Object o, long offset, long expected, long x);
+static void compareAndSetLong(Frame *f) {
+    slot_t *args = f->lvars;
+    args++; // jump 'this'
+    auto o = slot::get<jref>(args++);
+    auto offset = slot::get<jlong>(args);
+    args += 2;
+    auto expected = slot::get<jlong>(args);
+    args += 2;
+    auto x = slot::get<jlong>(args);
+
     jlong *old;
 
     if (o == nullptr) {
@@ -121,11 +136,19 @@ static jboolean compareAndSwapLong(JNIEnv *env, jref _this,
     }
 //#endif
 
-    return b ? jtrue : jfalse;
+    f->pushi(b ? jtrue : jfalse);
 }
 
-static jboolean compareAndSwapObject(JNIEnv *env, jref _this,
-                                     jref o, jlong offset, jref expected, jref x) {
+//public final native boolean compareAndSetReference(Object o, long offset, Object expected, Object x);
+static void compareAndSetReference(Frame *f) {
+    slot_t *args = f->lvars;
+    args++; // jump 'this'
+    auto o = slot::get<jref>(args++);
+    auto offset = slot::get<jlong>(args);
+    args += 2;
+    auto expected = slot::get<jref>(args++);
+    auto x = slot::get<jref>(args);
+
     jref *old;
 
     if (o == nullptr) {
@@ -149,10 +172,8 @@ static jboolean compareAndSwapObject(JNIEnv *env, jref _this,
     }
 //#endif
 
-    return b ? jtrue : jfalse;
+    f->pushi(b ? jtrue : jfalse);
 }
-
-#endif
 
 /*************************************    class    ************************************/
 // Allocate an instance but do not run any constructor. Initializes the class if it has not yet been.
@@ -636,10 +657,9 @@ void jdk_internal_misc_Unsafe_registerNatives(Frame *f) {
     R(park, "(ZJ)V");
     R(unpark, _OBJ ")V");
 
-    // compare and swap
-//    R("compareAndSetInt", _OBJ "JII)Z", compareAndSwapInt },
-//    R("compareAndSetLong", _OBJ "JJJ)Z", compareAndSwapLong },
-//    R("compareAndSetReference", _OBJ "J" OBJ OBJ_ "Z", compareAndSwapObject },
+    R(compareAndSetInt, _OBJ "JII)Z");
+    R(compareAndSetLong, _OBJ "JJJ)Z");
+    R(compareAndSetReference, _OBJ "J" OBJ OBJ_ "Z");
 
     // class
     R(allocateInstance, _CLS_ OBJ);
