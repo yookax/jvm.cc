@@ -84,6 +84,7 @@ void init_native() {
     REGISTRY("java/lang/Class", "registerNatives", "()V", java_lang_Class_registerNatives);
     //REGISTRY("java/lang/Thread", "registerNatives", "()V", java_lang_Thread_registerNatives);
     REGISTRY("java/lang/System", "registerNatives", "()V", java_lang_System_registerNatives);
+    REGISTRY("jdk/internal/misc/Unsafe", "registerNatives", "()V", jdk_internal_misc_Unsafe_registerNatives);
 
     REGISTRY_NOW(java_lang_Object_registerNatives);
     REGISTRY_NOW(java_lang_Float_registerNatives);
