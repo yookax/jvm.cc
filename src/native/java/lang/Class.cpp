@@ -492,6 +492,19 @@ void getClassAccessFlagsRaw0(Frame *f) {
     unimplemented
 }
 
+// Called after security check for system loader access checks have been made.
+//private static native Class<?> forName0(String name, boolean initialize,
+//                        ClassLoader loader, Class<?> caller) throws ClassNotFoundException;
+void forName0(Frame *f) {
+    slot_t *args = f->lvars;
+    auto name = slot::get<jref>(args++);
+    auto initialize = slot::get<jbool>(args++);
+    auto loader = slot::get<jref>(args++);
+    auto caller = slot::get<jref>(args);
+
+    unimplemented
+}
+
 // private static native void registerNatives();
 void java_lang_Class_registerNatives(Frame *f) {
 #undef R
@@ -525,4 +538,5 @@ void java_lang_Class_registerNatives(Frame *f) {
     R(getPermittedSubclasses0, "()[Ljava/lang/Class;");
     R(getClassFileVersion0, "()I");
     R(getClassAccessFlagsRaw0, "()I");
+    // R(forName0, "(Ljava/lang/String;ZLjava/lang/ClassLoader;Ljava/lang/Class;)Ljava/lang/Class;");
 }

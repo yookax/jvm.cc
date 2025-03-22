@@ -41,6 +41,7 @@ set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/native/java/lang/Float.cpp
         src/native/jdk/internal/misc/Unsafe.cpp
         src/native/jdk/internal/misc/CDS.cpp
+        src/native/java/lang/ClassLoader.cpp
 )
 
 set (TEST_SOURCE_FILES
