@@ -11,6 +11,7 @@ import encoding;
 import runtime;
 import class_loader;
 import interpreter;
+import exception;
 
 using namespace std;
 using namespace slot;
@@ -35,7 +36,33 @@ void initClassName(Frame *f) {
     f->pushr(class_name);
 }
 
+/*
+ * Returns the {@code Class} representing the direct superclass of the
+ * entity (class, interface, primitive type or void) represented by
+ * this {@code Class}.  If this {@code Class} represents either the
+ * {@code Object} class, an interface, a primitive type, or void, then
+ * null is returned.  If this {@code Class} object represents an array class
+ * then the {@code Class} object representing the {@code Object} class is
+ * returned.
+ *
+ * @return the direct superclass of the class represented by this {@code Class} object
+ */
 // public native Class<? super T> getSuperclass();
+void getSuperclass(Frame *f) {
+    slot_t *args = f->lvars;
+    auto _this = slot::get<jref>(args++)->jvm_mirror;
+
+    jref sup = nullptr;
+    if (_this->access_flags.is_interface()
+            || _this->is_prim_class()
+            || _this->check_class_name("void")
+            || (_this->super_class == nullptr))
+        sup = nullptr;
+    else
+        sup = _this->super_class->java_mirror;
+
+    f->pushr(sup);
+}
 
 // private native Class<?>[] getInterfaces0();
 void getInterfaces0(Frame *f) {
@@ -51,6 +78,42 @@ void getInterfaces0(Frame *f) {
     }
 
     f->pushr(interfaces);
+}
+
+/*
+ * Determines if the class or interface represented by this
+ * {@code Class} object is either the same as, or is a superclass or
+ * superinterface of, the class or interface represented by the specified
+ * {@code Class} parameter. It returns {@code true} if so;
+ * otherwise it returns {@code false}. If this {@code Class}
+ * object represents a primitive type, this method returns
+ * {@code true} if the specified {@code Class} parameter is
+ * exactly this {@code Class} object; otherwise it returns
+ * {@code false}.
+ *
+ * <p> Specifically, this method tests whether the type represented by the
+ * specified {@code Class} parameter can be converted to the type
+ * represented by this {@code Class} object via an identity conversion
+ * or via a widening reference conversion. See <cite>The Java Language
+ * Specification</cite>, sections {@jls 5.1.1} and {@jls 5.1.4},
+ * for details.
+ *
+ * @param     cls the {@code Class} object to be checked
+ * @return    the {@code boolean} value indicating whether objects of the
+ *            type {@code cls} can be assigned to objects of this class
+ * @throws    NullPointerException if the specified Class parameter is
+ *            null.
+ * @since     1.1
+ */
+// public native boolean isAssignableFrom(Class<?> cls);
+void isAssignableFrom(Frame *f) {
+    slot_t *args = f->lvars;
+    auto _this = slot::get<jref>(args++)->jvm_mirror;
+    auto co = slot::get<jref>(args);
+    if (co == nullptr) {
+        throw java_lang_NullPointerException(); // todo msg
+    }
+    f->pushi(co->jvm_mirror->is_subclass_of(_this) ? 1 : 0);
 }
 
 // public native boolean isInterface();
@@ -83,6 +146,14 @@ void isPrimitive(Frame *f) {
     auto _this = slot::get<jref>(args);
     auto c = _this->jvm_mirror;
     f->pushi(c->is_prim_class() ? 1 : 0);
+}
+
+// public native boolean isInstance(Object obj);
+void isInstance(Frame *f) {
+    slot_t *args = f->lvars;
+    auto _this = slot::get<jref>(args++);
+    auto obj = slot::get<jref>(args);
+    f->pushi(obj->is_instance_of(_this->jvm_mirror) ? 1 : 0);
 }
 
 // public native int getModifiers();
@@ -512,11 +583,14 @@ void java_lang_Class_registerNatives(Frame *f) {
     registry("java/lang/Class", #method, method_descriptor, method)
 
     R(initClassName, "()Ljava/lang/String;");
+    R(getSuperclass, "()Ljava/lang/Class;");
     R(getInterfaces0, "()[Ljava/lang/Class;");
+    R(isAssignableFrom, "(Ljava/lang/Class;)Z");
     R(isInterface, "()Z");
     R(isArray, "()Z");
     R(isHidden, "()Z");
     R(isPrimitive, "()Z");
+    R(isInstance, "(Ljava/lang/Object;)Z");
     R(getModifiers,  "()I");
     R(getDeclaredFields0, "(Z)[Ljava/lang/reflect/Field;");
     R(getDeclaredMethods0, "(Z)[Ljava/lang/reflect/Method;");

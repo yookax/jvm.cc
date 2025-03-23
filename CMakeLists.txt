@@ -17,8 +17,14 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8 /experimental:module /W4")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8 /experimental:module ") # /W4
 endif()
+
+# 添加 zlib 子目录，引入 zlib 的 CMakeLists.txt
+# add_subdirectory(lib/zlib-1.3.1)
+
+# 包含 minizip 头文件目录
+# target_include_directories(jvmcc PRIVATE lib/zlib-1.3.1/minizip)
 
 set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/jmm.cpp src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
@@ -51,6 +57,7 @@ set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/native/java/io/FileDescriptor.cpp
         src/native/java/lang/ref/Reference.cpp
         src/native/java/lang/invoke/MethodHandleNatives.cpp
+        src/native/jdk/internal/misc/Signal.cpp
 )
 
 set (TEST_SOURCE_FILES
@@ -73,6 +80,7 @@ SET_TARGET_PROPERTIES(jvm PROPERTIES OUTPUT_NAME "jvm" PREFIX "")
 # 生成可运行的虚拟机
 add_executable(jvmcc src/vm_client.cpp)
 target_link_libraries(jvmcc jvm)
+# target_link_libraries(jvm PRIVATE zlibstatic)
 
 add_executable(jvmcc-test test-cpp/test.cpp)
 target_link_libraries(jvmcc-test jvm)

@@ -99,5 +99,6 @@ void init_native() {
     REGISTRY_NOW(java_io_FileInputStream_registerNatives);
     REGISTRY_NOW(java_io_FileOutputStream_registerNatives);
     REGISTRY_NOW(jdk_internal_misc_CDS_registerNatives);
+    REGISTRY_NOW(jdk_internal_misc_Signal_registerNatives);
     REGISTRY_NOW(jdk_internal_reflect_Reflection_registerNatives);
 }
