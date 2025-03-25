@@ -49,7 +49,7 @@ JNIEXPORT void JNICALL JVM_MonitorNotify(JNIEnv *env, jobject obj);
 JNIEXPORT void JNICALL JVM_MonitorNotifyAll(JNIEnv *env, jobject obj);
 
 void Unsafe_registerNatives(JNIEnv *, jclass);
-void MethodHandleNatives_registerNatives(JNIEnv *, jclass);
+//void MethodHandleNatives_registerNatives(JNIEnv *, jclass);
 void ScopedMemoryAccess_registerNatives(JNIEnv *, jclass );
 
 #define REGISTRY(class_name, method_name, method_descriptor, method) \
@@ -75,8 +75,8 @@ void init_native() {
     c = load_boot_class("jdk/internal/misc/Unsafe");
     c->get_method("registerNatives", "()V")->native_method = (void *) Unsafe_registerNatives;
 
-    c = load_boot_class("java/lang/invoke/MethodHandleNatives");
-    c->get_method("registerNatives", "()V")->native_method = (void *) MethodHandleNatives_registerNatives;
+//    c = load_boot_class("java/lang/invoke/MethodHandleNatives");
+//    c->get_method("registerNatives", "()V")->native_method = (void *) MethodHandleNatives_registerNatives;
 
     c = load_boot_class("jdk/internal/misc/ScopedMemoryAccess");
     c->get_method("registerNatives", "()V")->native_method = (void *) ScopedMemoryAccess_registerNatives;
@@ -95,6 +95,7 @@ void init_native() {
     REGISTRY_NOW(java_lang_Throwable_registerNatives);
     REGISTRY_NOW(java_lang_ref_Reference_registerNatives);
     REGISTRY_NOW(java_lang_reflect_Array_registerNatives);
+//    REGISTRY_NOW(java_lang_invoke_MethodHandle_registerNatives);
     REGISTRY_NOW(java_io_FileDescriptor_registerNatives);
     REGISTRY_NOW(java_io_FileInputStream_registerNatives);
     REGISTRY_NOW(java_io_FileOutputStream_registerNatives);

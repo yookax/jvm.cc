@@ -1,3 +1,5 @@
+#if 0
+
 #include "../vmdef.h"
 #include "../jni.h"
 
@@ -476,3 +478,5 @@ static JNINativeMethod MethodHandleNatives_natives[] = {
 void MethodHandleNatives_registerNatives(JNIEnv *env, jclass cls) {
     (*env)->RegisterNatives(env, cls, MethodHandleNatives_natives, std::size(MethodHandleNatives_natives));
 }
+
+#endif

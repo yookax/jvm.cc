@@ -573,7 +573,16 @@ void forName0(Frame *f) {
     auto loader = slot::get<jref>(args++);
     auto caller = slot::get<jref>(args);
 
-    unimplemented
+    // todo
+    Class *c = loadClass(loader, java_lang_String::to_utf8(classname));
+    if (c == nullptr) {
+        throw java_lang_ClassNotFoundException(); // todo msg
+        // todo ClassNotFoundException
+        unimplemented
+        // (*env)->ThrowNew(env, )
+    }
+
+    f->pushr(c->java_mirror);
 }
 
 // private static native void registerNatives();
@@ -612,5 +621,5 @@ void java_lang_Class_registerNatives(Frame *f) {
     R(getPermittedSubclasses0, "()[Ljava/lang/Class;");
     R(getClassFileVersion0, "()I");
     R(getClassAccessFlagsRaw0, "()I");
-    // R(forName0, "(Ljava/lang/String;ZLjava/lang/ClassLoader;Ljava/lang/Class;)Ljava/lang/Class;");
+     R(forName0, "(Ljava/lang/String;ZLjava/lang/ClassLoader;Ljava/lang/Class;)Ljava/lang/Class;");
 }

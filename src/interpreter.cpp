@@ -1701,13 +1701,19 @@ static void call_native_method(Frame *frame) {
         unimplemented
     }
 
-    auto native = find_native(m->clazz->name, m->name, m->descriptor);
+    auto descriptor = m->descriptor;
+    if (m->is_signature_polymorphic()) {
+        descriptor = "";
+    }
+    auto native = find_native(m->clazz->name, m->name, descriptor);
     if (native == nullptr) {
-        //cout << m->clazz->name << ", " << m->name << ", " << m->descriptor << endl;
+        cout << m->clazz->name << ", " << m->name << ", " << m->descriptor << endl;
         // todo error
     } else {
         auto n = (void(*)(Frame*))native;
         n(frame);
+        if(strcmp(m->clazz->name, "java/lang/invoke/MethodHandleNatives") == 0)
+            return;
         if(strcmp(m->name, "registerNatives") != 0)
             return;
     }

@@ -58,6 +58,7 @@ set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/native/java/lang/ref/Reference.cpp
         src/native/java/lang/invoke/MethodHandleNatives.cpp
         src/native/jdk/internal/misc/Signal.cpp
+#        src/native/java/lang/invoke/MethodHandle.cpp
 )
 
 set (TEST_SOURCE_FILES
