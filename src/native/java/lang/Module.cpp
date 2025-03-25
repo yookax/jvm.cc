@@ -84,7 +84,7 @@ void java_lang_Module_registerNatives() {
 #define R(method, method_descriptor) \
     registry("java/lang/Module", #method, method_descriptor, method)
 
-    R(defineModule0, "(Ljava/lang/Module;ZLjava/lang/String;Ljava/lang/String;[B)V");
+    R(defineModule0, "(Ljava/lang/Module;ZLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V");
     R(addReads0, "(Ljava/lang/Module;Ljava/lang/Module;)V");
     R(addExports0, "(Ljava/lang/Module;Ljava/lang/String;Ljava/lang/Module;)V");
     R(addExportsToAll0, "(Ljava/lang/Module;Ljava/lang/String;)V");
