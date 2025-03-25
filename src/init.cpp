@@ -221,6 +221,8 @@ static string find_jdk_dir() {
     return "";
 }
 
+void __init_invoke__();
+
 void init_jvm(InitArgs *init_args) {
     g_java_home = find_jdk_dir();
     if (g_java_home.empty()) {
@@ -237,6 +239,7 @@ void init_jvm(InitArgs *init_args) {
     init_reference();
     init_thread();
     init_invoke();
+    __init_invoke__();
     init_polymorphic_method();
     init_module();
     init_reflection();

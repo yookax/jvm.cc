@@ -95,7 +95,7 @@ void init_native() {
     REGISTRY_NOW(java_lang_Throwable_registerNatives);
     REGISTRY_NOW(java_lang_ref_Reference_registerNatives);
     REGISTRY_NOW(java_lang_reflect_Array_registerNatives);
-//    REGISTRY_NOW(java_lang_invoke_MethodHandle_registerNatives);
+    REGISTRY_NOW(java_lang_invoke_MethodHandle_registerNatives);
     REGISTRY_NOW(java_io_FileDescriptor_registerNatives);
     REGISTRY_NOW(java_io_FileInputStream_registerNatives);
     REGISTRY_NOW(java_io_FileOutputStream_registerNatives);

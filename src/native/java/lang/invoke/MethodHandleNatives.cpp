@@ -510,5 +510,4 @@ void java_lang_invoke_MethodHandleNatives_registerNatives(Frame *f) {
     R(setCallSiteTargetVolatile, _CS MH_ "V");
     R(copyOutBootstrapArguments, _CLS "III" OBJ "IZ" OBJ ")V");
     R(clearCallSiteContext, "(Ljava/lang/invoke/MethodHandleNatives$CallSiteContext)V");
-
 }

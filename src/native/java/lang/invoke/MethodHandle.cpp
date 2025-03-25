@@ -47,7 +47,7 @@ static int RMN_vmholder_id;
 
 #define MH_asType_method_desc "asType", "(Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/MethodHandle;"
 
-void init_invoke() {
+void __init_invoke__() {
     constructor_reflect_class = load_boot_class("java/lang/reflect/Constructor");
     method_reflect_class = load_boot_class("java/lang/reflect/Method");
     field_reflect_class = load_boot_class("java/lang/reflect/Field");
@@ -139,6 +139,38 @@ jref linkMethodHandleConstant(Class *caller_class, int ref_kind,
 //     return execJavaR(lookup);
 // }
 
+static void push_return_value(Frame *f, slot_t *v) {
+    switch (f->method->ret_type) {
+        case Method::RET_VOID:      break;
+        case Method::RET_BYTE:      f->pushi(slot::get<jbyte>(v));   break;
+        case Method::RET_BOOL:      f->pushi(slot::get<jbool>(v));   break;
+        case Method::RET_CHAR:      f->pushi(slot::get<jchar>(v));   break;
+        case Method::RET_SHORT:     f->pushi(slot::get<jshort>(v));  break;
+        case Method::RET_INT:       f->pushi(slot::get<jint>(v));    break;
+        case Method::RET_FLOAT:     f->pushf(slot::get<jfloat>(v));  break;
+        case Method::RET_LONG:      f->pushl(slot::get<jlong>(v));   break;
+        case Method::RET_DOUBLE:    f->pushd(slot::get<jdouble>(v)); break;
+        case Method::RET_REFERENCE: f->pushr(slot::get<jref>(v));    break;
+        case Method::RET_INVALID:
+        default:                    UNREACHABLE("%d", f->method->ret_type);  break;
+    }
+}
+
+static slot_t* __invokeExact__(const slot_t *args) {
+    jref _this = slot::get<jref>(args);
+
+    jref form = _this->get_field_value<jref>(MH_form_id);
+    jref entry = form->get_field_value<jref>("vmentry", "Ljava/lang/invoke/MemberName;");
+    jref resolved = entry->get_field_value<jref>(MN_method_id);
+    auto target = (Method *) (void *) resolved->get_field_value<jref>(RMN_vmtarget_id);
+
+    // printvm("+++ %d\n", args->arr_len);
+    // printvm("+++ %p\n", entry);
+    // printvm("+++ %s\n", target->toString().c_str());
+
+    return execJava(target, args);
+}
+
 /**
  * Invokes the method handle, allowing any caller type type, but requiring an exact type match.
  * The symbolic type type at the call site of {@code invokeExact} must
@@ -157,19 +189,24 @@ jref linkMethodHandleConstant(Class *caller_class, int ref_kind,
  * @throws Throwable anything thrown by the underlying method propagates unchanged through the method handle call
  */
 // public final native @PolymorphicSignature Object invokeExact(Object... args) throws Throwable;
-void invokeExact(const slot_t *args, u2 len) {
-    jref _this = slot::get<jref>(args);
+static void invokeExact(Frame *f) {
+//    slot_t *args = f->lvars;
+//    jref _this = slot::get<jref>(args);
+//
+//    jref form = _this->get_field_value<jref>(MH_form_id);
+//    jref entry = form->get_field_value<jref>("vmentry", "Ljava/lang/invoke/MemberName;");
+//    jref resolved = entry->get_field_value<jref>(MN_method_id);
+//    auto target = (Method *) (void *) resolved->get_field_value<jref>(RMN_vmtarget_id);
+//
+//    // printvm("+++ %d\n", args->arr_len);
+//    // printvm("+++ %p\n", entry);
+//    // printvm("+++ %s\n", target->toString().c_str());
+//
+//    slot_t *x = execJava(target, args);
+//    push_return_value(f, x);
 
-    jref form = _this->get_field_value<jref>(MH_form_id);
-    jref entry = form->get_field_value<jref>("vmentry", "Ljava/lang/invoke/MemberName;");
-    jref resolved = entry->get_field_value<jref>(MN_method_id);
-    auto target = (Method *) (void *) resolved->get_field_value<jref>(RMN_vmtarget_id);
-
-    // printvm("+++ %d\n", args->arr_len);
-    // printvm("+++ %p\n", entry);
-    // printvm("+++ %s\n", target->toString().c_str());
-
-    return execJava(target, args);
+    slot_t *x = __invokeExact__(f->lvars);
+    push_return_value(f, x);
 }
 /**
  * Invokes the method handle, allowing any caller type type,
@@ -207,8 +244,11 @@ void invokeExact(const slot_t *args, u2 len) {
  * @throws Throwable anything thrown by the underlying method propagates unchanged through the method handle call
  */
 // public final native @PolymorphicSignature Object invoke(Object... args) throws Throwable;
-slot_t *java_lang_invoke_MethodHandle::invoke(const slot_t *args, u2 len) {
+static void invoke(Frame *f) {
+    slot_t *args = f->lvars;
+    auto len = f->method->arg_slots_count;
     jref _this = slot::get<jref>(args);
+
     Method *m = get_current_thread()->top_frame->method;
     jref new_type = findMethodType(m->descriptor, m->clazz->loader);
     Method *as_type = _this->clazz->lookup_method(MH_asType_method_desc);
@@ -219,7 +259,9 @@ slot_t *java_lang_invoke_MethodHandle::invoke(const slot_t *args, u2 len) {
     slot::set<jref>(exact_args, new_handler);
     for (int i = 1; i < len; i++)
         exact_args[i] = args[i];
-    return invokeExact(exact_args, len);
+
+    slot_t *x = __invokeExact__(exact_args);
+    push_return_value(f, x);
 }
 
 /**
@@ -240,13 +282,15 @@ slot_t *java_lang_invoke_MethodHandle::invoke(const slot_t *args, u2 len) {
  * @return the signature-polymorphic result, statically represented using {@code Object}
  */
 // final native @PolymorphicSignature Object invokeBasic(Object... args) throws Throwable;
-slot_t *java_lang_invoke_MethodHandle::invokeBasic(const slot_t *args, u2 len) {
+static void invokeBasic(Frame *f) {
+    slot_t *args = f->lvars;
     jref _this = slot::get<jref>(args);
     jref form = _this->get_field_value<jref>(MH_form_id);
     jref entry = form->get_field_value<jref>("vmentry", "Ljava/lang/invoke/MemberName;");
     jref resolved = entry->get_field_value<jref>(MN_method_id);
     auto target = (Method *) (void *) resolved->get_field_value<jref>(RMN_vmtarget_id);
-    return execJava(target, args);
+    slot_t *x = execJava(target, args);
+    push_return_value(f, x);
 }
 
 /**
@@ -257,14 +301,17 @@ slot_t *java_lang_invoke_MethodHandle::invokeBasic(const slot_t *args, u2 len) {
  * @return the signature-polymorphic result, statically represented using {@code Object}
  */
 // static native @PolymorphicSignature Object linkToVirtual(Object... args) throws Throwable;
-slot_t *java_lang_invoke_MethodHandle::linkToVirtual(const slot_t *args, u2 len) {
+static void linkToVirtual(Frame *f) {
+    slot_t *args = f->lvars;
+    auto len = f->method->arg_slots_count;
     auto member_name = slot::get<jref>(args + len - 1);
     jref resolved = member_name->get_field_value<jref>(MN_method_id);
     auto target = (Method *) (void *) resolved->get_field_value<jref>(RMN_vmtarget_id);
 
     auto _this = slot::get<jref>(args);
     target = _this->clazz->lookup_method(target->name, target->descriptor);
-    return execJava(target, args);
+    slot_t *x = execJava(target, args);
+    push_return_value(f, x);
 }
 
 /**
@@ -275,11 +322,14 @@ slot_t *java_lang_invoke_MethodHandle::linkToVirtual(const slot_t *args, u2 len)
  * @return the signature-polymorphic result, statically represented using {@code Object}
  */
 // static native @PolymorphicSignature Object linkToStatic(Object... args) throws Throwable;
-slot_t *java_lang_invoke_MethodHandle::linkToStatic(const slot_t *args, u2 len) {
+static void linkToStatic(Frame *f) {
+    slot_t *args = f->lvars;
+    auto len = f->method->arg_slots_count;
     auto member_name = slot::get<jref>(args + len - 1);
     jref resolved = member_name->get_field_value<jref>(MN_method_id);
     auto target = (Method *) (void *) resolved->get_field_value<jref>(RMN_vmtarget_id);
-    return execJava(target, args);
+    slot_t *x = execJava(target, args);
+    push_return_value(f, x);
 }
 
 /**
@@ -290,11 +340,14 @@ slot_t *java_lang_invoke_MethodHandle::linkToStatic(const slot_t *args, u2 len) 
  * @return the signature-polymorphic result, statically represented using {@code Object}
  */
 // static native @PolymorphicSignature Object linkToSpecial(Object... args) throws Throwable;
-slot_t *java_lang_invoke_MethodHandle::linkToSpecial(const slot_t *args, u2 len) {
+static void linkToSpecial(Frame *f) {
+    slot_t *args = f->lvars;
+    auto len = f->method->arg_slots_count;
     auto member_name = slot::get<jref>(args + len - 1);
     jref resolved = member_name->get_field_value<jref>(MN_method_id);
     auto target = (Method *) (void *) resolved->get_field_value<jref>(RMN_vmtarget_id);
-    return execJava(target, args);
+    slot_t *x = execJava(target, args);
+    push_return_value(f, x);
 }
 
 /**
@@ -305,14 +358,12 @@ slot_t *java_lang_invoke_MethodHandle::linkToSpecial(const slot_t *args, u2 len)
  * @return the signature-polymorphic result, statically represented using {@code Object}
  */
 // static native @PolymorphicSignature Object linkToInterface(Object... args) throws Throwable;
-slot_t *java_lang_invoke_MethodHandle::linkToInterface(const slot_t *args, u2 len) {
+static void linkToInterface(Frame *f) {
     unimplemented
-    return nullptr;
 }
 
-slot_t *java_lang_invoke_MethodHandle::linkToNative(const slot_t *args, u2 len) {
+static void linkToNative(Frame *f) {
     unimplemented
-    return nullptr;
 }
 
 
@@ -321,4 +372,13 @@ void java_lang_invoke_MethodHandle_registerNatives() {
 #define R(method, method_descriptor) \
     registry("java/lang/invoke/MethodHandle", #method, method_descriptor, method)
 
+    R(invokeExact, "");
+    R(invoke, "");
+    R(invokeBasic, "");
+
+    R(linkToVirtual, "");
+    R(linkToStatic, "");
+    R(linkToSpecial, "");
+    R(linkToInterface, "");
+    R(linkToNative, "");
 }
