@@ -628,19 +628,19 @@ static void throwException(Frame *f) {
     unimplemented
 }
 
-//// "()V"
-//static void loadFence(Frame *f) {
-//    unimplemented
-//}
-//
-//// "()V"
-//static void storeFence(Frame *f) {
-//    // unimplemented // todo
-//}
+// "()V"
+static void loadFence(Frame *f) {
+    // todo
+}
+
+// "()V"
+static void storeFence(Frame *f) {
+    // todo
+}
 
 // public native void fullFence();
 static void fullFence(Frame *f) {
-    unimplemented
+    // todo
 }
 
 #undef CLD
@@ -725,8 +725,8 @@ void jdk_internal_misc_Unsafe_registerNatives(Frame *f) {
     R(getLoadAverage0, "([DI)I");
 //    R("defineAnonymousClass0", _CLS "[B[" OBJ_ CLS, defineAnonymousClass);
     R(throwException, "(Ljava/lang/Throwable;)V");
-//
-//    R("loadFence", "()V", loadFence);
-//    R("storeFence", "()V", storeFence);
+
+    R(loadFence, "()V");
+    R(storeFence, "()V");
     R(fullFence, "()V");
 }

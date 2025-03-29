@@ -72,8 +72,8 @@ void init_native() {
 //    c->get_method("notify", "()V")->native_method = (void *) JVM_MonitorNotify;
 //    c->get_method("wait", "(J)V")->native_method = (void *) JVM_MonitorWait;
 
-    c = load_boot_class("jdk/internal/misc/Unsafe");
-    c->get_method("registerNatives", "()V")->native_method = (void *) Unsafe_registerNatives;
+//    c = load_boot_class("jdk/internal/misc/Unsafe");
+//    c->get_method("registerNatives", "()V")->native_method = (void *) Unsafe_registerNatives;
 
 //    c = load_boot_class("java/lang/invoke/MethodHandleNatives");
 //    c->get_method("registerNatives", "()V")->native_method = (void *) MethodHandleNatives_registerNatives;

@@ -338,6 +338,18 @@ void getProtectionDomain0(Frame *f) {
 }
 
 /*
+ * Returns the Class object for the named primitive type. Type parameter T
+ * avoids redundant casts for trusted code.
+ */
+//static native <T> Class<T> getPrimitiveClass(String name);
+void getPrimitiveClass(Frame *f) {
+    slot_t *args = f->lvars;
+    // 这里的 class name 是诸如 "int, float" 之类的 primitive type
+    auto name = slot::get<jref>(args);
+    f->pushr(load_boot_class(java_lang_String::to_utf8(name))->java_mirror);
+}
+
+/*
  * getClasses 和 getDeclaredClasses 的区别：
  * getClasses 得到该类及其父类所有的 public 的内部类。
  * getDeclaredClasses 得到该类所有的内部类，除去父类的。
@@ -605,6 +617,7 @@ void java_lang_Class_registerNatives(Frame *f) {
     R(getDeclaredMethods0, "(Z)[Ljava/lang/reflect/Method;");
     R(getDeclaredConstructors0, "(Z)[Ljava/lang/reflect/Constructor;");
     R(getProtectionDomain0, "()Ljava/security/ProtectionDomain;");
+    R(getPrimitiveClass, "(Ljava/lang/String;)Ljava/lang/Class;");
     R(getDeclaredClasses0, "()[Ljava/lang/Class;");
     R(getDeclaringClass0, "()Ljava/lang/Class;");
     R(getSimpleBinaryName0, "()Ljava/lang/String;");
@@ -621,5 +634,5 @@ void java_lang_Class_registerNatives(Frame *f) {
     R(getPermittedSubclasses0, "()[Ljava/lang/Class;");
     R(getClassFileVersion0, "()I");
     R(getClassAccessFlagsRaw0, "()I");
-     R(forName0, "(Ljava/lang/String;ZLjava/lang/ClassLoader;Ljava/lang/Class;)Ljava/lang/Class;");
+    R(forName0, "(Ljava/lang/String;ZLjava/lang/ClassLoader;Ljava/lang/Class;)Ljava/lang/Class;");
 }
