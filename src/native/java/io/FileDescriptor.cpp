@@ -1,9 +1,5 @@
 ﻿module;
 #include "../../../vmdef.h"
-#ifdef _WIN64
-#include <windows.h>
-#elifdef __linux__
-#endif
 
 module native;
 
@@ -45,20 +41,17 @@ static void sync0(Frame *f) {
 static void getHandle(Frame *f) {
     slot_t *args = f->lvars;
     auto fd = slot::get<jint>(args);
-#ifdef _WIN64
+
     jlong handle = -1;
     if (fd == 0) {
-        handle = (jlong) GetStdHandle(STD_INPUT_HANDLE);
+        handle = (jlong) stdin;
     } else if (fd == 1) {
-        handle = (jlong) GetStdHandle(STD_OUTPUT_HANDLE);
+        handle = (jlong) stdout;
     } else if (fd == 2) {
-        handle = (jlong) GetStdHandle(STD_ERROR_HANDLE);
+        handle = (jlong) stderr;
     }
     assert(handle != -1);
     f->pushl(handle);
-#elifdef __linux__
-    unimplemented
-#endif
 }
 
 /*
@@ -75,16 +68,16 @@ static void getAppend(Frame *f) {
  */
 // private native void close0() throws IOException;
 static void close0(Frame *f) {
-    slot_t *args = f->lvars;
-    auto _this = slot::get<jref>(args);
-
-    auto handle = _this->get_field_value<jlong>(handle_field);
-    if (handle != -1) {
-        CloseHandle((HANDLE) handle);
-        _this->set_field_value(handle_field, (jlong) -1);
-    }
-
-    _this->set_field_value(fd_field, (jlong) -1);
+//    slot_t *args = f->lvars;
+//    auto _this = slot::get<jref>(args);
+//
+//    auto handle = _this->get_field_value<jlong>(handle_field);
+//    if (handle != -1) {
+//        fclose((FILE *) handle);
+//        _this->set_field_value(handle_field, (jlong) -1);
+//    }
+//
+//    _this->set_field_value(fd_field, (jlong) -1);
 }
 
 void java_io_FileDescriptor_registerNatives() {
@@ -92,9 +85,9 @@ void java_io_FileDescriptor_registerNatives() {
 #define R(method, method_descriptor) \
     registry("java/io/FileDescriptor", #method, method_descriptor, method)
 
-   // R(initIDs, "()V");
-   // R(sync0, "()V");
-    R(getHandle, "(I)J");
-    R(getAppend, "(I)Z");
-  //  R(close0, "()V");
+//    R(initIDs, "()V");
+//    R(sync0, "()V");
+//    R(getHandle, "(I)J");
+//    R(getAppend, "(I)Z");
+//    R(close0, "()V");
 }
