@@ -369,7 +369,9 @@ Class *define_class(Class *lookup, const char *name, const jbyte *buf,
     //     init_class(c); // todo
     // }
 
-    if (!utf8::equals(c->name, name)) {
+    if (name != nullptr && !utf8::equals(c->name, name)) {
+        cout << c->name << endl;
+        cout << name << endl;
         unimplemented; // todo
     }
 
