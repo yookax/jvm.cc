@@ -10,6 +10,8 @@ import class_loader;
 import runtime;
 import exception;
 
+//private static native void initIDs();
+
 /*
  * Opens the specified file for reading.
  * @param name the name of the file
@@ -36,8 +38,6 @@ import exception;
 //private native int available0() throws IOException;
 
 //private native boolean isRegularFile0(FileDescriptor fd);
-
-//private static native void initIDs();
 
 void java_io_FileInputStream_registerNatives() {
 #undef R

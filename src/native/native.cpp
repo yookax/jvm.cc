@@ -58,7 +58,7 @@ void ScopedMemoryAccess_registerNatives(JNIEnv *, jclass );
         registry(class_name, method_name, method_descriptor, method); \
     } while(false)
 
-#define REGISTRY_NOW(method) \
+#define REGISTRY_ALL(method) \
     do { \
         void method(); \
         method(); \
@@ -88,19 +88,19 @@ void init_native() {
     REGISTRY("jdk/internal/misc/Unsafe", "registerNatives", "()V", jdk_internal_misc_Unsafe_registerNatives);
     REGISTRY("java/lang/invoke/MethodHandleNatives", "registerNatives", "()V", java_lang_invoke_MethodHandleNatives_registerNatives);
 
-    REGISTRY_NOW(java_lang_Object_registerNatives);
-    REGISTRY_NOW(java_lang_String_registerNatives);
-    REGISTRY_NOW(java_lang_Float_registerNatives);
-    REGISTRY_NOW(java_lang_Module_registerNatives);
-    REGISTRY_NOW(java_lang_Throwable_registerNatives);
-    REGISTRY_NOW(java_lang_ref_Reference_registerNatives);
-    REGISTRY_NOW(java_lang_reflect_Array_registerNatives);
-    REGISTRY_NOW(java_lang_invoke_MethodHandle_registerNatives);
-    REGISTRY_NOW(java_io_FileDescriptor_registerNatives);
-    REGISTRY_NOW(java_io_FileInputStream_registerNatives);
-    REGISTRY_NOW(java_io_FileOutputStream_registerNatives);
-    REGISTRY_NOW(java_io_WinNTFileSystem_registerNatives);
-    REGISTRY_NOW(jdk_internal_misc_CDS_registerNatives);
-    REGISTRY_NOW(jdk_internal_misc_Signal_registerNatives);
-    REGISTRY_NOW(jdk_internal_reflect_Reflection_registerNatives);
+    REGISTRY_ALL(java_lang_Object_registerNatives);
+    REGISTRY_ALL(java_lang_String_registerNatives);
+    REGISTRY_ALL(java_lang_Float_registerNatives);
+    REGISTRY_ALL(java_lang_Module_registerNatives);
+    REGISTRY_ALL(java_lang_Throwable_registerNatives);
+    REGISTRY_ALL(java_lang_ref_Reference_registerNatives);
+    REGISTRY_ALL(java_lang_reflect_Array_registerNatives);
+    REGISTRY_ALL(java_lang_invoke_MethodHandle_registerNatives);
+    REGISTRY_ALL(java_io_FileDescriptor_registerNatives);
+    REGISTRY_ALL(java_io_FileInputStream_registerNatives);
+    REGISTRY_ALL(java_io_FileOutputStream_registerNatives);
+    REGISTRY_ALL(java_io_WinNTFileSystem_registerNatives);
+    REGISTRY_ALL(jdk_internal_misc_CDS_registerNatives);
+    REGISTRY_ALL(jdk_internal_misc_Signal_registerNatives);
+    REGISTRY_ALL(jdk_internal_reflect_Reflection_registerNatives);
 }
