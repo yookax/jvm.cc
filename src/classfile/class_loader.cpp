@@ -157,14 +157,27 @@ static optional<pair<u1 *, size_t>> read_class(
 
 #endif
 
+vector<pair<const char *, unzFile>> zfiles;
+
+#if 1
 /*
  * @param class_name: xxx/xxx/xxx
  */
-static optional<pair<u1 *, size_t>> read_class(
-        const char *path, const char *class_name, ClassLocation location) {
-    unzFile zip_file = unzOpen64(path);
+static optional<pair<u1 *, size_t>> read_class(const char *path,
+                                       const char *class_name, ClassLocation location) {
+    unzFile zip_file = nullptr;
+    for (auto &p : zfiles) {
+        if (strcmp(p.first, path) == 0) {
+            zip_file = p.second;
+            break;
+        }
+    }
     if (zip_file == nullptr) {
-        throw java_io_IOException(string("unzOpen64 failed: ") + path);
+        zip_file = unzOpen64(path);
+        if (zip_file == nullptr) {
+            throw java_io_IOException(string("unzOpen64 failed: ") + path);
+        }
+        zfiles.emplace_back(strdup(path), zip_file);
     }
 
     auto buf = new char[strlen(class_name) + 32]; // big enough
@@ -177,7 +190,7 @@ static optional<pair<u1 *, size_t>> read_class(
 
     if (unzLocateFile(zip_file, buf, 1) != UNZ_OK) {
         // not found
-        unzClose(zip_file);
+        // unzClose(zip_file);
         delete[] buf;
         return nullopt;
     }
@@ -185,26 +198,28 @@ static optional<pair<u1 *, size_t>> read_class(
     char file_name[PATH_MAX];
     unz_file_info64 file_info;
     if (unzGetCurrentFileInfo64(zip_file, &file_info, file_name, sizeof(file_name), nullptr, 0, nullptr, 0) != UNZ_OK) {
-        unzClose(zip_file);
+        // unzClose(zip_file);
         throw java_io_IOException(string("unzGetCurrentFileInfo64 failed: ") + path);
     }
 
     if (unzOpenCurrentFile(zip_file) != UNZ_OK) {
-        unzClose(zip_file);
+        // unzClose(zip_file);
         throw java_io_IOException(string("unzOpenCurrentFile failed: ") + path);
     }
 
     size_t uncompressed_size = file_info.uncompressed_size;
     auto bytecode = new u1[uncompressed_size];
     int size = unzReadCurrentFile(zip_file, bytecode, (unsigned int) uncompressed_size);
-    unzCloseCurrentFile(zip_file); // todo 干嘛的
-    unzClose(zip_file);
+    // unzCloseCurrentFile(zip_file); // todo 干嘛的
+    // unzClose(zip_file);
     delete[] buf;
 
     if (size != uncompressed_size)
         throw java_io_IOException(string("unzReadCurrentFile failed: ") + path);
     return make_pair(bytecode, uncompressed_size);
 }
+
+#endif
 
 /*
  * Read JDK 类库中的类，不包括Array Class.
