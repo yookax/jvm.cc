@@ -85,9 +85,9 @@ void java_io_FileDescriptor_registerNatives() {
 #define R(method, method_descriptor) \
     registry("java/io/FileDescriptor", #method, method_descriptor, method)
 
-//    R(initIDs, "()V");
-//    R(sync0, "()V");
-//    R(getHandle, "(I)J");
-//    R(getAppend, "(I)Z");
-//    R(close0, "()V");
+    R(initIDs, "()V");
+    R(sync0, "()V");
+    R(getHandle, "(I)J");
+    R(getAppend, "(I)Z");
+    R(close0, "()V");
 }

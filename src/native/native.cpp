@@ -99,7 +99,9 @@ void init_native() {
     REGISTRY_ALL(java_io_FileDescriptor_registerNatives);
     REGISTRY_ALL(java_io_FileInputStream_registerNatives);
     REGISTRY_ALL(java_io_FileOutputStream_registerNatives);
+#ifdef _WIN64
     REGISTRY_ALL(java_io_WinNTFileSystem_registerNatives);
+#endif
     REGISTRY_ALL(jdk_internal_misc_CDS_registerNatives);
     REGISTRY_ALL(jdk_internal_misc_Signal_registerNatives);
     REGISTRY_ALL(jdk_internal_reflect_Reflection_registerNatives);

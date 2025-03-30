@@ -91,7 +91,7 @@ void java_io_FileInputStream_registerNatives() {
 #define R(method, method_descriptor) \
     registry("java/io/FileInputStream", #method, method_descriptor, method)
 
-//    R(initIDs, "()V");
-//    R(open0, "(Ljava/lang/String;)V");
-//    R(readBytes, "([BII)I");
+    R(initIDs, "()V");
+    R(open0, "(Ljava/lang/String;)V");
+    R(readBytes, "([BII)I");
 }

@@ -76,6 +76,6 @@ void java_io_FileOutputStream_registerNatives() {
 #define R(method, method_descriptor) \
     registry("java/io/FileOutputStream", #method, method_descriptor, method)
 
-//    R(initIDs, "()V");
-//    R(writeBytes, "([BIIZ)V");
+    R(initIDs, "()V");
+    R(writeBytes, "([BIIZ)V");
 }
