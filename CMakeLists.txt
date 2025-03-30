@@ -45,6 +45,7 @@ set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/native/java/lang/System.cpp
         src/native/java/lang/Runtime.cpp
         src/native/java/lang/Float.cpp
+        src/native/java/lang/Double.cpp
         src/native/jdk/internal/misc/Unsafe.cpp
         src/native/jdk/internal/misc/CDS.cpp
         src/native/java/lang/ClassLoader.cpp
@@ -60,6 +61,12 @@ set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/native/jdk/internal/misc/Signal.cpp
         src/native/java/lang/invoke/MethodHandle.cpp
         src/native/java/io/WinNTFileSystem.cpp
+        src/native/sun/nio/ch/IOUtil.cpp
+        src/native/jdk/internal/util/SystemProps-Raw.cpp
+        src/native/jdk/internal/misc/VM.cpp
+        src/native/sun/io/Win32ErrorMode.cpp
+        src/native/jdk/internal/loader/BootLoader.cpp
+        src/native/jdk/internal/loader/NativeLibraries.cpp
 )
 
 set (TEST_SOURCE_FILES

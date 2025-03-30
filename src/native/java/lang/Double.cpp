@@ -23,7 +23,7 @@ void java_lang_Double_registerNatives() {
 #define R(method, method_descriptor) \
     registry("java/lang/double", #method, method_descriptor, method)
 
-    R(doubleToRawLongBits, "(D)J");
-    R(longBitsToDouble, "(J)D");
+//    R(doubleToRawLongBits, "(D)J");
+//    R(longBitsToDouble, "(J)D");
 }
 
