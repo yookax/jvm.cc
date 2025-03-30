@@ -1,6 +1,7 @@
 ﻿#ifdef _WIN64
 module;
 #include "../../../vmdef.h"
+#include <windows.h>
 
 module native;
 
@@ -11,9 +12,12 @@ import class_loader;
 import runtime;
 import exception;
 
+static Field *path_field;
+
 //private static native void initIDs();
 static void initIDs(Frame *f) {
-    unimplemented
+    Class *file_class = load_boot_class("java/io/File");
+    path_field = file_class->get_field("path", "Ljava/lang/String;");
 }
 
 //private native String getDriveDirectory(int drive);
@@ -23,7 +27,33 @@ static void getDriveDirectory(Frame *f) {
 
 //private native String canonicalize0(String path) throws IOException;
 static void canonicalize0(Frame *f) {
-    unimplemented
+    slot_t *args = f->lvars;
+    auto _this = slot::get<jref>(args++);
+    auto _path = slot::get<jref>(args);
+    auto path = java_lang_String::to_utf8(_path);
+
+    DWORD size = GetFullPathNameA(path, 0, nullptr, nullptr);
+    if (size == 0) {
+        throw java_io_IOException("Failed to get full path size.");
+    }
+    std::string full_path(size, '\0');
+    if (GetFullPathNameA(path, size, &full_path[0], nullptr) == 0) {
+        throw java_io_IOException("Failed to get full path.");
+    }
+
+    size = GetLongPathNameA(full_path.c_str(), nullptr, 0);
+    if (size == 0) {
+        throw java_io_IOException("Failed to get long path size.");
+    }
+
+    std::string long_path(size, '\0');
+    if (GetLongPathNameA(full_path.c_str(), &long_path[0], size) == 0) {
+        throw java_io_IOException("Failed to get long path.");
+    }
+
+//    long_path.resize(size - 1); // 去除末尾的空字符
+    jref o = Allocator::string(long_path.c_str());
+    f->pushr(o);
 }
 
 //private native String getFinalPath0(String path) throws IOException;
@@ -115,7 +145,7 @@ void java_io_WinNTFileSystem_registerNatives() {
 
 //    R(initIDs, "()V");
 //    R(getDriveDirectory, "");
-//    R(canonicalize0, "(Ljava/lang/String;)Ljava/lang/String;");
+    R(canonicalize0, "(Ljava/lang/String;)Ljava/lang/String;");
 //    R(getFinalPath0, "");
 //    R(getBooleanAttributes0, "(Ljava/io/File;)I");
 //    R(checkAccess0, "");

@@ -475,7 +475,7 @@ public:
 
     bool is_ref_array_class() const { return (is_array_class() && !is_type_array_class()); }
 
-    // @descriptor 用于找打Field后检测类型是否匹配，如不想检测传NULL即可。
+    // @descriptor 用于找到Field后检测类型是否匹配，如不想检测传NULL即可。
     Field *get_field(const char *name, const char *descriptor = nullptr) const;
     Field *get_field(int id) const;
 
