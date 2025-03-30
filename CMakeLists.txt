@@ -7,6 +7,7 @@ project(jvmcc)
 #        -Wswitch-default -Wswitch-enum -Wuninitialized -Winit-self \
 #        -Wparentheses -Wunused-macros")
 
+set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # set(CMAKE_CXX_SCAN_FOR_MODULES ON)
@@ -26,7 +27,9 @@ endif()
 # 包含 minizip 头文件目录
 # target_include_directories(jvmcc PRIVATE lib/zlib-1.3.1/minizip)
 
-set (SOURCE_FILES src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
+add_subdirectory(lib/minizip)
+
+set (SOURCE_FILES ${MINIZIP_FILES} src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/jmm.cpp src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
         src/encoding.cpp src/classfile/poly.cpp src/reference.cpp
         src/runtime/thread.cpp src/runtime/heap.cpp src/classfile/method.cpp
@@ -83,13 +86,11 @@ set (TEST_SOURCE_FILES
 # 如果有Debug加载zip.dll和java.dll成功，而Release版失败的情况，可以考虑下是不是Release版是不是把jvm.cpp中没有使用的函数优化掉了。
 # 总之一句话，无论Debug版还是Release版jvm.dll中导出所有zip.dll和java.dll中所依赖的函数。
 add_library(jvm SHARED ${SOURCE_FILES} ${TEST_SOURCE_FILES})
-
 SET_TARGET_PROPERTIES(jvm PROPERTIES OUTPUT_NAME "jvm" PREFIX "")
 
 # 生成可运行的虚拟机
 add_executable(jvmcc src/vm_client.cpp)
 target_link_libraries(jvmcc jvm)
-# target_link_libraries(jvm PRIVATE zlibstatic)
 
 add_executable(jvmcc-test test-cpp/test.cpp)
 target_link_libraries(jvmcc-test jvm)

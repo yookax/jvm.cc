@@ -2,7 +2,7 @@ module;
 #include <cassert>
 #include "../vmdef.h"
 #include "../jni.h"
-//#include "../../lib/zlib-1.3.1/minizip/zip.h"
+#include "../../lib/minizip/unzip.h"
 
 module class_loader;
 
@@ -101,12 +101,14 @@ enum ClassLocation {
     IN_MODULE
 };
 
+#if 0
+
 static void* (*zipOpen)(const char *name, char **msg);
 static void* (*zipFindEntry)(void *zip, char *name, jint *entry_size, jint *name_len);
 static jboolean (*zipReadEntry)(void *zip, void *entry, unsigned char *buf, char *entry_name);
 static void (*zipClose)(void *zip);
 
-/**
+/*
  * @param class_name: xxx/xxx/xxx
  */
 static optional<pair<u1 *, size_t>> read_class(
@@ -151,6 +153,57 @@ static optional<pair<u1 *, size_t>> read_class(
         return nullopt;
     }
     return make_pair(bytecode, entry_size);
+}
+
+#endif
+
+/*
+ * @param class_name: xxx/xxx/xxx
+ */
+static optional<pair<u1 *, size_t>> read_class(
+        const char *path, const char *class_name, ClassLocation location) {
+    unzFile zip_file = unzOpen64(path);
+    if (zip_file == nullptr) {
+        throw java_io_IOException(string("unzOpen64 failed: ") + path);
+    }
+
+    auto buf = new char[strlen(class_name) + 32]; // big enough
+    if (location == IN_JAR) {
+        strcat(strcpy(buf, class_name), ".class");
+    } else if (location == IN_MODULE) {
+        // All classes 放在 module 的 "classes" 目录下
+        strcat(strcat(strcpy(buf, "classes/"), class_name), ".class");
+    }
+
+    if (unzLocateFile(zip_file, buf, 1) != UNZ_OK) {
+        // not found
+        unzClose(zip_file);
+        delete[] buf;
+        return nullopt;
+    }
+
+    char file_name[PATH_MAX];
+    unz_file_info64 file_info;
+    if (unzGetCurrentFileInfo64(zip_file, &file_info, file_name, sizeof(file_name), nullptr, 0, nullptr, 0) != UNZ_OK) {
+        unzClose(zip_file);
+        throw java_io_IOException(string("unzGetCurrentFileInfo64 failed: ") + path);
+    }
+
+    if (unzOpenCurrentFile(zip_file) != UNZ_OK) {
+        unzClose(zip_file);
+        throw java_io_IOException(string("unzOpenCurrentFile failed: ") + path);
+    }
+
+    size_t uncompressed_size = file_info.uncompressed_size;
+    auto bytecode = new u1[uncompressed_size];
+    int size = unzReadCurrentFile(zip_file, bytecode, (unsigned int) uncompressed_size);
+    unzCloseCurrentFile(zip_file); // todo 干嘛的
+    unzClose(zip_file);
+    delete[] buf;
+
+    if (size != uncompressed_size)
+        throw java_io_IOException(string("unzReadCurrentFile failed: ") + path);
+    return make_pair(bytecode, uncompressed_size);
 }
 
 /*
@@ -476,14 +529,14 @@ void init_classloader() {
         panic("g_libzip"); // todo
     }
 
-    // from zip.dll 中读取我们需要的函数接口
-    zipOpen = (decltype(zipOpen)) find_library_entry(g_libzip, "ZIP_Open");
-    zipFindEntry = (decltype(zipFindEntry)) find_library_entry(g_libzip, "ZIP_FindEntry");
-    zipReadEntry = (decltype(zipReadEntry)) find_library_entry(g_libzip, "ZIP_ReadEntry");
-    zipClose = (decltype(zipClose)) find_library_entry(g_libzip, "ZIP_Close");
-
-    assert(zipOpen != nullptr && zipFindEntry != nullptr );
-    assert(zipReadEntry != nullptr && zipClose != nullptr );
+//    // from zip.dll 中读取我们需要的函数接口
+//    zipOpen = (decltype(zipOpen)) find_library_entry(g_libzip, "ZIP_Open");
+//    zipFindEntry = (decltype(zipFindEntry)) find_library_entry(g_libzip, "ZIP_FindEntry");
+//    zipReadEntry = (decltype(zipReadEntry)) find_library_entry(g_libzip, "ZIP_ReadEntry");
+//    zipClose = (decltype(zipClose)) find_library_entry(g_libzip, "ZIP_Close");
+//
+//    assert(zipOpen != nullptr && zipFindEntry != nullptr );
+//    assert(zipReadEntry != nullptr && zipClose != nullptr );
 
     g_object_class = load_boot_class("java/lang/Object");
     g_class_class = load_boot_class("java/lang/Class");
