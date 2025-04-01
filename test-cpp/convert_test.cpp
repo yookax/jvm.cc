@@ -13,7 +13,7 @@ TEST_CASE(test_convert_int)
     uint8_t bytes[sizeof(jint)];
     for (auto i: ints) {
         int32_to_bytes(i, bytes);
-        auto x = bytes_to_int32(bytes);
+        auto x = big_bytes_to_int32(bytes);
         if (i != x) {
             printf("failed. %d, %d\n", i, x);
         }

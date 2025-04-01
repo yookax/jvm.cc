@@ -5,11 +5,27 @@ export module convert;
 
 import std.core;
 
+export template <std::endian e, typename T>
+T bytes_to_int(const uint8_t *bytes) {
+    T value = 0;
+    if (std::endian::native == e) {
+        // 如果本地字节序和bytes的字节序相同，直接复制
+        std::memcpy(&value, bytes, sizeof(T));
+    } else {
+        // 进行字节序转换
+        for (std::size_t i = 0; i < sizeof(T); ++i) {
+            value <<= 8;
+            value |= static_cast<T>(bytes[i]);
+        }
+    }
+    return value;
+}
+
 /*
  * 将字节数组转换为32位整形.
  * 字节数组bytes按大端存储，长度4.
  */
-export int32_t bytes_to_int32(const uint8_t *bytes);
+export int32_t big_bytes_to_int32(const uint8_t *bytes);
 export void int32_to_bytes(int32_t value, unsigned char bytes[]);
 
 /*
@@ -35,42 +51,44 @@ export void double_to_bytes(double d, unsigned char bytes[]);
 
 module : private;
 
-// 将大端字节数组转换为整数
-template <typename T>
-T big_endian_bytes_to_int(const unsigned char bytes[]) {
-    T value = 0;
-    if constexpr (std::endian::native == std::endian::big) {
-        // 如果本地字节序是大端，直接复制
-        std::memcpy(&value, bytes, sizeof(T));
-    } else {
-        // 如果本地字节序是小端，需要进行字节序转换
-        for (std::size_t i = 0; i < sizeof(T); ++i) {
-            value <<= 8;
-            value |= static_cast<T>(bytes[i]);
-        }
-    }
-    return value;
-}
+//// 将大端字节数组转换为整数
+//template <typename T>
+//T big_endian_bytes_to_int(const unsigned char bytes[]) {
+//    T value = 0;
+//    if constexpr (std::endian::native == std::endian::big) {
+//        // 如果本地字节序是大端，直接复制
+//        std::memcpy(&value, bytes, sizeof(T));
+//    } else {
+//        // 如果本地字节序是小端，需要进行字节序转换
+//        for (std::size_t i = 0; i < sizeof(T); ++i) {
+//            value <<= 8;
+//            value |= static_cast<T>(bytes[i]);
+//        }
+//    }
+//    return value;
+//}
 
-int32_t bytes_to_int32(const uint8_t *bytes) {
-    return big_endian_bytes_to_int<int32_t>(bytes);
+int32_t big_bytes_to_int32(const uint8_t *bytes) {
+    return bytes_to_int<std::endian::big, int32_t>(bytes);
+//    return big_endian_bytes_to_int<int32_t>(bytes);
 }
 
 //int64_t bytes_to_int64(const uint8_t *bytes) {
-//    int64_t high = ((int64_t) bytes_to_int32(bytes)) << 32;
-//    int64_t low = bytes_to_int32(bytes + 4) & 0x00000000ffffffff;
+//    int64_t high = ((int64_t) big_bytes_to_int32(bytes)) << 32;
+//    int64_t low = big_bytes_to_int32(bytes + 4) & 0x00000000ffffffff;
 //    return high | low;
 //}
 
 int64_t bytes_to_int64(const uint8_t *bytes) {
-    return big_endian_bytes_to_int<int64_t>(bytes);
+    return bytes_to_int<std::endian::big, int64_t>(bytes);
+//    return big_endian_bytes_to_int<int64_t>(bytes);
 }
 
 //jfloat bytes_to_float(const uint8_t *bytes) {
-//    return int_bits_to_float(bytes_to_int32(bytes));
+//    return int_bits_to_float(big_bytes_to_int32(bytes));
 //}
 jfloat bytes_to_float(const uint8_t *bytes) {
-    auto k = bytes_to_int32(bytes);
+    auto k = big_bytes_to_int32(bytes);
     return *(jfloat *)&k;
 }
 

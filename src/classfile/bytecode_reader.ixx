@@ -88,7 +88,7 @@ public:
         u1 buf[4];
         read_bytes(buf, 4);
 
-        return (u4) bytes_to_int32(buf);  // should be bytesToUint32  todo
+        return (u4) big_bytes_to_int32(buf);  // should be bytesToUint32  todo
     }
 
     u8 readu8() {
@@ -111,7 +111,7 @@ public:
         u1 buf[4];
         read_bytes(buf, 4);
 
-        return (s4) bytes_to_int32(buf);
+        return (s4) big_bytes_to_int32(buf);
     }
 
     /*
@@ -123,7 +123,7 @@ public:
             u1 buf[4];
             read_bytes(buf, 4);
 
-            s4s[i] = (s4) bytes_to_int32(buf);
+            s4s[i] = (s4) big_bytes_to_int32(buf);
         }
     }
 };

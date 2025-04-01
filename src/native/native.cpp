@@ -92,6 +92,7 @@ void init_native() {
     REGISTRY_ALL(java_lang_String_registerNatives);
     REGISTRY_ALL(java_lang_Float_registerNatives);
     REGISTRY_ALL(java_lang_Double_registerNatives);
+    REGISTRY_ALL(java_lang_Runtime_registerNatives);
     REGISTRY_ALL(java_lang_Module_registerNatives);
     REGISTRY_ALL(java_lang_Throwable_registerNatives);
     REGISTRY_ALL(java_lang_ref_Reference_registerNatives);
@@ -100,15 +101,18 @@ void init_native() {
     REGISTRY_ALL(java_io_FileDescriptor_registerNatives);
     REGISTRY_ALL(java_io_FileInputStream_registerNatives);
     REGISTRY_ALL(java_io_FileOutputStream_registerNatives);
-    REGISTRY_ALL(jdk_internal_loader_BootLoader_registerNatives);
-    REGISTRY_ALL(jdk_internal_loader_NativeLibraries_registerNatives);
+    REGISTRY_ALL(jdk_internal_misc_VM_registerNatives);
     REGISTRY_ALL(jdk_internal_misc_CDS_registerNatives);
     REGISTRY_ALL(jdk_internal_misc_Signal_registerNatives);
     REGISTRY_ALL(jdk_internal_reflect_Reflection_registerNatives);
+    REGISTRY_ALL(jdk_internal_loader_BootLoader_registerNatives);
+    REGISTRY_ALL(jdk_internal_loader_NativeLibraries_registerNatives);
     REGISTRY_ALL(jdk_internal_util_SystemProps$Raw_registerNatives);
+    REGISTRY_ALL(jdk_internal_jimage_NativeImageBuffer_registerNatives);
     REGISTRY_ALL(sun_nio_ch_IOUtil_registerNatives);
 #ifdef _WIN64
     REGISTRY_ALL(java_io_WinNTFileSystem_registerNatives);
     REGISTRY_ALL(sun_io_Win32ErrorMode_registerNatives);
+    REGISTRY_ALL(sun_nio_fs_WindowsNativeDispatcher_registerNatives);
 #endif
 }

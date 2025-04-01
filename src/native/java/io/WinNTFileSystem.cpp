@@ -12,6 +12,57 @@ import class_loader;
 import runtime;
 import exception;
 
+/* Check whether or not the file name in "path" is a Windows reserved
+   device name (CON, PRN, AUX, NUL, COM[1-9], LPT[1-9]) based on the
+   returned result from GetFullPathName, which should be in thr form of
+   "\\.\[ReservedDeviceName]" if the path represents a reserved device
+   name.
+   Note1: GetFullPathName doesn't think "CLOCK$" (which is no longer
+   important anyway) is a device name, so we don't check it here.
+   GetFileAttributesEx will catch it later by returning 0 on NT/XP/
+   200X.
+
+   Note2: Theoretically the implementation could just lookup the table
+   below linearly if the first 4 characters of the fullpath returned
+   from GetFullPathName are "\\.\". The current implementation should
+   achieve the same result. If Microsoft add more names into their
+   reserved device name repository in the future, which probably will
+   never happen, we will need to revisit the lookup implementation.
+
+static WCHAR* ReservedDEviceNames[] = {
+    L"CON", L"PRN", L"AUX", L"NUL",
+    L"COM1", L"COM2", L"COM3", L"COM4", L"COM5", L"COM6", L"COM7", L"COM8", L"COM9",
+    L"LPT1", L"LPT2", L"LPT3", L"LPT4", L"LPT5", L"LPT6", L"LPT7", L"LPT8", L"LPT9",
+    L"CLOCK$"
+};
+*/
+
+//static BOOL isReservedDeviceName(CHAR* path) {
+//#define BUFSIZE 9
+//    CHAR buf[BUFSIZE];
+//    CHAR *lpf = NULL;
+//    DWORD retLen = GetFullPathName(path,
+//                                    BUFSIZE,
+//                                    buf,
+//                                    &lpf);
+//    if ((retLen == BUFSIZE - 1 || retLen == BUFSIZE - 2) &&
+//        buf[0] == L'\\' && buf[1] == L'\\' &&
+//        buf[2] == L'.' && buf[3] == L'\\') {
+//        CHAR* dname = strupr(buf + 4);
+//        if (strcmp(dname, "CON") == 0 ||
+//            strcmp(dname, "PRN") == 0 ||
+//            strcmp(dname, "AUX") == 0 ||
+//            strcmp(dname, "NUL") == 0)
+//            return TRUE;
+//        if ((strcmp(dname, "COM", 3) == 0 ||
+//             strcmp(dname, "LPT", 3) == 0) &&
+//             dname[3] - '0' > 0 &&
+//             dname[3] - '0' <= 9)
+//            return TRUE;
+//    }
+//    return FALSE;
+//}
+
 static Field *path_field;
 
 //private static native void initIDs();

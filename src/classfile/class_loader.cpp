@@ -101,7 +101,7 @@ enum ClassLocation {
     IN_MODULE
 };
 
-#if 0
+#if 1
 
 static void* (*zipOpen)(const char *name, char **msg);
 static void* (*zipFindEntry)(void *zip, char *name, jint *entry_size, jint *name_len);
@@ -159,7 +159,7 @@ static optional<pair<u1 *, size_t>> read_class(
 
 vector<pair<const char *, unzFile>> zfiles;
 
-#if 1
+#if 0
 /*
  * @param class_name: xxx/xxx/xxx
  */
@@ -544,14 +544,14 @@ void init_classloader() {
         panic("g_libzip"); // todo
     }
 
-//    // from zip.dll 中读取我们需要的函数接口
-//    zipOpen = (decltype(zipOpen)) find_library_entry(g_libzip, "ZIP_Open");
-//    zipFindEntry = (decltype(zipFindEntry)) find_library_entry(g_libzip, "ZIP_FindEntry");
-//    zipReadEntry = (decltype(zipReadEntry)) find_library_entry(g_libzip, "ZIP_ReadEntry");
-//    zipClose = (decltype(zipClose)) find_library_entry(g_libzip, "ZIP_Close");
-//
-//    assert(zipOpen != nullptr && zipFindEntry != nullptr );
-//    assert(zipReadEntry != nullptr && zipClose != nullptr );
+    // from zip.dll 中读取我们需要的函数接口
+    zipOpen = (decltype(zipOpen)) find_library_entry(g_libzip, "ZIP_Open");
+    zipFindEntry = (decltype(zipFindEntry)) find_library_entry(g_libzip, "ZIP_FindEntry");
+    zipReadEntry = (decltype(zipReadEntry)) find_library_entry(g_libzip, "ZIP_ReadEntry");
+    zipClose = (decltype(zipClose)) find_library_entry(g_libzip, "ZIP_Close");
+
+    assert(zipOpen != nullptr && zipFindEntry != nullptr );
+    assert(zipReadEntry != nullptr && zipClose != nullptr );
 
     g_object_class = load_boot_class("java/lang/Object");
     g_class_class = load_boot_class("java/lang/Class");

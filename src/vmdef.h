@@ -186,6 +186,14 @@ do { \
 
 // #define println(...) do { printvm(__VA_ARGS__); printf("\n"); } while(false)
 
+#ifdef _WIN64
+#define JNI_LIB_PREFIX ""
+#define JNI_LIB_SUFFIX ".dll"
+#elifdef __linux__
+#define JNI_LIB_PREFIX "lib"
+#define JNI_LIB_SUFFIX ".so"
+#endif
+
 /* --------------------- 配置日志 -------------------- */
 
 #define LOG_LEVEL_ERR     0

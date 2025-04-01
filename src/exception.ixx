@@ -53,6 +53,14 @@ DEF_EXCEP_CLASS(java_lang_CloneNotSupportedException, "java/lang/CloneNotSupport
 DEF_EXCEP_CLASS(java_lang_VirtualMachineError, "java/lang/VirtualMachineError");
 DEF_EXCEP_CLASS(java_io_IOException, "java/io/IOException");
 DEF_EXCEP_CLASS(java_io_FileNotFoundException, "java/io/FileNotFoundException");
+DEF_EXCEP_CLASS(sun_nio_fs_WindowsException, "sun/nio/fs/WindowsException");
+
+//export struct sun_nio_fs_WindowsException: public JavaException {
+//    sun_nio_fs_WindowsException(): JavaException("sun/nio/fs/WindowsException") { }
+//
+//    explicit sun_nio_fs_WindowsException(std::string msg0)
+//            : JavaException("sun/nio/fs/WindowsException", msg0) { }
+//}
 
 #undef DEF_EXCEP_CLASS
 

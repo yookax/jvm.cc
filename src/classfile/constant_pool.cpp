@@ -55,7 +55,7 @@ ConstantPool::ConstantPool(Class *c, BytecodeReader &r): owner(c) {
             case JVM_CONSTANT_Integer: {
                 u1 bytes[4];
                 r.read_bytes(bytes, 4);
-                set_int(i, bytes_to_int32(bytes));
+                set_int(i, big_bytes_to_int32(bytes));
                 break;
             }
             case JVM_CONSTANT_Float: {

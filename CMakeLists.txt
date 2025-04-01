@@ -70,6 +70,8 @@ set (SOURCE_FILES ${MINIZIP_FILES} src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/native/sun/io/Win32ErrorMode.cpp
         src/native/jdk/internal/loader/BootLoader.cpp
         src/native/jdk/internal/loader/NativeLibraries.cpp
+        src/native/sun/nio/fs/WindowsNativeDispatcher.cpp
+        src/native/jdk/internal/jimage/NativeImageBuffer.cpp
 )
 
 set (TEST_SOURCE_FILES
@@ -107,7 +109,7 @@ target_sources(jvm
         src/classfile/class_loader.ixx src/classfile/poly.ixx src/util/sysinfo.ixx
         src/runtime/heap.ixx src/reference.ixx src/dll.ixx src/util/convert.ixx
         src/interpreter.ixx src/encoding.ixx src/exception.ixx src/util/access_flags.ixx
-        src/native/native.ixx
+        src/native/native.ixx src/util/bytes_reader.ixx src/jimage/image_file.ixx
 )
 
 #target_sources(jvmcc
