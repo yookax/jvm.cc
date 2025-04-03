@@ -1,4 +1,5 @@
 module;
+#include <cassert>
 #ifdef _WIN64
 #include <Windows.h>
 #include <direct.h>
@@ -155,4 +156,47 @@ export char *get_current_working_directory() {
             unreachable(); // todo Couldn't get cwd
         }
     }
+}
+
+export streamsize get_file_size(const string &filename) {
+    ifstream file(filename, std::ios::binary | std::ios::ate);
+    if (file) {
+        std::streamsize size = file.tellg();
+        file.close();
+        return size;
+    }
+    return -1;
+}
+
+export void *mem_mapping(const char *file_path) {
+    assert(file_path != nullptr);
+#ifdef _WIN64
+    // 打开文件
+    HANDLE file = CreateFileA(file_path, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (file == INVALID_HANDLE_VALUE) {
+        std::cerr << "无法打开文件" << std::endl;
+        return nullptr;
+    }
+
+    // 创建文件映射对象
+    HANDLE mapping = CreateFileMappingA(file, 0, PAGE_READONLY, 0, 0, nullptr);
+    if (mapping == nullptr) {
+        std::cerr << "无法创建文件映射对象" << std::endl;
+        CloseHandle(file);
+        return nullptr;
+    }
+
+    // 将文件映射到内存
+    LPVOID address = MapViewOfFile(mapping, FILE_MAP_READ, 0, 0, 0);
+    if (address == nullptr) {
+        std::cerr << "无法将文件映射到内存" << std::endl;
+        CloseHandle(mapping);
+        CloseHandle(file);
+        return nullptr;
+    }
+
+    return address;
+#elifdef __linux__
+    return nullptr;
+#endif
 }

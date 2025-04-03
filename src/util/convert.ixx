@@ -67,6 +67,10 @@ T bytes_to_int(const uint8_t *bytes, std::endian e) {
     return value;
 }
 
+export int16_t bytes_to_int16(const uint8_t *bytes, std::endian e) {
+    return bytes_to_int<int16_t>(bytes, e);
+}
+
 export int32_t bytes_to_int32(const uint8_t *bytes, std::endian e) {
     return bytes_to_int<int32_t>(bytes, e);
 }
