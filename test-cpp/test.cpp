@@ -12,11 +12,13 @@ void run_all_java_tests();
 int main() {
 //    RUN_TEST_CASE(test_sys_info)
 //    RUN_TEST_CASE(test_slot);
+//
+//    RUN_TEST_CASE(test_convert_int);
+//    RUN_TEST_CASE(test_convert_long);
+//    RUN_TEST_CASE(test_convert_float);
+//    RUN_TEST_CASE(test_convert_double);
 
-    RUN_TEST_CASE(test_convert_int);
-    RUN_TEST_CASE(test_convert_long);
-    RUN_TEST_CASE(test_convert_float);
-    RUN_TEST_CASE(test_convert_double);
+    RUN_TEST_CASE(test_jimage);
 
 //    JNI_CreateJavaVM(nullptr, nullptr, nullptr);
 //

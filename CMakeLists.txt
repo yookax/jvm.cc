@@ -39,47 +39,30 @@ set (SOURCE_FILES ${MINIZIP_FILES} src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/object/reflect.cpp src/classfile/class.cpp src/classfile/array_class.cpp src/exception.cpp
         src/classfile/invoke.cpp src/native/method_handle_natives.cpp
         src/native/scoped_memory_access.cpp src/native/var_handle.cpp src/native/method_handle.cpp
-        src/object/allocator.cpp
-        src/native/java/lang/Thread.cpp
-        src/native/native.cpp
-        src/native/java/lang/Class.cpp
-        src/native/java/lang/Object.cpp
-        src/native/java/lang/reflect/Array.cpp
-        src/native/java/lang/System.cpp
-        src/native/java/lang/Runtime.cpp
-        src/native/java/lang/Float.cpp
-        src/native/java/lang/Double.cpp
-        src/native/jdk/internal/misc/Unsafe.cpp
-        src/native/jdk/internal/misc/CDS.cpp
-        src/native/java/lang/ClassLoader.cpp
-        src/native/java/lang/Module.cpp
-        src/native/java/lang/Throwable.cpp
-        src/native/java/lang/String.cpp
-        src/native/jdk/internal/reflect/Reflection.cpp
-        src/native/java/io/FileInputStream.cpp
-        src/native/java/io/FileOutputStream.cpp
-        src/native/java/io/FileDescriptor.cpp
-        src/native/java/lang/ref/Reference.cpp
-        src/native/java/lang/invoke/MethodHandleNatives.cpp
-        src/native/jdk/internal/misc/Signal.cpp
-        src/native/java/lang/invoke/MethodHandle.cpp
-        src/native/java/io/WinNTFileSystem.cpp
-        src/native/sun/nio/ch/IOUtil.cpp
-        src/native/jdk/internal/util/SystemProps-Raw.cpp
-        src/native/jdk/internal/misc/VM.cpp
-        src/native/sun/io/Win32ErrorMode.cpp
-        src/native/jdk/internal/loader/BootLoader.cpp
-        src/native/jdk/internal/loader/NativeLibraries.cpp
-        src/native/sun/nio/fs/WindowsNativeDispatcher.cpp
-        src/native/jdk/internal/jimage/NativeImageBuffer.cpp
+        src/object/allocator.cpp src/native/java/lang/Thread.cpp src/native/native.cpp
+        src/native/java/lang/Class.cpp src/native/java/lang/reflect/Array.cpp
+        src/native/java/lang/System.cpp src/native/java/lang/Runtime.cpp
+        src/native/java/lang/Float.cpp src/native/java/lang/Double.cpp
+        src/native/jdk/internal/misc/Unsafe.cpp src/native/jdk/internal/misc/CDS.cpp
+        src/native/java/lang/ClassLoader.cpp src/native/java/lang/Module.cpp
+        src/native/java/lang/Throwable.cpp src/native/java/lang/String.cpp
+        src/native/jdk/internal/reflect/Reflection.cpp src/native/java/io/FileInputStream.cpp
+        src/native/java/io/FileOutputStream.cpp src/native/java/io/FileDescriptor.cpp
+        src/native/java/lang/ref/Reference.cpp src/native/java/lang/invoke/MethodHandleNatives.cpp
+        src/native/jdk/internal/misc/Signal.cpp src/native/java/lang/invoke/MethodHandle.cpp
+        src/native/java/io/WinNTFileSystem.cpp src/native/sun/nio/ch/IOUtil.cpp
+        src/native/jdk/internal/util/SystemProps-Raw.cpp src/native/jdk/internal/misc/VM.cpp
+        src/native/sun/io/Win32ErrorMode.cpp src/native/jdk/internal/loader/BootLoader.cpp
+        src/native/jdk/internal/loader/NativeLibraries.cpp src/native/sun/nio/fs/WindowsNativeDispatcher.cpp
+        src/native/jdk/internal/jimage/NativeImageBuffer.cpp src/native/java/lang/Object.cpp
+        src/jimage/jimage_strings.cpp
 )
 
 set (TEST_SOURCE_FILES
         test-cpp/test.cpp test-cpp/convert_test.cpp test-cpp/slot_test.cpp
         test-cpp/descriptor_test.cpp test-cpp/heap_test.cpp test-cpp/class_loader_test.cpp
         test-cpp/object_test.cpp test-cpp/class_test.cpp test-cpp/foo_test.cpp
-        test-cpp/encoding_test.cpp
-        test-cpp/jimage_test.cpp
+        test-cpp/encoding_test.cpp test-cpp/jimage_test.cpp
 )
 
 # 这里生成 jvm.dll
@@ -110,7 +93,7 @@ target_sources(jvm
         src/classfile/class_loader.ixx src/classfile/poly.ixx src/util/sysinfo.ixx
         src/runtime/heap.ixx src/reference.ixx src/dll.ixx src/util/convert.ixx
         src/interpreter.ixx src/encoding.ixx src/exception.ixx src/util/access_flags.ixx
-        src/native/native.ixx src/util/bytes_reader.ixx src/jimage/jimage_file.ixx
+        src/native/native.ixx src/util/bytes_reader.ixx src/jimage/jimage.ixx
 )
 
 #target_sources(jvmcc

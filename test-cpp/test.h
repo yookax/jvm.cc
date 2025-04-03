@@ -8,6 +8,7 @@ import classfile;
 import heap;
 import object;
 import invoke;
+import jimage;
 import encoding;
 import sysinfo;
 import primitive;
