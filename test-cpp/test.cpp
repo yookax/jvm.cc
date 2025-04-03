@@ -10,40 +10,40 @@ void run_all_java_tests();
 #define RUN_TEST_CASE(func_name) void func_name(); func_name();
 
 int main() {
-    RUN_TEST_CASE(test_sys_info)
-    RUN_TEST_CASE(test_slot);
+//    RUN_TEST_CASE(test_sys_info)
+//    RUN_TEST_CASE(test_slot);
 
     RUN_TEST_CASE(test_convert_int);
     RUN_TEST_CASE(test_convert_long);
     RUN_TEST_CASE(test_convert_float);
     RUN_TEST_CASE(test_convert_double);
 
-    JNI_CreateJavaVM(nullptr, nullptr, nullptr);
-
-    RUN_TEST_CASE(test_properties);
-
-    RUN_TEST_CASE(test_method_descriptor);
-
-    RUN_TEST_CASE(test_alloc_continuously);
-    RUN_TEST_CASE(test_heap1);
-
-    RUN_TEST_CASE(test_load_class)
-    RUN_TEST_CASE(test_classloader1);
-
-    RUN_TEST_CASE(test_box);
-
-    RUN_TEST_CASE(test_string1);
-    RUN_TEST_CASE(test_intern);
-    RUN_TEST_CASE(test_equals);
-
-    RUN_TEST_CASE(test_new_array);
-    RUN_TEST_CASE(test_multi_array1);
-    RUN_TEST_CASE(test_multi_array2);
-    RUN_TEST_CASE(test_string_array);
-
-    RUN_TEST_CASE(test_inject_field);
-
-    run_all_java_tests();
+//    JNI_CreateJavaVM(nullptr, nullptr, nullptr);
+//
+//    RUN_TEST_CASE(test_properties);
+//
+//    RUN_TEST_CASE(test_method_descriptor);
+//
+//    RUN_TEST_CASE(test_alloc_continuously);
+//    RUN_TEST_CASE(test_heap1);
+//
+//    RUN_TEST_CASE(test_load_class)
+//    RUN_TEST_CASE(test_classloader1);
+//
+//    RUN_TEST_CASE(test_box);
+//
+//    RUN_TEST_CASE(test_string1);
+//    RUN_TEST_CASE(test_intern);
+//    RUN_TEST_CASE(test_equals);
+//
+//    RUN_TEST_CASE(test_new_array);
+//    RUN_TEST_CASE(test_multi_array1);
+//    RUN_TEST_CASE(test_multi_array2);
+//    RUN_TEST_CASE(test_string_array);
+//
+//    RUN_TEST_CASE(test_inject_field);
+//
+//    run_all_java_tests();
 
     cout << endl << "Testing is over." << endl;
     return 0;

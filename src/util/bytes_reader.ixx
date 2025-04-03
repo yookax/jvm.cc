@@ -5,7 +5,7 @@ import std.core;
 export class BytesReader {
     const uint8_t *bytes;
     size_t len; // bytes len
-    std::endian endian;
+    std::endian endian; // bytes endian
 
     size_t saved_pc = 0;
 };

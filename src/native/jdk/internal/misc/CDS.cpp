@@ -21,7 +21,7 @@ void logLambdaFormInvoker(Frame *f) {
     unimplemented
 }
 
-/**
+/*
  * Initialize archived static fields in the given Class using archived
  * values from CDS dump time. Also initialize the classes of objects in
  * the archived graph referenced by those fields.
@@ -35,7 +35,7 @@ void initializeFromArchive(Frame *f) {
     // todo
 }
 
-/**
+/*
  * Ensure that the native representation of all archived java.lang.Module objects
  * are properly restored.
  */
@@ -44,7 +44,7 @@ void defineArchivedModules(Frame *f) {
     unimplemented
 }
 
-/**
+/*
  * Returns a predictable "random" seed derived from the VM's build ID and version,
  * to be used by java.util.ImmutableCollections to ensure that archived
  * ImmutableCollections are always sorted the same order for the same VM build.

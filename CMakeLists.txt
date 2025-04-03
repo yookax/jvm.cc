@@ -79,6 +79,7 @@ set (TEST_SOURCE_FILES
         test-cpp/descriptor_test.cpp test-cpp/heap_test.cpp test-cpp/class_loader_test.cpp
         test-cpp/object_test.cpp test-cpp/class_test.cpp test-cpp/foo_test.cpp
         test-cpp/encoding_test.cpp
+        test-cpp/jimage_test.cpp
 )
 
 # 这里生成 jvm.dll

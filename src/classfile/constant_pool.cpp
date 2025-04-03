@@ -55,26 +55,26 @@ ConstantPool::ConstantPool(Class *c, BytecodeReader &r): owner(c) {
             case JVM_CONSTANT_Integer: {
                 u1 bytes[4];
                 r.read_bytes(bytes, 4);
-                set_int(i, big_bytes_to_int32(bytes));
+                set_int(i, bytes_to_int32(bytes, std::endian::big));
                 break;
             }
             case JVM_CONSTANT_Float: {
                 u1 bytes[4];
                 r.read_bytes(bytes, 4);
-                set_float(i, bytes_to_float(bytes));
+                set_float(i, bytes_to_float(bytes, std::endian::big));
                 break;
             }
             case JVM_CONSTANT_Long: {
                 u1 bytes[8];
                 r.read_bytes(bytes, 8);
-                set_long(i, bytes_to_int64(bytes));
+                set_long(i, bytes_to_int64(bytes, std::endian::big));
                 set_type(++i, JVM_CONSTANT_Placeholder);
                 break;
             }
             case JVM_CONSTANT_Double: {
                 u1 bytes[8];
                 r.read_bytes(bytes, 8);
-                set_double(i, bytes_to_double(bytes));
+                set_double(i, bytes_to_double(bytes, std::endian::big));
                 set_type(++i, JVM_CONSTANT_Placeholder);
                 break;
             }
