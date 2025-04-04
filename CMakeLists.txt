@@ -74,8 +74,17 @@ add_library(jvm SHARED ${SOURCE_FILES} ${TEST_SOURCE_FILES})
 SET_TARGET_PROPERTIES(jvm PROPERTIES OUTPUT_NAME "jvm" PREFIX "")
 
 # 生成可运行的虚拟机
-add_executable(jvmcc src/vm_client.cpp)
+add_executable(jvmcc src/cmd/jvmcc.cpp)
 target_link_libraries(jvmcc jvm)
+
+add_executable(javap src/cmd/javap.cpp)
+target_link_libraries(javap jvm)
+
+add_executable(jmod ${MINIZIP_FILES} src/cmd/jmod.cpp)
+#target_link_libraries(jmod jvm)
+
+add_executable(jimage src/cmd/jimage.cpp)
+target_link_libraries(jimage jvm)
 
 add_executable(jvmcc-test test-cpp/test.cpp)
 target_link_libraries(jvmcc-test jvm)
@@ -96,11 +105,3 @@ target_sources(jvm
         src/jimage/jimage_strings.ixx src/jimage/jimage_location.ixx src/jimage/jimage.ixx
 )
 
-#target_sources(jvmcc
-#        PUBLIC
-#        FILE_SET CXX_MODULES
-#        BASE_DIRS src
-#        FILES
-#        src/classfile/classfile.ixx src/runtime/runtime.ixx
-#        src/object/object.ixx src/vmstd.ixx src/classfile/constant_pool.ixx
-#)

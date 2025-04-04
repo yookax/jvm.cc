@@ -1,5 +1,5 @@
-#include "vmdef.h"
-#include "jni.h"
+#include "../vmdef.h"
+#include "../jni.h"
 
 import std.core;
 import std.filesystem;
