@@ -3,6 +3,8 @@
 
 export module jimage;
 
+export import jimage_strings;
+export import jimage_location;
 import std.core;
 import bytes_reader;
 import sysinfo;
@@ -57,8 +59,7 @@ using namespace std;
 // Flags - various image wide flags (future).
 // Resource count - number of resources in the file.
 // Table length - the length of lookup tables used in the index.
-// Attributes size - number of bytes in the region used to store location attribute
-//                   streams.
+// Attributes size - number of bytes in the region used to store location attribute streams.
 // Strings size - the size of the region used to store strings used by the
 //                index and meta data.
 //
@@ -121,7 +122,7 @@ using namespace std;
 
 export class JImageFile {
     BytesReader *reader;
-
+public:
     // jdk/internal/jimage/ImageHeader.java
     struct Header {
         static const uint32_t MAGIC = 0xCAFEDADA;
@@ -188,8 +189,8 @@ export class JImageFile {
         }
     } index;
 
-    const void *resources;
-public:
+    const uint8_t *resources;
+
     JImageFile(const char *jimage_file_path) {
         auto size = get_file_size(jimage_file_path);
         auto mapping = mem_mapping(jimage_file_path);
@@ -200,6 +201,27 @@ public:
         header.read_from(*reader);
         index.read_from(*reader, header);
         resources = reader->curr_pos();
+    }
+
+//     redirectIndex = hash(path, DEFAULT_SEED) % table_length;
+//     redirect = redirectTable[redirectIndex];
+//     if (redirect == 0) return not found;
+//     locationIndex = redirect < 0 ? -1 - redirect : hash(path, redirect) % table_length;
+//     location = locationTable[locationIndex];
+//     if (!verify(location, path)) return not found;
+//     return location;
+    optional<JImageLocation> find_location(const char8_t *path) {
+        u8string s(path);
+        auto hash = hash_code(s);
+        auto redirect_index = hash % header.table_length;
+        auto redirect = index.redirect_table[redirect_index];
+        if (redirect == 0) {
+            // not found;
+            return nullopt;
+        }
+        auto location_index = redirect < 0 ? -1 - redirect : hash_code(s, redirect) % header.table_length;
+        auto offset = index.attribute_offsets[location_index];
+        return decompress(index.locations, offset, header.locations_size);
     }
 
     void print() {

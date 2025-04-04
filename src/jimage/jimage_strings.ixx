@@ -1,14 +1,15 @@
-﻿
+﻿export module jimage_strings;
+
 import std.core;
 
 using namespace std;
 
 // jdk/internal/jimage/ImageStringsReader.java
 
-static const int HASH_MULTIPLIER = 0x01000193;
+export const int HASH_MULTIPLIER = 0x01000193;
 static const int POSITIVE_MASK = 0x7FFFFFFF;
 
-static int unmasked_hash_code(u8string &s, int seed) {
+export int unmasked_hash_code(u8string &s, int seed) {
     size_t len = s.length();
     int8_t *buffer = nullptr;
 
@@ -43,15 +44,20 @@ static int unmasked_hash_code(u8string &s, int seed) {
     return seed;
 }
 
-static int hash_code(u8string &s, int seed) {
+export int unmasked_hash_code(const char8_t *s, int seed) {
+    u8string str(s);
+    return unmasked_hash_code(str, seed);
+}
+
+export int hash_code(u8string &s, int seed) {
     return unmasked_hash_code(s, seed) & POSITIVE_MASK;
 }
 
-static int hash_code(u8string &s) {
+export int hash_code(u8string &s) {
     return hash_code(s, HASH_MULTIPLIER);
 }
 
-static int hash_code(u8string &module, u8string &name, int seed) {
+export int hash_code(u8string &module, u8string &name, int seed) {
     seed = (seed * HASH_MULTIPLIER) ^ ('/');
     seed = unmasked_hash_code(module, seed);
     seed = (seed * HASH_MULTIPLIER) ^ ('/');
@@ -59,6 +65,6 @@ static int hash_code(u8string &module, u8string &name, int seed) {
     return seed & POSITIVE_MASK;
 }
 
-static int hash_code(u8string &module, u8string &name) {
+export int hash_code(u8string &module, u8string &name) {
     return hash_code(module, name, HASH_MULTIPLIER);
 }
