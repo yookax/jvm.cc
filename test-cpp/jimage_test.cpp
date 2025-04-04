@@ -1,5 +1,7 @@
 ﻿#include "test.h"
 
+import jimage;
+
 using namespace std;
 
 TEST_CASE(test_jimage_string)
@@ -41,7 +43,6 @@ static auto u8s = {// /<module>/<package>/<base>.<extension>
 
 TEST_CASE(test_jimage)
     JImageFile jf("d:/modules");
-    jf.read();
     jf.print();
 
     for (auto u8: u8s) {
@@ -52,5 +53,21 @@ TEST_CASE(test_jimage)
             continue;
         }
         cout << location.value().to_str(jf.index.strings);
+    }
+}
+
+TEST_CASE(test_jimage1)
+    for (auto u8: u8s) {
+        cout << "---\n[" << (const char *)u8 << "]" << endl;
+        auto resource = get_resource_from_jimage(u8);
+        if (!resource.has_value()) {
+            cout << "not find" << endl;
+            continue;
+        }
+        auto [bytecode, size] = resource.value();
+        Class *c = define_class(BOOT_CLASS_LOADER, bytecode, size);
+        printf("%p, %s, %s, %d\n", c, c->name,
+               c->java_mirror->jvm_mirror->name,
+               c == c->java_mirror->jvm_mirror);
     }
 }

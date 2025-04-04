@@ -18,7 +18,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8 /experimental:module ") # /W4
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8 /execution-charset:utf-8 /experimental:module ") # /W4
 endif()
 
 # 添加 zlib 子目录，引入 zlib 的 CMakeLists.txt
@@ -92,8 +92,8 @@ target_sources(jvm
         src/classfile/class_loader.ixx src/classfile/poly.ixx src/util/sysinfo.ixx
         src/runtime/heap.ixx src/reference.ixx src/dll.ixx src/util/convert.ixx
         src/interpreter.ixx src/encoding.ixx src/exception.ixx src/util/access_flags.ixx
-        src/native/native.ixx src/util/bytes_reader.ixx src/jimage/jimage.ixx
-        src/jimage/jimage_strings.ixx src/jimage/jimage_location.ixx
+        src/native/native.ixx src/util/bytes_reader.ixx src/jimage/jimage_file.ixx
+        src/jimage/jimage_strings.ixx src/jimage/jimage_location.ixx src/jimage/jimage.ixx
 )
 
 #target_sources(jvmcc

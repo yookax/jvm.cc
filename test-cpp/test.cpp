@@ -18,10 +18,11 @@ int main() {
 //    RUN_TEST_CASE(test_convert_float);
 //    RUN_TEST_CASE(test_convert_double);
 
+    JNI_CreateJavaVM(nullptr, nullptr, nullptr);
+
     RUN_TEST_CASE(test_jimage_string);
     RUN_TEST_CASE(test_jimage);
-
-//    JNI_CreateJavaVM(nullptr, nullptr, nullptr);
+    RUN_TEST_CASE(test_jimage1);
 //
 //    RUN_TEST_CASE(test_properties);
 //

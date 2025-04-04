@@ -13,6 +13,7 @@ import slot;
 import primitive;
 import object;
 import classfile;
+import jimage;
 import dll;
 import exception;
 import interpreter;
@@ -22,7 +23,13 @@ using namespace slot;
 using namespace utf8;
 using namespace std::filesystem;
 
+// jdk modules 全路径
 vector<string> jdk_modules;
+
+/* jdk module names
+ * /java.base/, /java.net/ ....
+ */
+vector<string> jdk_module_names;
 
 static char classpath[PATH_MAX + 1] = { 0 };
 
@@ -83,6 +90,27 @@ static void init_classpath() {
             std::swap(*(jdk_modules.begin()), *iter);
             break;
         }
+    }
+
+    for (auto &s: jdk_modules) {
+        size_t i = s.rfind('\\');
+        size_t j = s.rfind('/');
+        if (i == string::npos && j == string::npos) {
+            panic(""); // todo
+        }
+        size_t x;
+        if (i == string::npos) {
+            x = j;
+        } else if (j == string::npos) {
+            x = i;
+        } else {
+            x = std::max(i, j) + 1;
+        }
+        size_t y = s.rfind(".jmod");
+        if (y == string::npos || y <= x) {
+            panic(""); // todo
+        }
+        jdk_module_names.emplace_back("/" + s.substr(x, y - x) + "/");
     }
 
     if (classpath[0] == 0) {
@@ -225,17 +253,26 @@ static optional<pair<u1 *, size_t>> read_class(const char *path,
  * Read JDK 类库中的类，不包括Array Class.
  * xxx/xxx/xxx
  */
-static optional<pair<u1 *, size_t>> read_boot_class(const utf8_t *class_name) {
+static optional<pair<const u1 *, size_t>> read_boot_class(const utf8_t *class_name) {
     assert(class_name != nullptr);
 //    assert(isSlashName(class_name));
     assert(class_name[0] != '['); // don't load array class
 
-    for (auto &mod : jdk_modules) {
-        auto content = read_class(mod.c_str(), class_name, IN_MODULE);
+    // 从jimage中读取
+    for (auto &s: jdk_module_names) {
+        string path = s + class_name + ".class";
+        auto content = get_resource_from_jimage((const char8_t *)path.c_str());
         if (content.has_value()) { // find out
             return content;
         }
     }
+
+//    for (auto &mod : jdk_modules) {
+//        auto content = read_class(mod.c_str(), class_name, IN_MODULE);
+//        if (content.has_value()) { // find out
+//            return content;
+//        }
+//    }
 
     return nullopt;
 }

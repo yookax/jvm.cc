@@ -13,6 +13,7 @@ import heap;
 import classfile;
 import invoke;
 import class_loader;
+import jimage;
 import reference;
 import dll;
 import native;
@@ -232,6 +233,7 @@ void init_jvm(InitArgs *init_args) {
     /* order is important */
     init_heap();
     init_properties();
+    init_jimage();
     init_dll();
     init_classloader();
     init_native();

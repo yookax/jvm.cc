@@ -168,35 +168,81 @@ export streamsize get_file_size(const string &filename) {
     return -1;
 }
 
-export void *mem_mapping(const char *file_path) {
-    assert(file_path != nullptr);
+export struct MemMapping {
 #ifdef _WIN64
-    // 打开文件
-    HANDLE file = CreateFileA(file_path, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-    if (file == INVALID_HANDLE_VALUE) {
-        std::cerr << "无法打开文件" << std::endl;
-        return nullptr;
-    }
+    void *address = nullptr;
 
-    // 创建文件映射对象
-    HANDLE mapping = CreateFileMappingA(file, 0, PAGE_READONLY, 0, 0, nullptr);
-    if (mapping == nullptr) {
-        std::cerr << "无法创建文件映射对象" << std::endl;
-        CloseHandle(file);
-        return nullptr;
-    }
+    MemMapping(const char *file_path) noexcept {
+        assert(file_path != nullptr);
+        // 打开文件
+        HANDLE file = CreateFileA(file_path, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+        if (file == INVALID_HANDLE_VALUE) {
+            std::cerr << "无法打开文件" << std::endl;
+            return;
+        }
 
-    // 将文件映射到内存
-    LPVOID address = MapViewOfFile(mapping, FILE_MAP_READ, 0, 0, 0);
-    if (address == nullptr) {
-        std::cerr << "无法将文件映射到内存" << std::endl;
+        // 创建文件映射对象
+        HANDLE mapping = CreateFileMappingA(file, 0, PAGE_READONLY, 0, 0, nullptr);
+        if (mapping == nullptr) {
+            std::cerr << "无法创建文件映射对象" << std::endl;
+            CloseHandle(file);
+            return;
+        }
+
+        // 将文件映射到内存
+        address = MapViewOfFile(mapping, FILE_MAP_READ, 0, 0, 0);
+        if (address == nullptr) {
+            std::cerr << "无法将文件映射到内存" << std::endl;
+        }
+
+        // 关闭打开的jimage file，只留下内存映射即可。
+        // 如果这里不关闭文件，jdk内部打开jimage file时就会出错。
         CloseHandle(mapping);
         CloseHandle(file);
-        return nullptr;
     }
 
-    return address;
+    ~MemMapping() {
+        if (address != nullptr)
+            UnmapViewOfFile(address);
+    }
 #elifdef __linux__
-    return nullptr;
+#error
 #endif
-}
+};
+
+//export MappingInfo mem_mapping(const char *file_path) {
+//    assert(file_path != nullptr);
+//    MappingInfo info;
+//#ifdef _WIN64
+//    // 打开文件
+//    info.file = CreateFileA(file_path, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+//    if (info.file == INVALID_HANDLE_VALUE) {
+//        std::cerr << "无法打开文件" << std::endl;
+//        return info;
+//    }
+//
+//    // 创建文件映射对象
+//    info.mapping = CreateFileMappingA(info.file, 0, PAGE_READONLY, 0, 0, nullptr);
+//    if (info.mapping == nullptr) {
+//        std::cerr << "无法创建文件映射对象" << std::endl;
+//        CloseHandle(info.file);
+//        return info;
+//    }
+//
+//    // 将文件映射到内存
+//    info.address = MapViewOfFile(info.mapping, FILE_MAP_READ, 0, 0, 0);
+//    if (info.address == nullptr) {
+//        std::cerr << "无法将文件映射到内存" << std::endl;
+//        CloseHandle(info.mapping);
+//        CloseHandle(info.file);
+//        return info;
+//    }
+//
+//    assert(info.file != nullptr);
+//    assert(info.mapping != nullptr);
+//    assert(info.address != nullptr);
+//    return info;
+//#elifdef __linux__
+//#error
+//#endif
+//}

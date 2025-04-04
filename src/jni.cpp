@@ -958,7 +958,6 @@ void JNICALL Jvmcc_ReleaseStringCritical(JNIEnv *env,
 jweak JNICALL Jvmcc_NewWeakGlobalRef(JNIEnv *env, jobject obj) {
     unimplemented
 }
-
 void JNICALL Jvmcc_DeleteWeakGlobalRef(JNIEnv *env, jweak ref) {
     unimplemented
 }

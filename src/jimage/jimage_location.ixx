@@ -24,6 +24,44 @@ static const int ATTRIBUTE_COUNT = 8;
 export struct JImageLocation {
     jlong attributes[ATTRIBUTE_COUNT] = { 0 };
 
+    jlong get_offset() {
+        return attributes[ATTRIBUTE_OFFSET];
+    }
+
+    jlong get_uncompressed() {
+        return attributes[ATTRIBUTE_UNCOMPRESSED];
+    }
+
+    string get_full_name(bool modules_prefix, const char *strings) {
+        ostringstream oss;
+        if (attributes[ATTRIBUTE_MODULE] != 0) {
+            if (modules_prefix) {
+                oss << "/modules";
+            }
+            auto index = attributes[ATTRIBUTE_MODULE];
+            oss << "/" << strings + index << "/";
+        }
+
+        if (attributes[ATTRIBUTE_PARENT] != 0) {
+            auto index = attributes[ATTRIBUTE_PARENT];
+            oss << strings + index << "/";
+        }
+
+        oss << strings + attributes[ATTRIBUTE_BASE];
+
+        if (attributes[ATTRIBUTE_EXTENSION] != 0) {
+            auto index = attributes[ATTRIBUTE_EXTENSION];
+            oss << "." << strings + index;
+        }
+
+        return oss.str();
+    }
+
+    bool verify(const char8_t *path, const char *strings) {
+        string full_name = get_full_name(false, strings);
+        return strcmp((char *)path, full_name.c_str()) == 0;
+    }
+
     string to_str(const char *strings) {
         ostringstream oss;
         if (attributes[ATTRIBUTE_END] != 0) {
