@@ -21,7 +21,13 @@ import exception;
  */
 // private static native String[] vmProperties();
 void vmProperties(Frame *f) {
-
+    jarrRef prop_array = Allocator::string_array(g_properties.size()*2);
+    int i = 0;
+    for (Property &p : g_properties) {
+        prop_array->setRefElt(i++, Allocator::string(p.name));
+        prop_array->setRefElt(i++, Allocator::string(p.value));
+    }
+    f->pushr(prop_array);
 }
 
 /*
@@ -34,7 +40,13 @@ void vmProperties(Frame *f) {
  */
 // private static native String[] platformProperties();
 void platformProperties(Frame *f) {
-
+    jarrRef prop_array = Allocator::string_array(g_properties.size()*2);
+    int i = 0;
+    for (Property &p : g_properties) {
+        prop_array->setRefElt(i++, Allocator::string(p.name));
+        prop_array->setRefElt(i++, Allocator::string(p.value));
+    }
+    f->pushr(prop_array);
 }
 
 void jdk_internal_util_SystemProps$Raw_registerNatives() {
@@ -42,6 +54,6 @@ void jdk_internal_util_SystemProps$Raw_registerNatives() {
 #define R(method, method_descriptor) \
     registry("jdk/internal/util/SystemProps$Raw", #method, method_descriptor, method)
 
-//    R(vmProperties, "()[Ljava/lang/String;");
-//    R(platformProperties, "()[Ljava/lang/String;");
+    R(vmProperties, "()[Ljava/lang/String;");
+    R(platformProperties, "()[Ljava/lang/String;");
 }

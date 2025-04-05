@@ -5,12 +5,20 @@ module;
 
 module native;
 
+import std.filesystem;
 import slot;
 import classfile;
 import object;
 import class_loader;
 import runtime;
 import exception;
+
+// java/io/FileSystem.java
+/* Constants for simple boolean attributes */
+static const int BA_EXISTS    = 0x01;
+static const int BA_REGULAR   = 0x02;
+static const int BA_DIRECTORY = 0x04;
+static const int BA_HIDDEN    = 0x08;
 
 /* Check whether or not the file name in "path" is a Windows reserved
    device name (CON, PRN, AUX, NUL, COM[1-9], LPT[1-9]) based on the
@@ -29,46 +37,48 @@ import exception;
    reserved device name repository in the future, which probably will
    never happen, we will need to revisit the lookup implementation.
 
-static WCHAR* ReservedDEviceNames[] = {
+static WCHAR* ReservedDeviceNames[] = {
     L"CON", L"PRN", L"AUX", L"NUL",
     L"COM1", L"COM2", L"COM3", L"COM4", L"COM5", L"COM6", L"COM7", L"COM8", L"COM9",
     L"LPT1", L"LPT2", L"LPT3", L"LPT4", L"LPT5", L"LPT6", L"LPT7", L"LPT8", L"LPT9",
     L"CLOCK$"
 };
 */
-
-//static BOOL isReservedDeviceName(CHAR* path) {
-//#define BUFSIZE 9
-//    CHAR buf[BUFSIZE];
-//    CHAR *lpf = NULL;
-//    DWORD retLen = GetFullPathName(path,
-//                                    BUFSIZE,
-//                                    buf,
-//                                    &lpf);
-//    if ((retLen == BUFSIZE - 1 || retLen == BUFSIZE - 2) &&
-//        buf[0] == L'\\' && buf[1] == L'\\' &&
-//        buf[2] == L'.' && buf[3] == L'\\') {
-//        CHAR* dname = strupr(buf + 4);
-//        if (strcmp(dname, "CON") == 0 ||
-//            strcmp(dname, "PRN") == 0 ||
-//            strcmp(dname, "AUX") == 0 ||
-//            strcmp(dname, "NUL") == 0)
-//            return TRUE;
-//        if ((strcmp(dname, "COM", 3) == 0 ||
-//             strcmp(dname, "LPT", 3) == 0) &&
-//             dname[3] - '0' > 0 &&
-//             dname[3] - '0' <= 9)
-//            return TRUE;
-//    }
-//    return FALSE;
-//}
+static bool is_reserved_device_name(char* path) {
+#define BUF_SIZE 9
+    char buf[BUF_SIZE];
+    char *lpf = nullptr;
+    DWORD len = GetFullPathNameA(path,
+                                    BUF_SIZE,
+                                    buf,
+                                    &lpf);
+    if ((len == BUF_SIZE - 1 || len == BUF_SIZE - 2) &&
+        buf[0] == L'\\' && buf[1] == L'\\' &&
+        buf[2] == L'.' && buf[3] == L'\\') {
+        char* name = strupr(buf + 4);
+        if (strcmp(name, "CON") == 0 || strcmp(name, "PRN") == 0
+            || strcmp(name, "AUX") == 0 || strcmp(name, "NUL") == 0)
+            return true;
+        if ((strncmp(name, "COM", 3) == 0 || strncmp(name, "LPT", 3) == 0)
+                && name[3] - '0' > 0 && name[3] - '0' <= 9)
+            return true;
+    }
+    return false;
+}
 
 static Field *path_field;
+
+char *file_to_path(jref fo) {
+    auto po = fo->get_field_value<jref>(path_field);
+    return java_lang_String::to_utf8(po);
+}
 
 //private static native void initIDs();
 static void initIDs(Frame *f) {
     Class *file_class = load_boot_class("java/io/File");
+    // private final String path;
     path_field = file_class->get_field("path", "Ljava/lang/String;");
+    assert(path_field != nullptr);
 }
 
 //private native String getDriveDirectory(int drive);
@@ -113,8 +123,34 @@ static void getFinalPath0(Frame *f) {
 }
 
 //private native int getBooleanAttributes0(File f);
-static void getBooleanAttributes0(Frame *f) {
-    unimplemented
+static void getBooleanAttributes(Frame *f) {
+    slot_t *args = f->lvars;
+    auto _this = slot::get<jref>(args++);
+    auto fo = slot::get<jref>(args);
+
+    char *path = file_to_path(fo);
+    if (is_reserved_device_name(path)) {
+        f->pushi(0);
+        return;
+    }
+
+    auto a = GetFileAttributes(path);
+    if (a == INVALID_FILE_ATTRIBUTES) {
+        f->pushi(0);
+        return;
+    }
+
+    jint attributes = BA_EXISTS;
+    if ((a & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+        attributes |= BA_DIRECTORY;
+    } else {
+        attributes |= BA_REGULAR;
+    }
+    if ((a & FILE_ATTRIBUTE_HIDDEN) != 0) {
+        attributes |= BA_HIDDEN;
+    }
+
+    f->pushi(attributes);
 }
 
 //private native boolean checkAccess0(File f, int access);
@@ -128,8 +164,14 @@ static void getLastModifiedTime0(Frame *f) {
 }
 
 //private native long getLength0(File f);
-static void getLength0(Frame *f) {
-    unimplemented
+static void getLength(Frame *f) {
+    slot_t *args = f->lvars;
+    auto _this = slot::get<jref>(args++);
+    auto fo = slot::get<jref>(args);
+
+    std::filesystem::path file_path = file_to_path(fo);
+    uintmax_t size = std::filesystem::file_size(file_path);
+    f->pushl(size);
 }
 
 //private native boolean setPermission0(File f, int access, boolean enable, boolean owneronly);
@@ -194,14 +236,14 @@ void java_io_WinNTFileSystem_registerNatives() {
 #define R(method, method_descriptor) \
     registry("java/io/WinNTFileSystem", #method, method_descriptor, method)
 
-//    R(initIDs, "()V");
+    R(initIDs, "()V");
 //    R(getDriveDirectory, "");
     R(canonicalize0, "(Ljava/lang/String;)Ljava/lang/String;");
 //    R(getFinalPath0, "");
-//    R(getBooleanAttributes0, "(Ljava/io/File;)I");
+    R(getBooleanAttributes, "(Ljava/io/File;)I");
 //    R(checkAccess0, "");
 //    R(getLastModifiedTime0, "");
-//    R(getLength0, "(Ljava/io/File;)J");
+    R(getLength, "(Ljava/io/File;)J");
 //    R(setPermission0, "");
 //    R(createFileExclusively0, "");
 //    R(list0, "");
