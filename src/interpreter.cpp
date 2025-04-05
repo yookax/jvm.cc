@@ -1712,12 +1712,13 @@ static void call_native_method(Frame *frame) {
     } else {
         auto n = (void(*)(Frame*))native;
         n(frame);
-        if(strcmp(m->clazz->name, "java/lang/invoke/MethodHandleNatives") == 0)
-            return;
-        if(strcmp(m->clazz->name, "jdk/internal/misc/Unsafe") == 0)
-            return;
-        if(strcmp(m->name, "registerNatives") != 0)
-            return;
+//        if(strcmp(m->clazz->name, "java/lang/invoke/MethodHandleNatives") == 0)
+//            return;
+//        if(strcmp(m->clazz->name, "jdk/internal/misc/Unsafe") == 0)
+//            return;
+//        if(strcmp(m->name, "registerNatives") != 0)
+//            return;
+        return;
     }
 
     slot_t *args = frame->lvars; 
