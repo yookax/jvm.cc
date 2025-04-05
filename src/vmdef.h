@@ -18,7 +18,8 @@
 #endif
  
 #define VM_VERSION "1.0" // version of this jvm, a string.
-#define JAVA_COMPAT_VERSION "1.8.0_162" // todo
+
+#define JAVA_COMPAT_MAJOR_VERSION "17"
 
 // jvm 最大支持的classfile版本
 #define JVM_MAX_CLASSFILE_MAJOR_VERSION 60
@@ -92,6 +93,7 @@ class Heap;
 extern Heap *g_heap;
 
 extern std::string g_java_home;
+extern std::string g_java_version;
 
 extern u2 g_classfile_major_version;
 extern u2 g_classfile_manor_version;

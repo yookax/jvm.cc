@@ -11,6 +11,7 @@ static char *main_func_args[MAX_JVM_ARITY];
 static int main_func_args_count = 0;
 
 void set_classpath(const char *cp);
+string get_java_version();
 
 static bool silent_when_no_main = false;
 
@@ -107,7 +108,7 @@ int run_jvm(int argc, char* argv[]) {
 
     auto end = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(end - start).count();
-    printf("\n--- Powered by jvmcc(%.2fs) ---\n", duration / 1000.0);
+    printf("\n--- Powered by jvm.cc(%.2fs) on Java-%s ---\n", duration / 1000.0, get_java_version().c_str());
     return 0;
 }
 

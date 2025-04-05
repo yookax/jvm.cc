@@ -26,6 +26,12 @@ Heap *g_heap;
 Object *g_sys_thread_group;
 
 string g_java_home;
+string g_java_version;
+
+__declspec(dllexport) string get_java_version() {
+    return g_java_version;
+}
+
 
 u2 g_classfile_major_version = 0;
 u2 g_classfile_manor_version = 0;
@@ -133,7 +139,6 @@ static void init_heap() {
 //     args->exit = exit;
 // }
 
-
 namespace fs = std::filesystem;
 
 static bool check_jdk_version(string jdk_path) {
@@ -148,13 +153,24 @@ static bool check_jdk_version(string jdk_path) {
     file.seekg(0, std::ios::beg);
 
     // 读取文件内容到缓冲区
-//	char buffer[size];
     auto buffer = new char[size];
     file.read(buffer, size);
     file.close();
-    auto b = strstr(buffer, "JAVA_VERSION=\"17") != nullptr;
+    auto b = strstr(buffer, "JAVA_VERSION=\"" JAVA_COMPAT_MAJOR_VERSION);
+    if (b == nullptr) {
+        delete[] buffer;
+        return false;
+    }
+    b += strlen("JAVA_VERSION=\"");
+    auto c = strstr(b, "\"");
+    if (c == nullptr) {
+        delete[] buffer;
+        return false;
+    }
+    *c = 0;
+    g_java_version = b;
     delete[] buffer;
-    return b;
+    return true;
 }
 
 static string find_jdk_dir() {
