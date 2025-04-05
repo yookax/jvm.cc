@@ -19,7 +19,7 @@
  
 #define VM_VERSION "1.0" // version of this jvm, a string.
 
-#define JAVA_COMPAT_MAJOR_VERSION "17"
+#define JAVA_COMPAT_MAJOR_VERSION "24"
 
 // jvm 最大支持的classfile版本
 #define JVM_MAX_CLASSFILE_MAJOR_VERSION 60
@@ -246,8 +246,8 @@ enum ExitCode {
 // 出现异常，退出jvm
 #define panic(...) \
 do { \
-    printvm("JVM panic! "); \
-    printf(__VA_ARGS__); \
+    fprintf(stderr, "\n%s: %d: JVM panic!\n", __FILE__, __LINE__); \
+    fprintf(stderr, __VA_ARGS__); \
     exit(EXIT_CODE_UNKNOWN_ERROR); \
 } while(false)
 
@@ -256,7 +256,7 @@ do { \
 #define UNREACHABLE(...) \
 do { \
     printvm("Unreachable.\n"); \
-    printf(__VA_ARGS__); \
+    fprintf(stderr, __VA_ARGS__); \
     exit(EXIT_CODE_UNREACHABLE); \
 } while(false)
 
@@ -264,7 +264,7 @@ do { \
 // 打印位置，退出JVM
 #define unimplemented \
 { \
-    printf("Unimplemented. %s: %d. %s\n", __FILE__, __LINE__, __func__); \
+    fprintf(stderr, "Unimplemented. %s: %d. %s\n", __FILE__, __LINE__, __func__); \
     exit(EXIT_CODE_UNIMPLEMENTED); \
 }
 

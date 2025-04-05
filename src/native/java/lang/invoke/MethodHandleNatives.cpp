@@ -52,7 +52,8 @@ static int methodFlags(Method *m) {
 static Class *constructor_reflect_class;
 static Class *method_reflect_class;
 static Class *field_reflect_class;
-static Class *MH_class;  // java/lang/invoke/MethodHandle
+static Class *MT_class; // java/lang/invoke/MethodType
+static Class *MH_class; // java/lang/invoke/MethodHandle
 
 static Class *MN_class;  // java/lang/invoke/MemberName
 static Field *MN_clazz_field;
@@ -81,6 +82,7 @@ static void __init__() {
     MN_class = load_boot_class("java/lang/invoke/MemberName");
     RMN_class = load_boot_class("java/lang/invoke/ResolvedMethodName");
     MH_class = load_boot_class("java/lang/invoke/MethodHandle");
+    MT_class = load_boot_class("java/lang/invoke/MethodType");
     CS_class = load_boot_class("java/lang/invoke/CallSite");
 
     // private Class<?> clazz;
@@ -231,12 +233,14 @@ static void resolve(Frame *frame) {
         panic("11111111111"); // todo
     }
 
-    Method *get_sig = self->clazz->lookup_method("getSignature", "()Ljava/lang/String;");
-    jstrRef sig_str = execJavaR(get_sig, { rslot(self) });
-    const utf8_t *sig = java_lang_String::to_utf8(sig_str);
-
     switch(flags & ALL_KINDS) {
         case IS_METHOD: {
+            // java.lang.invoke.MethodType
+            // public String toMethodDescriptorString()
+            Method *d = MT_class->lookup_method("toMethodDescriptorString", "()Ljava/lang/String;");
+            jstrRef sig_str = execJavaR(d, { rslot(type) });
+            const utf8_t *sig = java_lang_String::to_utf8(sig_str);
+
             Method *m = clazz->lookup_method(name, sig);
             if (m == nullptr) {
                 m = clazz->generate_poly_method(name, sig);
@@ -256,6 +260,12 @@ static void resolve(Frame *frame) {
             return;
         }
         case IS_CONSTRUCTOR: {
+            // java.lang.invoke.MethodType
+            // public String toMethodDescriptorString()
+            Method *d = MT_class->lookup_method("toMethodDescriptorString", "()Ljava/lang/String;");
+            jstrRef sig_str = execJavaR(d, { rslot(type) });
+            const utf8_t *sig = java_lang_String::to_utf8(sig_str);
+
             Method *m = clazz->get_method(name, sig);
             if (m == nullptr) {
                 // todo
@@ -271,7 +281,7 @@ static void resolve(Frame *frame) {
             return;
         }
         case IS_FIELD: {
-            Field *f = clazz->lookup_field(name, sig);
+            Field *f = clazz->lookup_field(name);
             if (f == nullptr) {
                 // todo
                 throw java_lang_NoSuchFieldError("resolve member name, FIELD");

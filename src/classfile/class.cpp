@@ -473,11 +473,9 @@ Class::Class(jref class_loader, const u1 *bytecode, size_t len): loader(class_lo
 
         if (utf8::equals(name, "java/lang/invoke/ResolvedMethodName")) {
             //@Injected JVM_Method* vmtarget;
-            //@Injected Class<?>    vmholder;
-            bool b1 = inject_inst_field("vmtarget", "Ljava/lang/Object;");
-            bool b2 = inject_inst_field("vmholder", "Ljava/lang/Class;");
-            if (!b1 || !b2) {
-                UNREACHABLE("inject fields(vmtarget, vmholder) error");
+            bool b = inject_inst_field("vmtarget", "Ljava/lang/Object;");
+            if (!b) {
+                UNREACHABLE("inject fields(vmtarget) error");
             }
             return;
         }

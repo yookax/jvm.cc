@@ -160,7 +160,9 @@ void setNativeName(Frame *f) {
 // The address of the next thread identifier, see ThreadIdentifiers.
 // private static native long getNextThreadIdOffset();
 void getNextThreadIdOffset(Frame *f) {
-    unimplemented
+    // todo
+    static jlong NEXT_TID_OFFSET = 100;
+    f->pushl((jlong) &NEXT_TID_OFFSET);
 }
 
 // private static native void registerNatives();

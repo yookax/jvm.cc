@@ -23,6 +23,7 @@ using namespace java_lang_String;
  * This field would be set by VM itself during initClassName call.
  *
  * private transient String name;
+ *
  * private native String initClassName();
  */
 void initClassName(Frame *f) {
@@ -593,6 +594,8 @@ void forName0(Frame *f) {
         unimplemented
         // (*env)->ThrowNew(env, )
     }
+
+    init_class(c);
 
     f->pushr(c->java_mirror);
 }

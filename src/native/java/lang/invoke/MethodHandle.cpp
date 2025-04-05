@@ -36,10 +36,7 @@ static int MN_flags_id;   // private int flags;
 static int MN_method_id;  // private ResolvedMethodName method; // cached resolved method information
 static int MN_vmindex_id; // @Injected intptr_t vmindex; // vtable index or offset of resolved member
 
-// final class ResolvedMethodName {
-//     // @Injected JVM_Method* vmtarget;
-//     // @Injected Class<?>    vmholder;
-// };
+//@Injected JVM_Method* vmtarget;
 static int RMN_vmtarget_id;
 static int RMN_vmholder_id;
 
@@ -171,7 +168,7 @@ static slot_t* __invokeExact__(const slot_t *args) {
     return execJava(target, args);
 }
 
-/**
+/*
  * Invokes the method handle, allowing any caller type type, but requiring an exact type match.
  * The symbolic type type at the call site of {@code invokeExact} must
  * exactly match this method handle's {@link #type type}.
@@ -208,7 +205,7 @@ static void invokeExact(Frame *f) {
     slot_t *x = __invokeExact__(f->lvars);
     push_return_value(f, x);
 }
-/**
+/*
  * Invokes the method handle, allowing any caller type type,
  * and optionally performing conversions on arguments and return values.
  * <p>
@@ -264,7 +261,7 @@ static void invoke(Frame *f) {
     push_return_value(f, x);
 }
 
-/**
+/*
  * Private method for trusted invocation of a method handle respecting simplified signatures.
  * Type mismatches will not throw {@code WrongMethodTypeException}, but could crash the JVM.
  * <p>
@@ -293,7 +290,7 @@ static void invokeBasic(Frame *f) {
     push_return_value(f, x);
 }
 
-/**
+/*
  * Private method for trusted invocation of a MemberName of kind {@code REF_invokeVirtual}.
  * The caller signature is restricted to basic types as with {@code invokeBasic}.
  * The trailing (not leading) argument must be a MemberName.
@@ -314,7 +311,7 @@ static void linkToVirtual(Frame *f) {
     push_return_value(f, x);
 }
 
-/**
+/*
  * Private method for trusted invocation of a MemberName of kind {@code REF_invokeStatic}.
  * The caller signature is restricted to basic types as with {@code invokeBasic}.
  * The trailing (not leading) argument must be a MemberName.
@@ -332,7 +329,7 @@ static void linkToStatic(Frame *f) {
     push_return_value(f, x);
 }
 
-/**
+/*
  * Private method for trusted invocation of a MemberName of kind {@code REF_invokeSpecial}.
  * The caller signature is restricted to basic types as with {@code invokeBasic}.
  * The trailing (not leading) argument must be a MemberName.

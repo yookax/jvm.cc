@@ -119,11 +119,16 @@ static void canonicalize0(Frame *f) {
 
 //private native String getFinalPath0(String path) throws IOException;
 static void getFinalPath0(Frame *f) {
-    unimplemented
+    slot_t *args = f->lvars;
+    auto _this = slot::get<jref>(args++);
+    auto po = slot::get<jref>(args);
+    auto path = java_lang_String::to_utf8(po);
+    // todo
+    f->pushr(po);
 }
 
 //private native int getBooleanAttributes0(File f);
-static void getBooleanAttributes(Frame *f) {
+static void getBooleanAttributes0(Frame *f) {
     slot_t *args = f->lvars;
     auto _this = slot::get<jref>(args++);
     auto fo = slot::get<jref>(args);
@@ -164,7 +169,7 @@ static void getLastModifiedTime0(Frame *f) {
 }
 
 //private native long getLength0(File f);
-static void getLength(Frame *f) {
+static void getLength0(Frame *f) {
     slot_t *args = f->lvars;
     auto _this = slot::get<jref>(args++);
     auto fo = slot::get<jref>(args);
@@ -239,11 +244,11 @@ void java_io_WinNTFileSystem_registerNatives() {
     R(initIDs, "()V");
 //    R(getDriveDirectory, "");
     R(canonicalize0, "(Ljava/lang/String;)Ljava/lang/String;");
-//    R(getFinalPath0, "");
-    R(getBooleanAttributes, "(Ljava/io/File;)I");
+    R(getFinalPath0, "(Ljava/lang/String;)Ljava/lang/String;");
+    R(getBooleanAttributes0, "(Ljava/io/File;)I");
 //    R(checkAccess0, "");
 //    R(getLastModifiedTime0, "");
-    R(getLength, "(Ljava/io/File;)J");
+    R(getLength0, "(Ljava/io/File;)J");
 //    R(setPermission0, "");
 //    R(createFileExclusively0, "");
 //    R(list0, "");

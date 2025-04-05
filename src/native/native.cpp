@@ -52,7 +52,7 @@ void Unsafe_registerNatives(JNIEnv *, jclass);
 //void MethodHandleNatives_registerNatives(JNIEnv *, jclass);
 void ScopedMemoryAccess_registerNatives(JNIEnv *, jclass );
 
-#define REGISTRY(class_name, method_name, method_descriptor, method) \
+#define REGISTRY_ONE(class_name, method_name, method_descriptor, method) \
     do { \
         void method(Frame *); \
         registry(class_name, method_name, method_descriptor, method); \
@@ -81,12 +81,13 @@ void init_native() {
     c = load_boot_class("jdk/internal/misc/ScopedMemoryAccess");
     c->get_method("registerNatives", "()V")->native_method = (void *) ScopedMemoryAccess_registerNatives;
 
-    REGISTRY("java/lang/Class", "registerNatives", "()V", java_lang_Class_registerNatives);
-    REGISTRY("java/lang/ClassLoader", "registerNatives", "()V", java_lang_ClassLoader_registerNatives);
-    REGISTRY("java/lang/Thread", "registerNatives", "()V", java_lang_Thread_registerNatives);
-    REGISTRY("java/lang/System", "registerNatives", "()V", java_lang_System_registerNatives);
-    REGISTRY("jdk/internal/misc/Unsafe", "registerNatives", "()V", jdk_internal_misc_Unsafe_registerNatives);
-    REGISTRY("java/lang/invoke/MethodHandleNatives", "registerNatives", "()V", java_lang_invoke_MethodHandleNatives_registerNatives);
+    REGISTRY_ONE("java/lang/Class", "registerNatives", "()V", java_lang_Class_registerNatives);
+    REGISTRY_ONE("java/lang/ClassLoader", "registerNatives", "()V", java_lang_ClassLoader_registerNatives);
+    REGISTRY_ONE("java/lang/Thread", "registerNatives", "()V", java_lang_Thread_registerNatives);
+    REGISTRY_ONE("java/lang/System", "registerNatives", "()V", java_lang_System_registerNatives);
+    REGISTRY_ONE("jdk/internal/misc/Unsafe", "registerNatives", "()V", jdk_internal_misc_Unsafe_registerNatives);
+    REGISTRY_ONE("jdk/internal/misc/ScopedMemoryAccess", "registerNatives", "()V", jdk_internal_misc_ScopedMemoryAccess_registerNatives);
+    REGISTRY_ONE("java/lang/invoke/MethodHandleNatives", "registerNatives", "()V", java_lang_invoke_MethodHandleNatives_registerNatives);
 
     REGISTRY_ALL(java_lang_Object_registerNatives);
     REGISTRY_ALL(java_lang_String_registerNatives);
@@ -96,6 +97,8 @@ void init_native() {
     REGISTRY_ALL(java_lang_Module_registerNatives);
     REGISTRY_ALL(java_lang_Throwable_registerNatives);
     REGISTRY_ALL(java_lang_ref_Reference_registerNatives);
+    REGISTRY_ALL(java_lang_ref_Finalizer_registerNatives);
+    REGISTRY_ALL(java_lang_ref_PhantomReference_registerNatives);
     REGISTRY_ALL(java_lang_reflect_Array_registerNatives);
     REGISTRY_ALL(java_lang_invoke_MethodHandle_registerNatives);
     REGISTRY_ALL(java_io_FileDescriptor_registerNatives);

@@ -81,11 +81,15 @@ Thread::Thread() {
 // Various field and method into java.lang.Thread cached at startup and used in thread creation
 static int eetop_id;
 static int thread_status_id;
+static int holder_id;
 static int name_id;
 static int tid_id;
 
 // Cached java.lang.Thread class
 static Class *thread_class;
+
+// Cached java.lang.Thread$FieldHolder class
+static Class *field_holder_class;
 
 //Thread *g_main_thread;
 
@@ -129,12 +133,16 @@ void init_thread() {
     g_main_thread = new Thread;
 
     thread_class = load_boot_class("java/lang/Thread");
+    field_holder_class = load_boot_class("java/lang/Thread$FieldHolder");
     init_class(thread_class);
+    init_class(field_holder_class);
 
     eetop_id = thread_class->lookup_field("eetop", "J")->id;
-    thread_status_id = thread_class->lookup_field("threadStatus", "I")->id;
     name_id = thread_class->lookup_field("name", "Ljava/lang/String;")->id;
+    holder_id = thread_class->lookup_field("holder", "Ljava/lang/Thread$FieldHolder;")->id;
     tid_id = thread_class->lookup_field("tid", "J")->id;
+
+    thread_status_id = field_holder_class->lookup_field("threadStatus", "I")->id;
     
     /* Get system Thread group */
 
@@ -152,9 +160,6 @@ void init_thread() {
     /* Init main thread */
  
     g_main_thread->bind();
-    g_main_thread->tobj->set_field_value<jint>("priority", THREAD_NORM_PRIORITY);
-    setStatus(g_main_thread->tobj, RUNNING);
-
     // public Thread(ThreadGroup group, String name)
     constructor = thread_class->get_constructor("(Ljava/lang/ThreadGroup;Ljava/lang/String;)V");
     execJava(constructor, {
@@ -162,6 +167,10 @@ void init_thread() {
                                 rslot(g_sys_thread_group), 
                                 rslot(Allocator::string(MAIN_THREAD_NAME))
                             });
+
+    jref holder = g_main_thread->tobj->get_field_value<jref>(holder_id);
+    holder->set_field_value<jint>("priority", THREAD_NORM_PRIORITY);
+    setStatus(g_main_thread->tobj, RUNNING);
 }
 
 Thread *Thread::from(Object *tobj) {
@@ -180,11 +189,13 @@ Thread *Thread::from(jlong tid) {
 }
 
 void java_lang_Thread::setStatus(Object *tobj, jint status) {
-    tobj->set_field_value<jint>(thread_status_id, status);
+    jref holder = tobj->get_field_value<jref>(holder_id);
+    holder->set_field_value<jint>(thread_status_id, status);
 }
 
 jint java_lang_Thread::getStatus(Object *tobj) {
-    return tobj->get_field_value<jint>(thread_status_id);
+    jref holder = tobj->get_field_value<jref>(holder_id);
+    return holder->get_field_value<jint>(thread_status_id);
 }
 
 static void *invoke_run(void *args) {

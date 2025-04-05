@@ -10,7 +10,7 @@ module;
 
 export module dll;
 
-export void *g_libzip = nullptr;
+//export void *g_libzip = nullptr;
 
 export void init_dll();
 
@@ -109,8 +109,8 @@ void init_dll() {
     char *boot_lib_path = get_boot_lib_path();
     char path[PATH_MAX + 1];
 
-    open_library(strcat(strcpy(path, boot_lib_path), "java.dll"));
-    g_libzip = open_library(strcat(strcpy(path, boot_lib_path), "zip.dll"));
+//    open_library(strcat(strcpy(path, boot_lib_path), "java.dll"));
+//    g_libzip = open_library(strcat(strcpy(path, boot_lib_path), "zip.dll"));
 }
 
 void *find_library_entry(void *handle, const char *name) {

@@ -82,7 +82,12 @@ static void compareAndSetInt(Frame *f) {
         // offset is an address
         old = (jint *) offset;
     } else if (o->is_array_object()) {
-        old = (jint *) (o->index(offset));
+        auto ac = (ArrayClass *) o->clazz;
+        auto es = ac->get_element_size();
+        assert(offset % es == 0);
+        auto i = offset / es;
+        assert(0 <= i && i < o->arr_len);
+        old = (jint *) (o->index(i));
     } else {
         assert(0 <= offset && offset < o->clazz->inst_fields_count);
         old = (jint *) (o->data + offset);
@@ -119,7 +124,12 @@ static void compareAndSetLong(Frame *f) {
         // offset is an address
         old = (jlong *) offset;
     } else if ((o)->is_array_object()) {
-        old = (jlong *) ((o)->index(offset));
+        auto ac = (ArrayClass *) o->clazz;
+        auto es = ac->get_element_size();
+        assert(offset % es == 0);
+        auto i = offset / es;
+        assert(0 <= i && i < o->arr_len);
+        old = (jlong *) ((o)->index(i));
     } else {
         assert(0 <= offset && offset < o->clazz->inst_fields_count);
         old = (jlong *) (o->data + offset);
@@ -155,7 +165,12 @@ static void compareAndSetReference(Frame *f) {
         // offset is an address
         old = (jref *) offset;
     } else if (o->is_array_object()) {
-        old = (jref *) (o->index(offset));
+        auto ac = (ArrayClass *) o->clazz;
+        auto es = ac->get_element_size();
+        assert(offset % es == 0);
+        auto i = offset / es;
+        assert(0 <= i && i < o->arr_len);
+        old = (jref *) (o->index(i));
     } else {
         assert(0 <= offset && offset < o->clazz->inst_fields_count);
         old = (jref *) (o->data + offset);
@@ -254,7 +269,15 @@ static void arrayBaseOffset0(Frame *f) {
 
 // private native int arrayIndexScale0(Class<?> arrayClass);
 static void arrayIndexScale0(Frame *f) {
-    f->pushi(1); // todo
+//    f->pushi(1); // todo
+
+    slot_t *args = f->lvars;
+    args++; // jump 'this'
+    auto ao = slot::get<jref>(args);
+    auto c = ao->jvm_mirror;
+    assert(c->name[0] == '[');
+    auto ac = (ArrayClass *) c;
+    f->pushi(ac->get_element_size());
 }
 
 // private native long objectFieldOffset0(Field field);
@@ -288,8 +311,12 @@ static void _obj_get_##type##_(Frame *f) { \
         f->push##t0(*(j##type *) (intptr_t) offset); return;\
     } \
     if ((o)->is_array_object()) { /* get value from array */ \
-        assert(0 <= offset && offset < o->arr_len); \
-        f->push##t0((o)->getElt<j##type>(offset)); return;\
+        auto ac = (ArrayClass *) o->clazz; \
+        auto es = ac->get_element_size();  \
+        assert(offset % es == 0);  \
+        auto index = offset / es; \
+        assert(0 <= index && index < o->arr_len); \
+        f->push##t0((o)->getElt<j##type>(index)); return;\
     } else if ((o)->is_class_object()) { /* get static filed value */ \
         Class *c = o->jvm_mirror; \
         init_class(c);  \
@@ -313,8 +340,12 @@ static void _obj_put_##type##_(Frame *f) { \
         return; \
     } \
     if ((o)->is_array_object()) { /* set value to array */ \
-        assert(0 <= offset && offset < o->arr_len); \
-        (o)->set##Type##Elt(offset, x); \
+        auto ac = (ArrayClass *) o->clazz; \
+        auto es = ac->get_element_size();  \
+        assert(offset % es == 0);  \
+        auto index = offset / es; \
+        assert(0 <= index && index < o->arr_len); \
+        (o)->set##Type##Elt(index, x); \
     } else if ((o)->is_class_object()) { /* set static filed value */ \
         Class *c = o->jvm_mirror; \
         init_class(c); \
@@ -390,7 +421,12 @@ static void getObjectVolatile(Frame *f) {
     auto offset = slot::get<jlong>(args);
 
     if (o->is_array_object()) {
-        f->pushr(o->getElt<jref>(offset));
+        auto ac = (ArrayClass *) o->clazz;
+        auto es = ac->get_element_size();
+        assert(offset % es == 0);
+        auto index = offset / es;
+        assert(0 <= index && index < o->arr_len);
+        f->pushr(o->getElt<jref>(index));
     } else if (o->is_class_object()) {
         Class *c = o->jvm_mirror;
         f->pushr(c->fields.at(offset)->static_value.r);
@@ -412,7 +448,12 @@ static void putObjectVolatile(Frame *f) {
     auto x = slot::get<jref>(args);
 
     if (o->is_array_object()) {
-        o->setRefElt(offset, x);
+        auto ac = (ArrayClass *) o->clazz;
+        auto es = ac->get_element_size();
+        assert(offset % es == 0);
+        auto index = offset / es;
+        assert(0 <= index && index < o->arr_len);
+        o->setRefElt(index, x);
     } else {
         o->set_field_value_unbox_if_necessary(offset, x);
     }
@@ -463,7 +504,11 @@ static void *getPoint__(jref o, jlong offset) {
     if (o == nullptr) {
         p = (void *) (intptr_t) offset;
     } else if (o->is_array_object()) {
-        // offset 在这里表示数组下标(index)
+        auto ac = (ArrayClass *) o->clazz;
+        auto es = ac->get_element_size();
+        assert(offset % es == 0);
+        auto index = offset / es;
+        assert(0 <= index && index < o->arr_len);
         p = o->index(offset);
     } else {
         // offset 在这里表示 slot id.
@@ -473,7 +518,7 @@ static void *getPoint__(jref o, jlong offset) {
     return p;
 }
 
-/**
+/*
  * Sets all bytes in a given block of memory to a fixed value (usually zero).
  *
  * This method determines a block's base address by means of two parameters,
@@ -503,7 +548,7 @@ static void setMemory0(Frame *f) {
     memset(p, value, bytes);
 }
 
-/**
+/*
  * Sets all bytes in a given block of memory to a copy of another block.
  *
  * This method determines each block's base address by means of two parameters,

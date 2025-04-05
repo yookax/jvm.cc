@@ -714,13 +714,12 @@ Method *find_invoke_dynamic_invoker(
     //                                Object staticArguments,
     //                                Object[] appendixResult)
     Method *link_call_site = mhn_class->lookup_method("linkCallSite",
-                                    "(Ljava/lang/Object;ILjava/lang/Object;Ljava/lang/Object;"
+                                    "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;"
                                     "Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)"
                                     "Ljava/lang/invoke/MemberName;");
     assert(link_call_site != nullptr);
 
     jref member_name = execJavaR(link_call_site, { slot::rslot(c->java_mirror), // caller
-                                                    slot::islot(inv_dyn->boot_method_index), // todo indexInCP
                                                     slot::rslot(boot_mthd), 
                                                     slot::rslot(name_str), slot::rslot(method_type), 
                                                     slot::rslot(args),

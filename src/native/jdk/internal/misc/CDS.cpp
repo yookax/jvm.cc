@@ -13,7 +13,7 @@ import runtime;
 
 //private static native int getCDSConfigStatus();
 void getCDSConfigStatus(Frame *f) {
-    unimplemented
+    f->pushi(0);
 }
 
 //private static native void logLambdaFormInvoker(String line);

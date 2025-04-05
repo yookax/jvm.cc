@@ -844,7 +844,7 @@ do { \
                 TRACE("will return: %s", frame->toString().c_str());
                 thread->pop_frame();
                 Frame *invoke_frame = thread->top_frame;
-                TRACE("invoke frame: %s", invoke_frame == nullptr ? "NULL" : get_frame_info(invoke_frame));
+                TRACE("invoke frame: %s", invoke_frame == nullptr ? "NULL" : invoke_frame->toString().c_str());
                 frame->ostack -= ret_value_slots_count;
                 slot_t *ret_value = frame->ostack;
                 if (frame->vm_invoke || invoke_frame == nullptr) {
@@ -1054,7 +1054,7 @@ do { \
                 reader->readu1();
 
                 Method *m = cp->resolve_interface_method(index);
-                assert(m->clazz->access_flags.is_interface());
+                // assert(m->clazz->access_flags.is_interface());
 
                 /* todo 本地方法 */
 
@@ -1707,8 +1707,8 @@ static void call_native_method(Frame *frame) {
     }
     auto native = find_native(m->clazz->name, m->name, descriptor);
     if (native == nullptr) {
-        //cout << m->clazz->name << ", " << m->name << ", " << m->descriptor << endl;
-        // todo error
+        panic("The native method is not implemented. %s~%s~%s\n",
+                        m->clazz->name, m->name, m->descriptor);
     } else {
         auto n = (void(*)(Frame*))native;
         n(frame);
@@ -1721,6 +1721,7 @@ static void call_native_method(Frame *frame) {
         return;
     }
 
+#if 0
     slot_t *args = frame->lvars; 
     
     if (m->native_method == nullptr) {
@@ -1772,6 +1773,7 @@ static void call_native_method(Frame *frame) {
     JNIEnv *env = getJNIEnv();
 
     m->native_invoker(m->native_method, env, _this, args, frame);
+#endif
 
 #if 0
     ffi_type *arg_types[args_count_max];

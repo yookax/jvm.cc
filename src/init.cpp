@@ -84,13 +84,13 @@ static void init_properties() {
     g_properties.emplace_back("user.home", p != nullptr ? p : "");// todo
     char *cwd = get_current_working_directory();
     g_properties.emplace_back("user.dir", cwd);
-    g_properties.emplace_back("user.country", "CN"); // todo
-    g_properties.emplace_back("file.encoding", "UTF-8");// todo
-    g_properties.emplace_back("sun.stdout.encoding", "UTF-8");// todo
-    g_properties.emplace_back("sun.stderr.encoding", "UTF-8");// todo
-    g_properties.emplace_back("java.io.tmpdir", "");// todo
-    p = getenv("LD_LIBRARY_PATH");
-    g_properties.emplace_back("java.library.path", p != nullptr ? p : ""); // USER PATHS
+    //g_properties.emplace_back("user.country", "CN"); // todo
+    //g_properties.emplace_back("file.encoding", "UTF-8");// todo
+    //g_properties.emplace_back("sun.stdout.encoding", "UTF-8");// todo
+    //g_properties.emplace_back("sun.stderr.encoding", "UTF-8");// todo
+    //g_properties.emplace_back("java.io.tmpdir", "");// todo
+//    p = getenv("LD_LIBRARY_PATH");
+    //g_properties.emplace_back("java.library.path", p != nullptr ? p : ""); // USER PATHS
     g_properties.emplace_back("sun.boot.library.path", get_boot_lib_path());
     g_properties.emplace_back("jdk.serialFilter", "");// todo
     g_properties.emplace_back("jdk.serialFilterFactory", "");// todo
@@ -280,6 +280,9 @@ void init_jvm(InitArgs *init_args) {
     // todo DATA_CACHE_LINE_FLUSH_SIZE
 
     // --------------------------------------
+
+    Class *ref = load_boot_class("java/lang/ref/Reference");
+    init_class(ref);
 
     // todo
     // AccessibleObject.java中说AccessibleObject类会在initPhase1阶段初始化，

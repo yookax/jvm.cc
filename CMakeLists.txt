@@ -55,6 +55,9 @@ set (SOURCE_FILES ${MINIZIP_FILES} src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/native/sun/io/Win32ErrorMode.cpp src/native/jdk/internal/loader/BootLoader.cpp
         src/native/jdk/internal/loader/NativeLibraries.cpp src/native/sun/nio/fs/WindowsNativeDispatcher.cpp
         src/native/jdk/internal/jimage/NativeImageBuffer.cpp src/native/java/lang/Object.cpp
+        src/native/jdk/internal/misc/ScopedMemoryAccess.cpp
+        src/native/java/lang/ref/Finalizer.cpp
+        src/native/java/lang/ref/PhantomReference.cpp
 )
 
 set (TEST_SOURCE_FILES
