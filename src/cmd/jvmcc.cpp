@@ -1,8 +1,13 @@
 #include "../vmdef.h"
-#include "../jni.h"
 
 import std.core;
 import std.filesystem;
+import slot;
+import encoding;
+import classfile;
+import object;
+import class_loader;
+import interpreter;
 
 using namespace std;
 
@@ -50,6 +55,8 @@ static void parse_command_line(int argc, char *argv[]) {
     }
 }
 
+void init_jvm(InitArgs *init_args);
+
 int run_jvm(int argc, char* argv[]) {
     auto start = chrono::high_resolution_clock::now();
 
@@ -64,21 +71,16 @@ int run_jvm(int argc, char* argv[]) {
             *t = '/';
     }
 
-    JavaVM *vm;
-    JNIEnv *env;
-    JavaVMInitArgs vm_init_args;
-    JNI_CreateJavaVM(&vm, &env, &vm_init_args);
+    init_jvm(nullptr);
 
-    auto main_class = (*env)->FindClass(env, main_class_name);
-//    Class *main_class = loadClass(g_app_class_loader, utf8::dot_2_slash(main_class_name));
+    Class *main_class = loadClass(g_app_class_loader, utf8::dot_2_slash(main_class_name));
     if (main_class == nullptr) {
         panic("main_class == NULL"); // todo
     }
 
   //  init_class(main_class);
 
-    auto main_method = (*env)->GetStaticMethodID(env, main_class, "main", "([Ljava/lang/String;)V");
-//    Method *main_method = main_class->lookup_method("main", "([Ljava/lang/String;)V");
+    Method *main_method = main_class->lookup_method("main", "([Ljava/lang/String;)V");
     if (main_method == nullptr) {
         if (silent_when_no_main) {
             // 是测试代码调用的，没有main函数直接退出即可。
@@ -91,17 +93,14 @@ int run_jvm(int argc, char* argv[]) {
     TRACE("begin to execute main function.\n");
 
     // Create the String array holding the command line args
-    auto string_class = (*env)->FindClass(env, "java/lang/String");
-    auto args = (*env)->NewObjectArray(env, main_func_args_count, string_class, nullptr);
+    auto args = Allocator::string_array(main_func_args_count);
     for (int i = 0; i < main_func_args_count; i++) {
-        auto a = (*env)->NewStringUTF(env, main_func_args[i]);
-        (*env)->SetObjectArrayElement(env, args, i, a);
+        auto a = Allocator::string(main_func_args[i]);
+        args->setRefElt(i, a);
     }
 
-    jvalue v;
-    v.l = (jobject) args;
-    // Call the main method
-    (*env)->CallStaticVoidMethodA(env, main_class, main_method, &v);
+    slot_t rs = slot::rslot(args);
+    execJava(main_method, &rs);
 
     // todo 如果有其他的非后台线程在执行，则main线程需要在此wait
     // todo main_thread 退出，做一些清理工作。

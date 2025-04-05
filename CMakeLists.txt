@@ -29,7 +29,7 @@ endif()
 
 add_subdirectory(lib/minizip)
 
-set (SOURCE_FILES ${MINIZIP_FILES} src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
+set (SOURCE_FILES ${MINIZIP_FILES} src/jni.cpp
         src/jmm.cpp src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
         src/encoding.cpp src/classfile/poly.cpp src/reference.cpp
         src/runtime/thread.cpp src/runtime/heap.cpp src/classfile/method.cpp
@@ -37,7 +37,7 @@ set (SOURCE_FILES ${MINIZIP_FILES} src/jvm.cpp src/jni.cpp src/native/unsafe.cpp
         src/classfile/class_loader.cpp src/init.cpp
         src/object/object.cpp src/object/array.cpp src/object/string.cpp src/object/box.cpp
         src/object/reflect.cpp src/classfile/class.cpp src/classfile/array_class.cpp src/exception.cpp
-        src/classfile/invoke.cpp src/native/method_handle_natives.cpp
+        src/classfile/invoke.cpp
         src/native/scoped_memory_access.cpp src/native/var_handle.cpp src/native/method_handle.cpp
         src/object/allocator.cpp src/native/java/lang/Thread.cpp src/native/native.cpp
         src/native/java/lang/Class.cpp src/native/java/lang/reflect/Array.cpp
@@ -73,27 +73,26 @@ set (TEST_SOURCE_FILES
 # 如果有函数没有实现，可以在jvm.cpp中实现之。
 # 如果有Debug加载zip.dll和java.dll成功，而Release版失败的情况，可以考虑下是不是Release版是不是把jvm.cpp中没有使用的函数优化掉了。
 # 总之一句话，无论Debug版还是Release版jvm.dll中导出所有zip.dll和java.dll中所依赖的函数。
-add_library(jvm SHARED ${SOURCE_FILES} ${TEST_SOURCE_FILES})
-SET_TARGET_PROPERTIES(jvm PROPERTIES OUTPUT_NAME "jvm" PREFIX "")
+#add_library(jvm SHARED ${SOURCE_FILES} ${TEST_SOURCE_FILES})
+#SET_TARGET_PROPERTIES(jvm PROPERTIES OUTPUT_NAME "jvm" PREFIX "")
 
 # 生成可运行的虚拟机
-add_executable(jvmcc src/cmd/jvmcc.cpp)
-target_link_libraries(jvmcc jvm)
+add_executable(jvmcc ${SOURCE_FILES} src/cmd/jvmcc.cpp)
+#target_link_libraries(jvmcc jvm)
 
-add_executable(javap src/cmd/javap.cpp)
-target_link_libraries(javap jvm)
-
-add_executable(jmod ${MINIZIP_FILES} src/cmd/jmod.cpp)
-#target_link_libraries(jmod jvm)
-
-add_executable(jimage src/cmd/jimage.cpp)
-target_link_libraries(jimage jvm)
-
-add_executable(jvmcc-test test-cpp/test.cpp)
-target_link_libraries(jvmcc-test jvm)
+#add_executable(javap src/cmd/javap.cpp)
+#target_link_libraries(javap jvm)
+#
+#add_executable(jmod ${MINIZIP_FILES} src/cmd/jmod.cpp)
+#
+#add_executable(jimage src/cmd/jimage.cpp)
+#target_link_libraries(jimage jvm)
+#
+#add_executable(jvmcc-test test-cpp/test.cpp)
+#target_link_libraries(jvmcc-test jvm)
 
 # 创建CXX_MODULES类型的FILE_SET
-target_sources(jvm
+target_sources(jvmcc
         PUBLIC
         FILE_SET CXX_MODULES
         BASE_DIRS src

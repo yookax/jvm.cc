@@ -48,7 +48,7 @@ JNIEXPORT void JNICALL JVM_MonitorWait(JNIEnv *env, jobject obj, jlong ms);
 JNIEXPORT void JNICALL JVM_MonitorNotify(JNIEnv *env, jobject obj);
 JNIEXPORT void JNICALL JVM_MonitorNotifyAll(JNIEnv *env, jobject obj);
 
-void Unsafe_registerNatives(JNIEnv *, jclass);
+//void Unsafe_registerNatives(JNIEnv *, jclass);
 //void MethodHandleNatives_registerNatives(JNIEnv *, jclass);
 void ScopedMemoryAccess_registerNatives(JNIEnv *, jclass );
 

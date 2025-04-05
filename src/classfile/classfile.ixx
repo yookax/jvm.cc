@@ -1,6 +1,6 @@
 module;
 #include "../vmdef.h"
-#include "../jni.h"
+//#include "../jni.h"
 
 export module classfile;
 
@@ -620,8 +620,8 @@ public:
     size_t code_len = 0;
 
     void *native_method = nullptr; // present only if native
-    // present only if native
-    void (* native_invoker)(void *, JNIEnv *, jref, slot_t *, void*/*Frame*/) = nullptr;
+//    // present only if native
+//    void (* native_invoker)(void *, JNIEnv *, jref, slot_t *, void*/*Frame*/) = nullptr;
 
     RetType ret_type = RET_INVALID;
 

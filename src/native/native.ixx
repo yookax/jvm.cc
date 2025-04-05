@@ -3,10 +3,9 @@
 //#include <string>
 //#include <unordered_map>
 import std.core;
+import runtime;
 
 using namespace std;
-
-class Frame;
 
 export void init_native();
 

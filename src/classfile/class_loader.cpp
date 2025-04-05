@@ -1,7 +1,7 @@
 module;
 #include <cassert>
 #include "../vmdef.h"
-#include "../jni.h"
+//#include "../jni.h"
 #include "../../lib/minizip/unzip.h"
 
 module class_loader;
