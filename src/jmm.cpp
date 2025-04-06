@@ -1,3 +1,4 @@
+#if 0
 #include "vmdef.h"
 #include "jmm.h"
 
@@ -282,3 +283,4 @@ void *getJmmInterface(jint version) {
     }
     return nullptr;
 }
+#endif

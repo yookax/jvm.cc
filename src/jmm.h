@@ -1,3 +1,4 @@
+#if 0
 #ifndef CABIN_JMM_H
 #define CABIN_JMM_H
 
@@ -239,3 +240,5 @@ typedef struct jmmInterface_1_ {
 void *getJmmInterface(jint version);
 
 #endif /* CABIN_JMM_H */
+
+#endif

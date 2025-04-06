@@ -12,6 +12,8 @@ import class_loader;
 import runtime;
 import exception;
 
+using namespace std;
+
 // Search the stack for the most recent scoped-value bindings.
 // static native Object findScopedValueBindings();
 void findScopedValueBindings(Frame *f) {

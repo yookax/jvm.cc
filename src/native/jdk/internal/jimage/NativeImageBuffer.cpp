@@ -10,6 +10,8 @@ import object;
 import runtime;
 import class_loader;
 
+using namespace std;
+
 // static native ByteBuffer getNativeMap(String imagePath);
 void getNativeMap(Frame *f) {
     slot_t *args = f->lvars;
@@ -17,8 +19,6 @@ void getNativeMap(Frame *f) {
 
     auto image_path = java_lang_String::to_utf8(path);
     cout << image_path << endl; // C:\Java\jdk-17.0.12\lib\modules
-
-    int i =3;
 }
 
 void jdk_internal_jimage_NativeImageBuffer_registerNatives() {
