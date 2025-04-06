@@ -1,7 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include "vmdef.h"
-//#include "jni.h"
 
 import std.core;
 import std.filesystem;
@@ -253,7 +252,6 @@ void init_jvm(InitArgs *init_args) {
     init_dll();
     init_classloader();
     init_native();
-    ///init_jni();
     init_reference();
     init_thread();
     init_invoke();

@@ -29,7 +29,7 @@ endif()
 
 add_subdirectory(lib/minizip)
 
-set (SOURCE_FILES ${MINIZIP_FILES}
+set(SOURCE_FILES ${MINIZIP_FILES}
         src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
         src/encoding.cpp src/classfile/poly.cpp src/reference.cpp
         src/runtime/thread.cpp src/runtime/heap.cpp src/classfile/method.cpp
@@ -37,7 +37,6 @@ set (SOURCE_FILES ${MINIZIP_FILES}
         src/classfile/class_loader.cpp src/init.cpp
         src/object/object.cpp src/object/array.cpp src/object/string.cpp src/object/box.cpp
         src/object/reflect.cpp src/classfile/class.cpp src/classfile/array_class.cpp src/exception.cpp
-        src/classfile/invoke.cpp
         src/object/allocator.cpp src/native/java/lang/Thread.cpp src/native/native.cpp
         src/native/java/lang/Class.cpp src/native/java/lang/reflect/Array.cpp
         src/native/java/lang/System.cpp src/native/java/lang/Runtime.cpp
@@ -54,13 +53,12 @@ set (SOURCE_FILES ${MINIZIP_FILES}
         src/native/sun/io/Win32ErrorMode.cpp src/native/jdk/internal/loader/BootLoader.cpp
         src/native/jdk/internal/loader/NativeLibraries.cpp src/native/sun/nio/fs/WindowsNativeDispatcher.cpp
         src/native/jdk/internal/jimage/NativeImageBuffer.cpp src/native/java/lang/Object.cpp
-        src/native/jdk/internal/misc/ScopedMemoryAccess.cpp
-        src/native/java/lang/ref/Finalizer.cpp
-        src/native/java/lang/ref/PhantomReference.cpp
+        src/native/jdk/internal/misc/ScopedMemoryAccess.cpp src/classfile/invoke.cpp
+        src/native/java/lang/ref/Finalizer.cpp src/native/java/lang/ref/PhantomReference.cpp
         src/native/java/lang/invoke/VarHandle.cpp
 )
 
-set (TEST_SOURCE_FILES
+set(TEST_SOURCE_FILES
         test-cpp/test.cpp test-cpp/convert_test.cpp test-cpp/slot_test.cpp
         test-cpp/descriptor_test.cpp test-cpp/heap_test.cpp test-cpp/class_loader_test.cpp
         test-cpp/object_test.cpp test-cpp/class_test.cpp test-cpp/foo_test.cpp
@@ -78,18 +76,14 @@ set (TEST_SOURCE_FILES
 
 # 生成可运行的虚拟机
 add_executable(jvmcc ${SOURCE_FILES} src/cmd/jvmcc.cpp)
-#target_link_libraries(jvmcc jvm)
 
 #add_executable(javap src/cmd/javap.cpp)
-#target_link_libraries(javap jvm)
-#
+
 #add_executable(jmod ${MINIZIP_FILES} src/cmd/jmod.cpp)
-#
+
 #add_executable(jimage src/cmd/jimage.cpp)
-#target_link_libraries(jimage jvm)
-#
-#add_executable(jvmcc-test test-cpp/test.cpp)
-#target_link_libraries(jvmcc-test jvm)
+
+#add_executable(jvmcc-test ${SOURCE_FILES} ${SOURCE_FILES})
 
 # 创建CXX_MODULES类型的FILE_SET
 target_sources(jvmcc
@@ -106,4 +100,3 @@ target_sources(jvmcc
         src/native/native.ixx src/util/bytes_reader.ixx src/jimage/jimage_file.ixx
         src/jimage/jimage_strings.ixx src/jimage/jimage_location.ixx src/jimage/jimage.ixx
 )
-
