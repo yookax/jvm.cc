@@ -6,6 +6,7 @@ import std.core;
 import std.filesystem;
 import slot;
 import sysinfo;
+import properties;
 import runtime;
 import object;
 import heap;
@@ -37,63 +38,6 @@ Object *g_app_class_loader;
 Object *g_platform_class_loader;
 
 bool g_vm_initing = true;
-
-vector<Property> g_properties;
-
-/*
- * System properties. The following properties are guaranteed to be defined:
- * java.version         Java version number
- * java.vendor          Java vendor specific string
- * java.vendor.url      Java vendor URL
- * java.home            Java installation directory
- * java.class.version   Java class version number
- * java.class.path      Java classpath
- * os.name              Operating System Name
- * os.arch              Operating System Architecture
- * os.version           Operating System Version
- * file.separator       File separator ("/" on Unix)
- * path.separator       Path separator (":" on Unix)
- * line.separator       Line separator ("\n" on Unix)
- * user.name            User account name
- * user.home            User home directory
- * user.dir             User's current working directory
- */
-static void init_properties() {
-    g_properties.emplace_back("java.vm.name", "CabinVM");
-    g_properties.emplace_back("java.vm.version", VM_VERSION); // todo
-    g_properties.emplace_back("java.version", VM_VERSION);
-    g_properties.emplace_back("java.vendor", "Ka Yo");
-    g_properties.emplace_back("java.vendor.url", "doesn't have");
-    g_properties.emplace_back("java.home", g_java_home.c_str());
-    ostringstream oss;
-    oss << JVM_MAX_CLASSFILE_MAJOR_VERSION << "." << JVM_MAX_CLASSFILE_MINOR_VERSION << ends;
-    g_properties.emplace_back("java.class.version", oss.str().c_str());
-    g_properties.emplace_back("java.class.path", get_classpath());
-    g_properties.emplace_back("os.name", os_name());
-    g_properties.emplace_back("os.arch", os_arch());
-    g_properties.emplace_back("os.version",  ""); // todo
-    g_properties.emplace_back("file.separator", file_separator());
-    g_properties.emplace_back("path.separator", path_separator());
-    g_properties.emplace_back("line.separator", line_separator()); // System.out.println最后输出换行符就会用到这个
-    char *p = getenv("USER");
-    g_properties.emplace_back("user.name", p != nullptr ? p : "");// todo
-    p = getenv("HOME");
-    g_properties.emplace_back("user.home", p != nullptr ? p : "");// todo
-    char *cwd = get_current_working_directory();
-    g_properties.emplace_back("user.dir", cwd);
-    //g_properties.emplace_back("user.country", "CN"); // todo
-    //g_properties.emplace_back("file.encoding", "UTF-8");// todo
-    g_properties.emplace_back("sun.jnu.encoding", "UTF-8");
-    //g_properties.emplace_back("sun.stdout.encoding", "UTF-8");// todo
-    //g_properties.emplace_back("sun.stderr.encoding", "UTF-8");// todo
-    //g_properties.emplace_back("java.io.tmpdir", "");// todo
-//    p = getenv("LD_LIBRARY_PATH");
-    //g_properties.emplace_back("java.library.path", p != nullptr ? p : ""); // USER PATHS
-    g_properties.emplace_back("sun.boot.library.path", get_boot_lib_path());
-    g_properties.emplace_back("jdk.serialFilter", "");// todo
-    g_properties.emplace_back("jdk.serialFilterFactory", "");// todo
-    g_properties.emplace_back("native.encoding", "UTF-8");// todo
-}
 
 static void init_heap() {
     g_heap = new Heap(VM_HEAP_SIZE);

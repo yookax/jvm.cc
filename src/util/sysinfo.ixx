@@ -4,8 +4,10 @@ module;
 #include <Windows.h>
 #include <direct.h>
 #include <VersionHelpers.h>
+#include <shlobj.h>
 #elifdef __linux__
 #include <unistd.h>
+#include <pwd.h>
 #include <sys/time.h>
 #endif
 #include "../vmdef.h"
@@ -115,6 +117,26 @@ export const char *os_arch() {
 #endif
 }
 
+export string os_version() {
+#ifdef _WIN64
+    OSVERSIONINFOEX x;
+    ZeroMemory(&x, sizeof(OSVERSIONINFOEX));
+    x.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+
+    if (GetVersionEx((OSVERSIONINFO*)&x)) {
+        string s;
+        s.append(to_string(x.dwMajorVersion)).append(".")
+         .append(to_string(x.dwMinorVersion)).append(".")
+         .append(to_string(x.dwBuildNumber));
+        return s;
+    } else {
+        return "";
+    }
+#elifdef __linux__
+#error
+#endif
+}
+
 export const char *file_separator() {
 #ifdef _WIN64
     return "\\";
@@ -137,6 +159,40 @@ export const char *line_separator() {
 #elifdef __linux__
     return "\n";
 #endif
+}
+
+export string get_user_name() {
+    std::string username;
+#ifdef _WIN64
+    TCHAR buffer[MAX_PATH];
+    DWORD len = MAX_PATH;
+    if (GetUserName(buffer, &len)) {
+        username = string(buffer, buffer + len - 1);
+    }
+#elif __linux__
+    uid_t uid = getuid();
+    struct passwd *pw = getpwuid(uid);
+    if (pw != nullptr) {
+        username = pw->pw_name;
+    }
+#endif
+    return username;
+}
+
+export string get_user_home_dir() {
+    string home_dir;
+#ifdef _WIN32
+    TCHAR buffer[MAX_PATH];
+    if (SUCCEEDED(SHGetFolderPath(nullptr, CSIDL_PROFILE, nullptr, 0, buffer))) {
+        home_dir = string(buffer);
+    }
+#elif __linux__
+    const char* home = getenv("HOME");
+    if (home != nullptr) {
+        home_dir = home;
+    }
+#endif
+    return home_dir;
 }
 
 export char *get_current_working_directory() {

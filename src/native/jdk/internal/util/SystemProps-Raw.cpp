@@ -3,12 +3,12 @@
 
 module native;
 
-import slot;
-import classfile;
-import object;
-import class_loader;
+import std.core;
+import properties;
 import runtime;
-import exception;
+import object;
+
+using namespace std;
 
 /*
  * Returns the available VM and Command Line Properties.
@@ -21,12 +21,14 @@ import exception;
  */
 // private static native String[] vmProperties();
 void vmProperties(Frame *f) {
-    jarrRef prop_array = Allocator::string_array(g_properties.size()*2);
+    vector<pair<const char *, const char *>> &properties = get_vm_properties();
+    jarrRef prop_array = Allocator::string_array((properties.size()+1)*2);
     int i = 0;
-    for (Property &p : g_properties) {
-        prop_array->setRefElt(i++, Allocator::string(p.name));
-        prop_array->setRefElt(i++, Allocator::string(p.value));
+    for (auto [key, value] : properties) {
+        prop_array->setRefElt(i++, Allocator::string(key));
+        prop_array->setRefElt(i++, Allocator::string(value));
     }
+    prop_array->setRefElt(i, nullptr); // null key indicates there are no more key, value pairs.
     f->pushr(prop_array);
 }
 
@@ -40,11 +42,11 @@ void vmProperties(Frame *f) {
  */
 // private static native String[] platformProperties();
 void platformProperties(Frame *f) {
-    jarrRef prop_array = Allocator::string_array(g_properties.size()*2);
-    int i = 0;
-    for (Property &p : g_properties) {
-        prop_array->setRefElt(i++, Allocator::string(p.name));
-        prop_array->setRefElt(i++, Allocator::string(p.value));
+    auto [properties, count] = get_platform_properties();
+    jarrRef prop_array = Allocator::string_array(count);
+    for (int i = 0; i < count; i++) {
+        auto o = properties[i] != nullptr ? Allocator::string(properties[i]) : nullptr;
+        prop_array->setRefElt(i, o);
     }
     f->pushr(prop_array);
 }

@@ -7,7 +7,6 @@
 #include <climits>
 #include <cassert>
 #include <string>
-#include <vector>
 
 #ifndef PATH_MAX
     #ifdef MAX_PATH
@@ -122,8 +121,6 @@ struct Property {
         assert(value != nullptr);
     }
 };
-
-extern std::vector<Property> g_properties;
 
 /* This number, mandated by the JVM spec as 255,
  * is the maximum number of slots
