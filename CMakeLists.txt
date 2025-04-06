@@ -29,8 +29,8 @@ endif()
 
 add_subdirectory(lib/minizip)
 
-set (SOURCE_FILES ${MINIZIP_FILES} src/jni.cpp
-        src/jmm.cpp src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
+set (SOURCE_FILES ${MINIZIP_FILES}
+        src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
         src/encoding.cpp src/classfile/poly.cpp src/reference.cpp
         src/runtime/thread.cpp src/runtime/heap.cpp src/classfile/method.cpp
         src/classfile/field.cpp src/classfile/constant_pool.cpp
