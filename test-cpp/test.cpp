@@ -5,7 +5,7 @@ import std.filesystem;
 
 using namespace std;
 
-void init_jvm(InitArgs *init_args);
+void init_jvm();
 
 void run_all_java_tests();
 #define RUN_TEST_CASE(func_name) void func_name(); func_name();
@@ -19,7 +19,7 @@ int main() {
 //    RUN_TEST_CASE(test_convert_float);
 //    RUN_TEST_CASE(test_convert_double);
 
-    init_jvm(nullptr);
+    init_jvm();
 
     RUN_TEST_CASE(test_jimage_string);
     RUN_TEST_CASE(test_jimage);

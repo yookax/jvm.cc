@@ -125,41 +125,6 @@ struct Property {
 
 extern std::vector<Property> g_properties;
 
-struct InitArgs {
-    bool asyncgc = false;
-    bool verbosegc = false;
-    bool verbosedll = false;
-    bool verboseclass = false;
-
-    // Whether compaction has been given on the command line, and the value if it has
-    bool compact_specified = false;
-    int do_compact = false;
-    bool trace_jni_sigs = false;
-
-    char *classpath = nullptr;
-
-    char *bootpath = nullptr;
-    char *bootpath_a = nullptr;
-    char *bootpath_p = nullptr;
-    char *bootpath_c = nullptr;
-    char *bootpath_v = nullptr;
-
-    int java_stack = VM_STACK_SIZE;
-    unsigned long min_heap = VM_HEAP_SIZE;
-    unsigned long max_heap = VM_HEAP_SIZE;
-
-    Property *commandline_props;
-    int props_count = 0;
-
-    void *main_stack_base;
-
-    /* JNI invocation API hooks */
-
-    int (* vfprintf)(FILE *stream, const char *fmt, va_list ap) = std::vfprintf;
-    void (* exit)(int status) = std::exit;
-    void (* abort)() = std::abort;
-};
-
 /* This number, mandated by the JVM spec as 255,
  * is the maximum number of slots
  * that any Java method can receive in its argument list.
@@ -185,8 +150,6 @@ do { \
     printf("%s: %d: ", __FILE__, __LINE__); \
     printf(__VA_ARGS__); \
 } while(false)
-
-// #define println(...) do { printvm(__VA_ARGS__); printf("\n"); } while(false)
 
 #ifdef _WIN64
 #define JNI_LIB_PREFIX ""

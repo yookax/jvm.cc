@@ -25,8 +25,9 @@ void (* find_native(const char *class_name, const char *method_name, const char 
     key.append("~").append(method_name).append("~").append(method_descriptor);
 
     auto iter = all_natives.find(key);
-    if (iter == all_natives.end())
+    if (iter == all_natives.end()) {
         return nullptr;
+    }
     return *(iter->second);
 }
 

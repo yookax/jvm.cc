@@ -91,9 +91,11 @@ void mapLibraryName(Frame *f) {
     slot_t *args = f->lvars;
     auto libname_obj = slot::get<jref>(args);
     auto libname = java_lang_String::to_utf8(libname_obj);
-cout << libname << endl;
-    int i=3;
-    unimplemented
+
+    string s;
+    s.append(JNI_LIB_PREFIX).append(libname).append(JNI_LIB_SUFFIX);
+    auto o = Allocator::string(s.c_str());
+    f->pushr(o);
 }
 
 // private static native void registerNatives();
@@ -110,5 +112,5 @@ void java_lang_System_registerNatives(Frame *f) {
     R(identityHashCode, "(Ljava/lang/Object;)I");
     //R(initProperties, "(Ljava/util/Properties;)Ljava/util/Properties;");
     R(nanoTime, "()J");
-    //R(mapLibraryName, "(Ljava/lang/String;)Ljava/lang/String;");
+    R(mapLibraryName, "(Ljava/lang/String;)Ljava/lang/String;");
 }

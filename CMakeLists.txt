@@ -31,7 +31,7 @@ add_subdirectory(lib/minizip)
 
 set(SOURCE_FILES ${MINIZIP_FILES}
         src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
-        src/encoding.cpp src/classfile/poly.cpp src/reference.cpp
+        src/encoding.cpp src/classfile/poly.cpp
         src/runtime/thread.cpp src/runtime/heap.cpp src/classfile/method.cpp
         src/classfile/field.cpp src/classfile/constant_pool.cpp
         src/classfile/class_loader.cpp src/init.cpp
@@ -56,6 +56,7 @@ set(SOURCE_FILES ${MINIZIP_FILES}
         src/native/jdk/internal/misc/ScopedMemoryAccess.cpp src/classfile/invoke.cpp
         src/native/java/lang/ref/Finalizer.cpp src/native/java/lang/ref/PhantomReference.cpp
         src/native/java/lang/invoke/VarHandle.cpp
+        src/properties.cpp
 )
 
 set(TEST_SOURCE_FILES
@@ -95,7 +96,7 @@ target_sources(jvmcc
         src/object/object.ixx src/constants.ixx src/util/primitive.ixx
         src/classfile/bytecode_reader.ixx src/classfile/invoke.ixx
         src/classfile/class_loader.ixx src/classfile/poly.ixx src/util/sysinfo.ixx
-        src/runtime/heap.ixx src/reference.ixx src/dll.ixx src/util/convert.ixx
+        src/runtime/heap.ixx src/dll.ixx src/util/convert.ixx
         src/interpreter.ixx src/encoding.ixx src/exception.ixx src/util/access_flags.ixx
         src/native/native.ixx src/util/bytes_reader.ixx src/jimage/jimage_file.ixx
         src/jimage/jimage_strings.ixx src/jimage/jimage_location.ixx src/jimage/jimage.ixx

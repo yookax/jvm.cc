@@ -8,7 +8,6 @@ import runtime;
 import object;
 import class_loader;
 
-
 /*
  * Atomically get and clear (set to null) the VM's pending-Reference list.
  */

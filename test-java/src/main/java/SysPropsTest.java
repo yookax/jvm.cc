@@ -1,3 +1,4 @@
+
 public class SysPropsTest {
     
     public static void main(String[] args) {
@@ -18,14 +19,19 @@ public class SysPropsTest {
             "user.home",
             "user.dir",
             "file.encoding",
+            "sun.jnu.encoding",
             "sun.stdout.encoding",
             "sun.stderr.encoding",
         };
-        
+
         for (String key : keys) {
             String val = System.getProperty(key);
             System.out.println(key + ": " + val);
         }
+
+        System.out.println("-------------------------------------------------------");
+
+        System.getProperties().forEach((key, val) -> System.out.println(key + ": " + val));
     }
     
 }

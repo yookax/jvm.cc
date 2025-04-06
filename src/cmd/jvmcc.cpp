@@ -55,7 +55,7 @@ static void parse_command_line(int argc, char *argv[]) {
     }
 }
 
-void init_jvm(InitArgs *init_args);
+void init_jvm();
 
 int run_jvm(int argc, char* argv[]) {
     auto start = chrono::high_resolution_clock::now();
@@ -71,7 +71,7 @@ int run_jvm(int argc, char* argv[]) {
             *t = '/';
     }
 
-    init_jvm(nullptr);
+    init_jvm();
 
     Class *main_class = loadClass(g_app_class_loader, utf8::dot_2_slash(main_class_name));
     if (main_class == nullptr) {

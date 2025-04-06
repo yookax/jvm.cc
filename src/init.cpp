@@ -13,7 +13,6 @@ import classfile;
 import invoke;
 import class_loader;
 import jimage;
-import reference;
 import dll;
 import native;
 import interpreter;
@@ -27,10 +26,9 @@ Object *g_sys_thread_group;
 string g_java_home;
 string g_java_version;
 
-__declspec(dllexport) string get_java_version() {
+string get_java_version() {
     return g_java_version;
 }
-
 
 u2 g_classfile_major_version = 0;
 u2 g_classfile_manor_version = 0;
@@ -85,6 +83,7 @@ static void init_properties() {
     g_properties.emplace_back("user.dir", cwd);
     //g_properties.emplace_back("user.country", "CN"); // todo
     //g_properties.emplace_back("file.encoding", "UTF-8");// todo
+    g_properties.emplace_back("sun.jnu.encoding", "UTF-8");
     //g_properties.emplace_back("sun.stdout.encoding", "UTF-8");// todo
     //g_properties.emplace_back("sun.stderr.encoding", "UTF-8");// todo
     //g_properties.emplace_back("java.io.tmpdir", "");// todo
@@ -102,41 +101,6 @@ static void init_heap() {
         panic("init Heap failed"); // todo
     }
 }
-
-// void set_default_init_args(InitArgs *args) 
-// {
-//     /* Long longs are used here because with PAE, a 32-bit
-//        machine can have more than 4GB of physical memory */
-//     // long long phys_mem = nativePhysicalMemory();
-    
-//     args->asyncgc = false;
-
-//     args->verbosegc = false;
-//     args->verbosedll = false;
-//     args->verboseclass = false;
-
-//     args->trace_jni_sigs = false;
-//     args->compact_specified = false;
-
-//     args->classpath = nullptr;
-//     args->bootpath = nullptr;
-//     args->bootpath_p = nullptr;
-//     args->bootpath_a = nullptr;
-//     args->bootpath_c = nullptr;
-//     args->bootpath_v = nullptr;
-
-//     // args->java_stack = DEFAULT_STACK;
-//     // args->max_heap = phys_mem == 0 ? DEFAULT_MAX_HEAP
-//     //                                  : clampHeapLimit(phys_mem/4);
-//     // args->min_heap = phys_mem == 0 ? DEFAULT_MIN_HEAP
-//     //                                  : clampHeapLimit(phys_mem/64);
-
-//     args->props_count = 0;
-
-//     args->vfprintf = vfprintf;
-//     args->abort = abort;
-//     args->exit = exit;
-// }
 
 namespace fs = std::filesystem;
 
@@ -239,7 +203,7 @@ static string find_jdk_dir() {
 
 void __init_invoke__();
 
-void init_jvm(InitArgs *init_args) {
+void init_jvm() {
     g_java_home = find_jdk_dir();
     if (g_java_home.empty()) {
         panic("java.lang.InternalError, %s\n", "no java lib");
@@ -252,7 +216,6 @@ void init_jvm(InitArgs *init_args) {
     init_dll();
     init_classloader();
     init_native();
-    init_reference();
     init_thread();
     init_invoke();
     __init_invoke__();

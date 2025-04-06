@@ -15,7 +15,7 @@ import primitive;
 import class_loader;
 
 #define TEST_CASE(func_name) \
-    __declspec(dllexport) void func_name() { \
+    void func_name() { \
         printf("----------- %s -----------\n", #func_name);
 
 #endif //JVMCC_TEST_H

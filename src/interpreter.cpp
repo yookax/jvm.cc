@@ -1102,8 +1102,8 @@ do { \
                 Method *m = frame->method;
                 assert(m != nullptr);
                 if (!m->access_flags.is_native()) {
-                    // todo
-                    unimplemented
+                    panic("The method is not native. %s~%s~%s\n",
+                          m->clazz->name, m->name, m->descriptor);
                 }
 
                 auto descriptor = m->descriptor;
@@ -1112,7 +1112,7 @@ do { \
                 }
                 auto native = find_native(m->clazz->name, m->name, descriptor);
                 if (native == nullptr) {
-                    panic("The native method is not implemented. %s~%s~%s\n",
+                    panic("The native method is not implemented.\n%s~%s~%s\n",
                           m->clazz->name, m->name, m->descriptor);
                 } else {
                     native(frame);

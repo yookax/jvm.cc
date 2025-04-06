@@ -28,6 +28,8 @@ void load(Frame *f) {
     auto name = slot::get<jref>(args++);
     auto is_builtin = slot::get<jbool>(args++);
     auto throw_exception_if_fail = slot::get<jbool>(args);
+
+    unimplemented
 }
 
 /*
@@ -72,7 +74,7 @@ void jdk_internal_loader_NativeLibraries_registerNatives() {
 #define R(method, method_descriptor) \
     registry("jdk/internal/loader/NativeLibraries", #method, method_descriptor, method)
 
-//    R(load, "(Ljdk/internal/loader/NativeLibraries$NativeLibraryImpl;Ljava/lang/String;ZZ)Z");
-//    R(unload, "(Ljava/lang/String;ZJ)V");
-//    R(findBuiltinLib, "(Ljava/lang/String;)Ljava/lang/String;");
+    R(load, "(Ljdk/internal/loader/NativeLibraries$NativeLibraryImpl;Ljava/lang/String;ZZ)Z");
+    R(unload, "(Ljava/lang/String;ZJ)V");
+    R(findBuiltinLib, "(Ljava/lang/String;)Ljava/lang/String;");
 }

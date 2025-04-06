@@ -6,13 +6,11 @@ module poly;
 
 import std.core;
 import classfile;
-import invoke;
 import encoding;
 import class_loader;
 import access_flags;
 
 using namespace std;
-using namespace java_lang_invoke_MethodHandle;
 
 /*
  * A method is signature polymorphic（签名多态性） if all of the following are true:

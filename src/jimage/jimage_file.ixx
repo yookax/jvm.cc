@@ -196,7 +196,7 @@ public:
     JImageFile(const char *jimage_file_path): mem_mapping(jimage_file_path) {
         auto size = get_file_size(jimage_file_path);
         if (mem_mapping.address == nullptr) {
-            panic("mem_mapping.address == nullptr"); //todo
+            panic("%s. mem_mapping.address == nullptr", jimage_file_path); //todo
         }
         reader = new BytesReader((const uint8_t *) mem_mapping.address, size, std::endian::native);
 
