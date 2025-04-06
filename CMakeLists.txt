@@ -38,7 +38,6 @@ set (SOURCE_FILES ${MINIZIP_FILES} src/jni.cpp
         src/object/object.cpp src/object/array.cpp src/object/string.cpp src/object/box.cpp
         src/object/reflect.cpp src/classfile/class.cpp src/classfile/array_class.cpp src/exception.cpp
         src/classfile/invoke.cpp
-        src/native/var_handle.cpp src/native/method_handle.cpp
         src/object/allocator.cpp src/native/java/lang/Thread.cpp src/native/native.cpp
         src/native/java/lang/Class.cpp src/native/java/lang/reflect/Array.cpp
         src/native/java/lang/System.cpp src/native/java/lang/Runtime.cpp
@@ -58,6 +57,7 @@ set (SOURCE_FILES ${MINIZIP_FILES} src/jni.cpp
         src/native/jdk/internal/misc/ScopedMemoryAccess.cpp
         src/native/java/lang/ref/Finalizer.cpp
         src/native/java/lang/ref/PhantomReference.cpp
+        src/native/java/lang/invoke/VarHandle.cpp
 )
 
 set (TEST_SOURCE_FILES

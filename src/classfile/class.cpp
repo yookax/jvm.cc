@@ -761,14 +761,14 @@ Method *Class::get_method(const utf8_t *_name, const utf8_t *descriptor) {
 // }
 
 Method *Class::generate_poly_method(const utf8_t *method_name, const utf8_t *descriptor) {
-    auto [clazz, acc, native_method] = lookup_polymorphic_method(this, method_name);
+    auto [clazz, acc] = lookup_polymorphic_method(this, method_name);
     if (clazz == nullptr) {
         // Don't find polymorphic method named `method_name` 
         // in current class and it's super classes.
         return nullptr; 
     }
 
-    auto m = new Method(clazz, method_name, descriptor, acc, native_method);
+    auto m = new Method(clazz, method_name, descriptor, acc);
     return m;
 }
 

@@ -363,7 +363,6 @@ static void linkToNative(Frame *f) {
     unimplemented
 }
 
-
 void java_lang_invoke_MethodHandle_registerNatives() {
 #undef R
 #define R(method, method_descriptor) \

@@ -63,6 +63,7 @@ void init_native() {
     REGISTRY_ALL(java_lang_ref_PhantomReference_registerNatives);
     REGISTRY_ALL(java_lang_reflect_Array_registerNatives);
     REGISTRY_ALL(java_lang_invoke_MethodHandle_registerNatives);
+    REGISTRY_ALL(java_lang_invoke_VarHandle_registerNatives);
     REGISTRY_ALL(java_io_FileDescriptor_registerNatives);
     REGISTRY_ALL(java_io_FileInputStream_registerNatives);
     REGISTRY_ALL(java_io_FileOutputStream_registerNatives);

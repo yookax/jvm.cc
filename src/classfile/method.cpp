@@ -286,15 +286,13 @@ Method::Method(Class *c, BytecodeReader &r) {
     }
 }
 
-Method::Method(Class *c, const utf8_t *name0, const utf8_t *descriptor0, int acc, void *native_method0) {
-    assert(c != nullptr && name0 != nullptr && descriptor0 != nullptr);
-    assert(acc > 0 && native_method0 != nullptr);
+Method::Method(Class *c, const utf8_t *name0, const utf8_t *descriptor0, int acc) {
+    assert(c != nullptr && name0 != nullptr && descriptor0 != nullptr && acc > 0);
 
     clazz = c;
     access_flags.set(acc);
     name = name0;
     descriptor = descriptor0;
-    native_method = native_method0;
 
     // note: 构造函数（<init>方法）是非static的，也会传递this reference  todo
     cal_args_slots_count();

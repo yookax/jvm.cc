@@ -13,4 +13,4 @@ export void init_polymorphic_method();
  * tuple<1>: access flag
  * tuple<2>: native method
  */
-export std::tuple<Class *, int, void *> lookup_polymorphic_method(Class *c, const utf8_t *name);
+export std::pair<Class *, int> lookup_polymorphic_method(Class *c, const utf8_t *name);

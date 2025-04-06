@@ -723,7 +723,7 @@ public:
 
 private:
     // 用来创建 polymorphic method
-    Method(Class *c, const utf8_t *name, const utf8_t *descriptor, int acc, void *native_method);
+    Method(Class *c, const utf8_t *name, const utf8_t *descriptor, int acc);
 
     void parse_code_attr(BytecodeReader &r);
     void determine_ret_type();
@@ -776,8 +776,8 @@ public:
     int find_exception_handler(Class *exception_type, size_t pc);
 
     bool is_signature_polymorphic() {
-        std::tuple<Class *, int, void *> p = lookup_polymorphic_method(clazz, name);
-        return std::get<0>(p) != nullptr;
+        std::pair<Class *, int> p = lookup_polymorphic_method(clazz, name);
+        return p.first != nullptr;
     }
 
     std::string toString() const;
