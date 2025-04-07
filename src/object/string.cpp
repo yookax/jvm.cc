@@ -25,7 +25,7 @@ jstrRef Allocator::string(const utf8_t *str) {
     assert(g_string_class != nullptr && str != nullptr);
 
     init_class(g_string_class);
-    assert(g_string_class->lookup_field("COMPACT_STRINGS", "Z")->static_value.z); // todo 啥意思
+    assert(g_string_class->lookup_field("COMPACT_STRINGS", "Z")->static_value.z);
 
     jstrRef so = Allocator::object(g_string_class);
     size_t len = length(str);

@@ -396,7 +396,6 @@ Class::Class(jref class_loader, const u1 *bytecode, size_t len): loader(class_lo
     }
 
     cp = new ConstantPool(this, r);
-//    access_flags = r.readu2();
     access_flags.set(r.readu2());
     u2 this_idx = r.readu2();
     name = cp->class_name(this_idx);

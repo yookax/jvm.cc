@@ -2,6 +2,7 @@
 
 import std.core;
 import bytes_reader;
+import encoding;
 import constants;
 import convert;
 
@@ -13,7 +14,8 @@ union ConstantValue {
     int64_t i64;
     float f32;
     double f64;
-    uint8_t *p;
+
+    u8string *str;
 
     struct {
         uint16_t name_index;
@@ -40,7 +42,7 @@ union ConstantValue {
     explicit ConstantValue(int64_t x): i64(x) { }
     explicit ConstantValue(float x): f32(x) { }
     explicit ConstantValue(double x): f64(x) { }
-    explicit ConstantValue(uint8_t *x): p(x) { }
+    explicit ConstantValue(u8string *s): str(s) { }
 
     ConstantValue(uint8_t x, uint16_t y) {
         method_handle.reference_kind = x;
@@ -56,11 +58,12 @@ union ConstantValue {
 struct RawAttribute {
     uint16_t attribute_name_index;
     uint32_t attribute_length;
-    uint8_t info[0];
+    const uint8_t *info;
 
     explicit RawAttribute(BytesReader &r) {
         attribute_name_index = r.readu2();
         attribute_length = r.readu4();
+        info = r.curr_pos();
         r.skip(attribute_length);
     }
 };
@@ -85,6 +88,9 @@ struct RawField {
 using RawMethod = RawField;
 
 export struct RawClassfile {
+    uint8_t *content = nullptr;
+    ~RawClassfile() { delete[] content; }
+
     uint32_t magic;
     uint16_t minor_version;
     uint16_t major_version;
@@ -114,7 +120,7 @@ export struct RawClassfile {
         }
         file.seekg(0, ios::beg);
 
-        auto content = new uint8_t[size];
+        content = new uint8_t[size];
         file.read((char *)content, size);
 
         if (file.gcount() != size) {
@@ -137,8 +143,9 @@ export struct RawClassfile {
         // ------------------------------ constant pool ---------------------------------
 
         auto constant_pool_count = r.readu2();
+        constant_pool.reserve(constant_pool_count);
         // constant pool 从 1 开始计数，第0位无效
-        constant_pool.emplace_back(JVM_CONSTANT_Invalid, 0);
+        constant_pool.emplace_back(JVM_CONSTANT_Invalid,(int32_t) 0);
         for (uint16_t i = 1; i < constant_pool_count; i++) {
             auto tag = r.readu1();
             switch (tag) {
@@ -188,10 +195,8 @@ export struct RawClassfile {
                 }
                 case JVM_CONSTANT_Utf8: {
                     auto utf8_len = r.readu2();
-                    auto buf = new uint8_t[utf8_len + 1];
-                    r.read_bytes(buf, utf8_len);
-                    buf[utf8_len] = 0;
-                    constant_pool.emplace_back(tag, buf);
+                    constant_pool.emplace_back(tag, mutf8_to_new_utf8(r.curr_pos(), utf8_len));
+                    r.skip(utf8_len);
                     break;
                 }
                 case JVM_CONSTANT_MethodHandle: {
@@ -245,6 +250,11 @@ export struct RawClassfile {
         oss << "minor version: " << minor_version << endl;
         oss << "major version: " << major_version << endl;
         oss << "constant pool: " << constant_pool.size() << endl;
+        for (auto &x: constant_pool) {
+            if (x.first == JVM_CONSTANT_Utf8) {
+                cout << (char *)x.second.str->c_str() << endl;
+            }
+        }
         oss << "access flags: " << access_flags << endl;
         oss << "this class: " << this_class << endl;
         oss << "super class: " << super_class << endl;

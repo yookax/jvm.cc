@@ -61,3 +61,21 @@ export namespace unicode {
     // 由调用者 delete[] utf8 string
     utf8_t *to_utf8(const unicode_t *unicode, size_t len);
 }
+
+export std::u8string *mutf8_to_utf8(const uint8_t *mutf8, size_t len, std::u8string *utf8);
+
+export std::u8string mutf8_to_utf8(const uint8_t *mutf8, size_t len) {
+    std::u8string utf8;
+    mutf8_to_utf8(mutf8, len, &utf8);
+    return utf8;
+}
+
+export std::u8string *mutf8_to_new_utf8(const uint8_t *mutf8, size_t len) {
+    auto s = new std::u8string;
+    return mutf8_to_utf8(mutf8, len, s);
+}
+
+export std::u16string utf8_to_utf16(const std::u8string& utf8_str);
+
+export void test_utf8_to_latin1();
+export void test_utf8_to_utf16();

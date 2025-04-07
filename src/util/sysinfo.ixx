@@ -231,14 +231,14 @@ export struct MemMapping {
     MemMapping(const char *file_path) {
         assert(file_path != nullptr);
         // 打开文件
-        HANDLE file = CreateFileA(file_path, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+        HANDLE file = CreateFileA(file_path, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
         if (file == INVALID_HANDLE_VALUE) {
             std::cerr << "Unable to open the file. " << file_path << std::endl;
             throw 1;
         }
 
         // 创建文件映射对象
-        HANDLE mapping = CreateFileMappingA(file, 0, PAGE_READONLY, 0, 0, nullptr);
+        HANDLE mapping = CreateFileMappingA(file, nullptr, PAGE_READONLY, 0, 0, nullptr);
         if (mapping == nullptr) {
             std::cerr << "Unable to create the file mapping. " << file_path << std::endl;
             CloseHandle(file);

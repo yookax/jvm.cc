@@ -1,4 +1,7 @@
 #include "../vmdef.h"
+#ifdef _WIN64
+#include <Windows.h>
+#endif
 
 import std.core;
 import std.filesystem;
@@ -112,9 +115,40 @@ int run_jvm(int argc, char* argv[]) {
     return 0;
 }
 
+void run_test();
+
+#define RUN_JVM 1
+
 int main(int argc, char* argv[]) {
-//    RawClassfile rcf = ("D:\\code\\jvm.cc\\test-java\\target\\classes\\HelloWorld.class");
-//    cout << rcf.to_str().c_str() << endl;
-//    return 0;
+#ifdef _WIN64
+   SetConsoleOutputCP(CP_UTF8);
+#endif
+
+#if RUN_JVM
     return run_jvm(argc, argv);
+#else
+    run_test();
+    return 0;
+#endif
+}
+
+void run_test() {
+    test_utf8_to_latin1();
+    test_utf8_to_utf16();
+//    cout << "俄格" << endl;
+//    cout << "éàü" << endl;
+//
+//    RawClassfile rcf = ("D:\\code\\jvm.cc\\test-java\\target\\classes\\I18nTest.class");
+//    cout << rcf.to_str().c_str() << endl;
+
+//    u8string s = u8"一个";
+//    u16string s2 = u"一个";
+//    u32string s3 = U"一个";
+//
+//    auto sss = utf8_to_utf16(s);
+
+//    cout << (char *)s.c_str() << endl;
+//    wcout << s2.c_str() << endl;
+//    cout << (char *)s2.c_str() << endl;
+//    cout << (char *)s3.c_str() << endl;
 }
