@@ -99,5 +99,5 @@ target_sources(jvmcc
         src/interpreter.ixx src/encoding.ixx src/exception.ixx src/util/access_flags.ixx
         src/native/native.ixx src/util/bytes_reader.ixx src/jimage/jimage_file.ixx
         src/jimage/jimage_strings.ixx src/jimage/jimage_location.ixx src/jimage/jimage.ixx
-        src/properties.ixx
+        src/properties.ixx src/classfile/raw_classfile.ixx
 )

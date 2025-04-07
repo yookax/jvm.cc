@@ -8,6 +8,7 @@ import classfile;
 import object;
 import class_loader;
 import interpreter;
+import raw_classfile;
 
 using namespace std;
 
@@ -112,5 +113,8 @@ int run_jvm(int argc, char* argv[]) {
 }
 
 int main(int argc, char* argv[]) {
+//    RawClassfile rcf = ("D:\\code\\jvm.cc\\test-java\\target\\classes\\HelloWorld.class");
+//    cout << rcf.to_str().c_str() << endl;
+//    return 0;
     return run_jvm(argc, argv);
 }
