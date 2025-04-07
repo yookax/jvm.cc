@@ -16,6 +16,7 @@ export void init_jimage() {
         jf = new JImageFile(s.c_str());
     } catch (...) {
         jf = nullptr;
+        panic("");
     }
 }
 

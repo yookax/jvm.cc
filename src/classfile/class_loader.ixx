@@ -1,6 +1,5 @@
 module;
 #include "../vmdef.h"
-//#include "../jni.h"
 
 export module class_loader;
 

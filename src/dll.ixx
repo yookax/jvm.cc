@@ -61,7 +61,7 @@ static void *open_library_os_depend(const char *name) {
     void *handle = LoadLibrary(name);
     if (handle == nullptr) {
         DWORD e = GetLastError();
-                ERR("Load dll failed. %ld, %s\n", e, name); // todo
+        ERR("Load dll failed. %ld, %s\n", e, name); // todo
         return nullptr;
     }
 

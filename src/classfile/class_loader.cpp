@@ -1,7 +1,6 @@
 module;
 #include <cassert>
 #include "../vmdef.h"
-//#include "../jni.h"
 #include "../../lib/minizip/unzip.h"
 
 module class_loader;
@@ -129,65 +128,8 @@ enum ClassLocation {
     IN_MODULE
 };
 
-#if 0
-
-static void* (*zipOpen)(const char *name, char **msg);
-static void* (*zipFindEntry)(void *zip, char *name, jint *entry_size, jint *name_len);
-static jboolean (*zipReadEntry)(void *zip, void *entry, unsigned char *buf, char *entry_name);
-static void (*zipClose)(void *zip);
-
-/*
- * @param class_name: xxx/xxx/xxx
- */
-static optional<pair<u1 *, size_t>> read_class(
-                   const char *path, const char *class_name, ClassLocation location) {
-    char *msg;
-    // JAVA_HOME/bin/zip.dll 中已经对 zipOpen 做了Cache，
-    // 所有这里无需 Cache，直接打开即可，效率OK。
-    void *zip_file = zipOpen(path, &msg);
-
-    if (zip_file == nullptr) {
-        throw java_io_IOException(string("zipOpen failed: ") + path + ". " + msg);
-        return nullopt;
-    }
-
-    auto buf = new char[strlen(class_name) + 32]; // big enough
-    if (location == IN_JAR) {
-        strcat(strcpy(buf, class_name), ".class");
-    } else if (location == IN_MODULE) {
-        // All classes 放在 module 的 "classes" 目录下
-        strcat(strcat(strcpy(buf, "classes/"), class_name), ".class");
-    }
-
-    jint entry_size;
-    jint name_len;
-    void *entry = zipFindEntry(zip_file, buf, &entry_size, &name_len);
-    if (entry == nullptr) { // not found
-        zipClose(zip_file);
-        delete[] buf;
-        return nullopt;
-    }
-
-    auto bytecode = new u1[entry_size];
-    auto entry_name  = new char[name_len + 1];
-    jbool b = zipReadEntry(zip_file, entry, bytecode, entry_name);
-
-    zipClose(zip_file);
-    delete[] entry_name;
-    delete[] buf;
-
-    if (!b) {
-        // todo error
-        return nullopt;
-    }
-    return make_pair(bytecode, entry_size);
-}
-
-#endif
-
 vector<pair<const char *, unzFile>> zfiles;
 
-#if 1
 /*
  * @param class_name: xxx/xxx/xxx
  */
@@ -246,8 +188,6 @@ static optional<pair<u1 *, size_t>> read_class(const char *path,
         throw java_io_IOException(string("unzReadCurrentFile failed: ") + path);
     return make_pair(bytecode, uncompressed_size);
 }
-
-#endif
 
 /*
  * Read JDK 类库中的类，不包括Array Class.
@@ -573,25 +513,8 @@ Object *get_app_classloader() {
     return execJavaR(get);
 }
 
-//Class *g_object_class = nullptr;
-//Class *g_class_class = nullptr;
-//Class *g_string_class = nullptr;
-
 void init_classloader() {
     init_classpath();
-
-//    if (g_libzip == nullptr) {
-//        panic("g_libzip"); // todo
-//    }
-
-    // from zip.dll 中读取我们需要的函数接口
-//    zipOpen = (decltype(zipOpen)) find_library_entry(g_libzip, "ZIP_Open");
-//    zipFindEntry = (decltype(zipFindEntry)) find_library_entry(g_libzip, "ZIP_FindEntry");
-//    zipReadEntry = (decltype(zipReadEntry)) find_library_entry(g_libzip, "ZIP_ReadEntry");
-//    zipClose = (decltype(zipClose)) find_library_entry(g_libzip, "ZIP_Close");
-//
-//    assert(zipOpen != nullptr && zipFindEntry != nullptr );
-//    assert(zipReadEntry != nullptr && zipClose != nullptr );
 
     g_object_class = load_boot_class("java/lang/Object");
     g_class_class = load_boot_class("java/lang/Class");

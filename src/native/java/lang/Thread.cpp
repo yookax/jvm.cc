@@ -26,7 +26,9 @@ void findScopedValueBindings(Frame *f) {
  */
 // static native Thread currentCarrierThread();
 void currentCarrierThread(Frame *f) {
-    unimplemented
+    //Thread *t = get_current_thread();
+    //f->pushr(t->tobj);
+    // todo virtual thread
 }
 
 /*

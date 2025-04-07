@@ -7,6 +7,7 @@ import std.core;
 import slot;
 import classfile;
 import object;
+import dll;
 import runtime;
 import exception;
 import class_loader;
@@ -29,7 +30,12 @@ void load(Frame *f) {
     auto is_builtin = slot::get<jbool>(args++);
     auto throw_exception_if_fail = slot::get<jbool>(args);
 
-    unimplemented
+    auto n = java_lang_String::to_utf8(name);
+    void *handle = open_library(n);
+    if (handle == nullptr) {
+        f->pushi(0);
+    }
+    f->pushi(1);
 }
 
 /*
@@ -74,7 +80,7 @@ void jdk_internal_loader_NativeLibraries_registerNatives() {
 #define R(method, method_descriptor) \
     registry("jdk/internal/loader/NativeLibraries", #method, method_descriptor, method)
 
-    R(load, "(Ljdk/internal/loader/NativeLibraries$NativeLibraryImpl;Ljava/lang/String;ZZ)Z");
+    //R(load, "(Ljdk/internal/loader/NativeLibraries$NativeLibraryImpl;Ljava/lang/String;ZZ)Z");
     R(unload, "(Ljava/lang/String;ZJ)V");
     R(findBuiltinLib, "(Ljava/lang/String;)Ljava/lang/String;");
 }

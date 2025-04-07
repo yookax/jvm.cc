@@ -12,6 +12,11 @@ import class_loader;
 import runtime;
 import exception;
 
+//private static native void initIDs();
+void initIDs(Frame *f) {
+    // todo
+}
+
 //private static native void GetFileAttributesEx0(long lpFileName, long address) throws WindowsException;
 void GetFileAttributesEx0(Frame *f) {
     slot_t *args = f->lvars;
@@ -29,6 +34,7 @@ void sun_nio_fs_WindowsNativeDispatcher_registerNatives() {
 #define R(method, method_descriptor) \
     registry("sun/nio/fs/WindowsNativeDispatcher", #method, method_descriptor, method)
 
+    //R(initIDs, "()V");
     R(GetFileAttributesEx0, "(JJ)V");
 }
 #endif
