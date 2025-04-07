@@ -258,21 +258,24 @@ static optional<pair<const u1 *, size_t>> read_boot_class(const utf8_t *class_na
 //    assert(isSlashName(class_name));
     assert(class_name[0] != '['); // don't load array class
 
-    // 从jimage中读取
-    for (auto &s: jdk_module_names) {
-        string path = s + class_name + ".class";
-        auto content = get_resource_from_jimage((const char8_t *)path.c_str());
-        if (content.has_value()) { // find out
-            return content;
+    if (is_jimage_valid()) {
+        // The jimage is valid, read from the jimage.
+        for (auto &s: jdk_module_names) {
+            string path = s + class_name + ".class";
+            auto content = get_resource_from_jimage((const char8_t *) path.c_str());
+            if (content.has_value()) { // find out
+                return content;
+            }
+        }
+    } else {
+        // The jimage is invalid, read from the jmods.
+        for (auto &mod : jdk_modules) {
+            auto content = read_class(mod.c_str(), class_name, IN_MODULE);
+            if (content.has_value()) { // find out
+                return content;
+            }
         }
     }
-
-//    for (auto &mod : jdk_modules) {
-//        auto content = read_class(mod.c_str(), class_name, IN_MODULE);
-//        if (content.has_value()) { // find out
-//            return content;
-//        }
-//    }
 
     return nullopt;
 }

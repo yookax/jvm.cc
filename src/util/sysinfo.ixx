@@ -228,33 +228,35 @@ export struct MemMapping {
 #ifdef _WIN64
     void *address = nullptr;
 
-    MemMapping(const char *file_path) noexcept {
+    MemMapping(const char *file_path) {
         assert(file_path != nullptr);
         // 打开文件
         HANDLE file = CreateFileA(file_path, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
         if (file == INVALID_HANDLE_VALUE) {
-            std::cerr << "无法打开文件" << std::endl;
-            return;
+            std::cerr << "Unable to open the file. " << file_path << std::endl;
+            throw 1;
         }
 
         // 创建文件映射对象
         HANDLE mapping = CreateFileMappingA(file, 0, PAGE_READONLY, 0, 0, nullptr);
         if (mapping == nullptr) {
-            std::cerr << "无法创建文件映射对象" << std::endl;
+            std::cerr << "Unable to create the file mapping. " << file_path << std::endl;
             CloseHandle(file);
-            return;
+            throw 2;
         }
 
         // 将文件映射到内存
         address = MapViewOfFile(mapping, FILE_MAP_READ, 0, 0, 0);
-        if (address == nullptr) {
-            std::cerr << "无法将文件映射到内存" << std::endl;
-        }
 
         // 关闭打开的jimage file，只留下内存映射即可。
         // 如果这里不关闭文件，jdk内部打开jimage file时就会出错。
         CloseHandle(mapping);
         CloseHandle(file);
+
+        if (address == nullptr) {
+            std::cerr << "Unable to map the file to memory. " << file_path << std::endl;
+            throw 3;
+        }
     }
 
     ~MemMapping() {

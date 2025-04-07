@@ -193,16 +193,15 @@ public:
 
     const uint8_t *resources;
 
-    JImageFile(const char *jimage_file_path): mem_mapping(jimage_file_path) {
+    JImageFile(const char *jimage_file_path) try: mem_mapping(jimage_file_path) {
         auto size = get_file_size(jimage_file_path);
-        if (mem_mapping.address == nullptr) {
-            panic("%s. mem_mapping.address == nullptr", jimage_file_path); //todo
-        }
         reader = new BytesReader((const uint8_t *) mem_mapping.address, size, std::endian::native);
-
         header.read_from(*reader);
         index.read_from(*reader, header);
         resources = reader->curr_pos();
+    } catch(...) {
+        std::cerr << "WARNING: Failed to create a memory mapping, "
+                     "which will significantly affect the running speed of the JVM." << endl;
     }
 
 //     redirectIndex = hash(path, DEFAULT_SEED) % table_length;
