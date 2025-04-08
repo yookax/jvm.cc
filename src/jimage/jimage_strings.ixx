@@ -1,4 +1,7 @@
-﻿export module jimage_strings;
+﻿module;
+#include "../vmdef.h"
+
+export module jimage_strings;
 
 import std.core;
 

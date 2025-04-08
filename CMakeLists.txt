@@ -58,21 +58,12 @@ set(SOURCE_FILES ${MINIZIP_FILES}
         src/native/java/lang/invoke/VarHandle.cpp
 )
 
-set(TEST_SOURCE_FILES
-        test-cpp/test.cpp test-cpp/convert_test.cpp test-cpp/slot_test.cpp
-        test-cpp/descriptor_test.cpp test-cpp/heap_test.cpp test-cpp/class_loader_test.cpp
-        test-cpp/object_test.cpp test-cpp/class_test.cpp test-cpp/foo_test.cpp
-        test-cpp/encoding_test.cpp test-cpp/jimage_test.cpp
-)
-
 # 这里生成 jvm.dll
 # jdk/bin/zip.dll 和 jdk/bin/java.dll 均依赖此dll
 # 如果加载以上两个dll失败，可以用‘Dependency Walker’之类的工具查看下这两个dll所依赖的函数在jvm.dll中是否实现。
 # 如果有函数没有实现，可以在jvm.cpp中实现之。
 # 如果有Debug加载zip.dll和java.dll成功，而Release版失败的情况，可以考虑下是不是Release版是不是把jvm.cpp中没有使用的函数优化掉了。
 # 总之一句话，无论Debug版还是Release版jvm.dll中导出所有zip.dll和java.dll中所依赖的函数。
-#add_library(jvm SHARED ${SOURCE_FILES} ${TEST_SOURCE_FILES})
-#SET_TARGET_PROPERTIES(jvm PROPERTIES OUTPUT_NAME "jvm" PREFIX "")
 
 # 生成可运行的虚拟机
 add_executable(jvmcc ${SOURCE_FILES} src/jvmcc.cpp)

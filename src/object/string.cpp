@@ -175,3 +175,44 @@ jstrRef java_lang_String::intern(jstrRef so) {
     Object *interned = *(str_pool.insert(so).first);
     return interned;
 }
+
+// ---------------------------------------------------------------------------------------
+
+static const utf8_t *utf8s[] = {
+        "Hello, World!",
+        "你好，世界！",
+        "こんにちは、世界！",
+};
+
+TEST_CASE(test_string)
+    for (auto s: utf8s) {
+        auto so = Allocator::string(s);
+        auto u = java_lang_String::to_utf8(so);
+        if (!utf8::equals(s, u)) {
+            printf("failed\n");
+        }
+    }
+}
+
+TEST_CASE(test_string_intern)
+    for (auto s: utf8s) {
+        auto so1 = Allocator::string(s);
+        auto so2 = Allocator::string(s);
+
+        auto intern1 = java_lang_String::intern(so1);
+        auto intern2 = java_lang_String::intern(so2);
+
+        if (intern1 != intern2)
+            printf("failed\n");
+    }
+}
+
+TEST_CASE(test_string_equals)
+    for (auto s: utf8s) {
+        auto so1 = Allocator::string(s);
+        auto so2 = Allocator::string(s);
+
+        if (!java_lang_String::equals(so1, so2))
+            printf("failed\n");
+    }
+}

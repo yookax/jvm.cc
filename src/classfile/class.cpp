@@ -992,3 +992,30 @@ bool Class::test_nest_mate(Class *c) {
     // the algorithm refers to JVMS 5.4.4
     return (this == c) || (get_nest_host() == c->get_nest_host());
 }
+
+// ---------------------------------------------------------------------------------------
+
+TEST_CASE(test_inject_field)
+//    const char *class_names[] = {
+//            "java/lang/Object",
+//            "java/lang/Class",
+//            "java/lang/Object", // 第二次注入 java/lang/Object
+//    };
+//
+//    for (const char *class_name: class_names) {
+//        Class *c = load_boot_class(class_name);
+//        printf("%s\n", c->name);
+//
+//        // 因为 inject_inst_field 只能在 loaded 之后进行，
+//        // 所以这里为了测试强制设置一下。
+//        Class::State state = c->state;
+//        c->state = Class::State::LOADED;
+//        bool b1 = c->inject_inst_field("inject1", "C");
+//        bool b2 = c->inject_inst_field("inject2", "I");
+//        bool b3 = c->inject_inst_field("inject3", "J");
+//        c->state = state;
+//
+//        printf("\t%d, %d, %d\n", b1, b2, b3);
+//        printf("\t%s\n", c->toString().c_str());
+//    }
+}

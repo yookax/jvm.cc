@@ -6,11 +6,16 @@
 import std.core;
 import std.filesystem;
 import slot;
+import heap;
+import convert;
 import encoding;
+import sysinfo;
+import properties;
 import classfile;
 import object;
 import class_loader;
 import interpreter;
+import jimage;
 import raw_classfile;
 
 using namespace std;
@@ -139,26 +144,48 @@ void run_all_java_tests();
 
 void test() {
     init_jvm();
-//    test_utf8_to_latin1();
-//    test_utf8_to_utf16();
-//    cout << "俄格" << endl;
-//    cout << "éàü" << endl;
-//
-    RawClassfile rcf = ("D:\\code\\jvm.cc\\test-java\\target\\classes\\I18nTest.class");
-    cout << rcf.to_str().c_str() << endl;
 
-//    u8string s = u8"一个";
-//    u16string s2 = u"一个";
-//    u32string s3 = U"一个";
-//
-//    auto sss = utf8_to_utf16(s);
+    test_sys_info();
+    test_properties();
 
-//    cout << (char *)s.c_str() << endl;
-//    wcout << s2.c_str() << endl;
-//    cout << (char *)s2.c_str() << endl;
-//    cout << (char *)s3.c_str() << endl;
+    test_convert_int();
+    test_convert_long();
+    test_convert_float();
+    test_convert_double();
+
+    test_utf8_to_latin1();
+    test_utf8_to_utf16();
+
+    test_jimage_string();
+    test_jimage();
+    test_jimage1();
+
+    test_alloc_continuously();
+    test_heap();
+
+    test_load_class();
+    test_classloader();
+
+    test_method_descriptor();
+
+    test_box();
+
+    test_string();
+    test_string_intern();
+    test_string_equals();
+
+    test_new_array();
+    test_multi_array1();
+    test_multi_array2();
+    test_string_array();
+
+    test_inject_field();
+
+//    RawClassfile rcf = ("D:\\code\\jvm.cc\\test-java\\target\\classes\\I18nTest.class");
+//    cout << rcf.to_str().c_str() << endl;
 
     run_all_java_tests();
+
     cout << endl << "Testing is over." << endl;
 }
 

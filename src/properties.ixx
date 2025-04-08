@@ -85,3 +85,10 @@ export void init_properties() {
     platform_properties[_path_separator_NDX] = path_separator();
     platform_properties[_java_io_tmpdir_NDX] = ""; // todo
 }
+
+// ---------------------------------------------------------------------------------------
+
+export TEST_CASE(test_properties)
+    // todo
+}
+

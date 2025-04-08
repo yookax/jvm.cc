@@ -257,3 +257,12 @@ export jref invoke_method(jref mo, jref _this, jarrRef args);
 
 // co: object of java.lang.reflect.Constructor
 export jref new_instance_from_constructor(jref co, jarrRef args);
+
+export void test_box();
+export void test_string();
+export void test_string_intern();
+export void test_string_equals();
+export void test_new_array();
+export void test_multi_array1();
+export void test_multi_array2();
+export void test_string_array();

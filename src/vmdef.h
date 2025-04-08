@@ -228,4 +228,10 @@ do { \
     exit(EXIT_CODE_UNIMPLEMENTED); \
 }
 
+// -------------------------------------------------
+
+#define TEST_CASE(func_name) \
+    void func_name() { \
+        printf("----------- %s -----------\n", #func_name);
+
 #endif //VMDEF_H

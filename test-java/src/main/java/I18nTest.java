@@ -3,7 +3,7 @@ public class I18nTest {
 
     private static String 一个变量 = "变量1";
     private static String 鼓掌 = "👋";
-
+    private static String éàü = "éàü";
 
     public static void main(String[] args) {
         一个函数();
@@ -12,6 +12,7 @@ public class I18nTest {
     static void 一个函数() {
         System.out.println(一个变量);
         System.out.println(鼓掌);
+        System.out.println(éàü);
         System.out.println("Hello, World.");
         System.out.println("你好，世界。");
         System.out.println("こんにちは、世界。");
