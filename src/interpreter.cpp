@@ -1492,3 +1492,14 @@ jref execJavaR(Method *m, jref _this, jarrRef args) {
     const slot_t *slots = execJava(m, _this, args);
     return slot::get<jref>(slots);
 }
+
+slot_t *call_java(jref method_obj, jref _this, jarrRef args) {
+    // private final Class<?> clazz;
+    // private final int slot;
+    auto co = method_obj->get_field_value<jclsRef>("clazz");
+    auto slot = method_obj->get_field_value<jint>("slot");
+
+    Class *c = co->jvm_mirror;
+    Method *m = c->methods.at(slot);
+    return execJava(m, _this, args);
+}

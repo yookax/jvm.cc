@@ -29,6 +29,7 @@ void currentCarrierThread(Frame *f) {
     //Thread *t = get_current_thread();
     //f->pushr(t->tobj);
     // todo virtual thread
+    unimplemented
 }
 
 /*
@@ -71,7 +72,10 @@ void yield0(Frame *f) {
 
 // private static native void sleepNanos0(long nanos) throws InterruptedException;
 void sleepNanos0(Frame *f) {
-    unimplemented
+    slot_t *args = f->lvars;
+    auto nanos = slot::get<jlong>(args);
+
+    this_thread::sleep_for(std::chrono::nanoseconds(nanos));
 }
 
 // private native void start0();

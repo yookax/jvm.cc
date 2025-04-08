@@ -59,6 +59,7 @@ void init_native() {
     REGISTRY_ALL(java_lang_Runtime_registerNatives);
     REGISTRY_ALL(java_lang_Module_registerNatives);
     REGISTRY_ALL(java_lang_Throwable_registerNatives);
+    REGISTRY_ALL(java_lang_StackTraceElement_registerNatives);
     REGISTRY_ALL(java_lang_ref_Reference_registerNatives);
     REGISTRY_ALL(java_lang_ref_Finalizer_registerNatives);
     REGISTRY_ALL(java_lang_ref_PhantomReference_registerNatives);
@@ -68,10 +69,13 @@ void init_native() {
     REGISTRY_ALL(java_io_FileDescriptor_registerNatives);
     REGISTRY_ALL(java_io_FileInputStream_registerNatives);
     REGISTRY_ALL(java_io_FileOutputStream_registerNatives);
+    REGISTRY_ALL(java_util_TimeZone_registerNatives);
     REGISTRY_ALL(jdk_internal_misc_VM_registerNatives);
     REGISTRY_ALL(jdk_internal_misc_CDS_registerNatives);
     REGISTRY_ALL(jdk_internal_misc_Signal_registerNatives);
     REGISTRY_ALL(jdk_internal_reflect_Reflection_registerNatives);
+    REGISTRY_ALL(jdk_internal_reflect_DirectMethodHandleAccessor$NativeAccessor_registerNatives);
+    REGISTRY_ALL(jdk_internal_reflect_DirectConstructorHandleAccessor$NativeAccessor_registerNatives);
     REGISTRY_ALL(jdk_internal_loader_BootLoader_registerNatives);
     REGISTRY_ALL(jdk_internal_loader_NativeLibraries_registerNatives);
     REGISTRY_ALL(jdk_internal_util_SystemProps$Raw_registerNatives);

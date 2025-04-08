@@ -239,10 +239,10 @@ static void run_all_java_tests() {
     // datetime.DateTimeTest
     // object.StringTest1
     // PrintTest
+    // SwingTest
     // Base64Test
     // RecordTest
     // UnicodeTest
-    // invoke.MethodHandleTest
     // invoke.MethodHandleNativesTest
     // NumberFormatTest
     // method.ArgsPassTest
@@ -259,13 +259,12 @@ static void run_all_java_tests() {
     // thread.DumpAllThreads
     // thread.InterruptFlagTest
     // thread.InterruptionTest
+    // thread.RunnableTest
+    // thread.ThreadSubClassTest
 
     string exclude[] = {
             "network.SocketListenTest",
             "network.SocketConnectTest",
-            "thread.RunnableTest",
-            "thread.SleepTest",
-            "thread.ThreadSubClassTest",
     };
 
     jvmcc.append(" -silent-when-no-main -cp ").append(class_path).append(" ");

@@ -52,3 +52,5 @@ export jref execJavaR(Method *m, std::initializer_list<slot_t> args) {
 // Object[] args;
 export slot_t *execJava(Method *, jref _this, jarrRef args);
 export jref execJavaR(Method *, jref _this, jarrRef args);
+
+export slot_t *call_java(jref method_obj, jref _this, jarrRef args);

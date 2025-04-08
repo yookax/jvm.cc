@@ -56,6 +56,10 @@ set(SOURCE_FILES ${MINIZIP_FILES}
         src/native/jdk/internal/misc/ScopedMemoryAccess.cpp src/classfile/invoke.cpp
         src/native/java/lang/ref/Finalizer.cpp src/native/java/lang/ref/PhantomReference.cpp
         src/native/java/lang/invoke/VarHandle.cpp
+        src/native/java/util/TimeZone.cpp
+        src/native/jdk/internal/reflect/DirectMethodHandleAccessor-NativeAccessor.cpp
+        src/native/java/lang/StackTraceElement.cpp
+        src/native/jdk/internal/reflect/DirectConstructorHandleAccessor-NativeAccessor.cpp
 )
 
 # 这里生成 jvm.dll
