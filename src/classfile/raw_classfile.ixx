@@ -1,4 +1,7 @@
-﻿export module raw_classfile;
+﻿module;
+#include <cassert>
+
+export module raw_classfile;
 
 import std.core;
 import bytes_reader;
@@ -9,7 +12,7 @@ import convert;
 using namespace std;
 
 union ConstantValue {
-    uint16_t utf8_index;
+    uint16_t index;
     int32_t i32;
     int64_t i64;
     float f32;
@@ -37,7 +40,7 @@ union ConstantValue {
         uint16_t reference_index;
     } method_handle;
 
-    explicit ConstantValue(uint16_t x): utf8_index(x) { }
+    explicit ConstantValue(uint16_t x): index(x) { }
     explicit ConstantValue(int32_t x): i32(x) { }
     explicit ConstantValue(int64_t x): i64(x) { }
     explicit ConstantValue(float x): f32(x) { }
@@ -70,18 +73,33 @@ struct RawAttribute {
 
 struct RawField {
     uint16_t access_flags;
-    uint16_t name_index;
-    uint16_t descriptor_index;
+    u8string *name;
+    u8string *descriptor;
     vector<RawAttribute> attributes;
 
-    explicit RawField(BytesReader &r) {
+    explicit RawField(BytesReader &r, vector<pair<uint8_t, ConstantValue>> &cp) {
         access_flags = r.readu2();
-        name_index = r.readu2();
-        descriptor_index = r.readu2();
+
+        auto name_index = r.readu2();
+        auto &[tag, value] = cp.at(name_index);
+        assert(tag == JVM_CONSTANT_Utf8);
+        name = value.str;
+
+        auto descriptor_index = r.readu2();
+        auto &[tag1, value1] = cp.at(descriptor_index);
+        assert(tag1 == JVM_CONSTANT_Utf8);
+        descriptor = value1.str;
+
         uint16_t attributes_count = r.readu2();
         for (uint16_t i = 0; i < attributes_count; i++) {
             attributes.emplace_back(r);
         }
+    }
+
+    string to_str() const {
+        ostringstream oss;
+        oss << (char *) name->c_str() << "~" << (char *) descriptor->c_str() << endl;
+        return oss.str();
     }
 };
 
@@ -96,8 +114,8 @@ export struct RawClassfile {
     uint16_t major_version;
     vector<pair<uint8_t, ConstantValue>> constant_pool;
     uint16_t access_flags;
-    uint16_t this_class;
-    uint16_t super_class;
+    u8string *this_class;
+    u8string *super_class;
     vector<uint16_t> interfaces;
     vector<RawField> fields;
     vector<RawMethod> methods;
@@ -212,8 +230,24 @@ export struct RawClassfile {
         }
 
         access_flags = r.readu2();
-        this_class = r.readu2();
-        super_class = r.readu2();
+
+        auto this_class_index = r.readu2();
+        auto &[tag, value] = constant_pool.at(this_class_index);
+        assert(tag == JVM_CONSTANT_Class);
+        auto &[tag1, value1] = constant_pool.at(value.index);
+        assert(tag1 == JVM_CONSTANT_Utf8);
+        this_class = value1.str;
+
+        auto super_class_index = r.readu2();
+        if (super_class_index == 0) {
+            super_class = nullptr;
+        } else {
+            auto &[tag2, value2] = constant_pool.at(super_class_index);
+            assert(tag2 == JVM_CONSTANT_Class);
+            auto &[tag3, value3] = constant_pool.at(value2.index);
+            assert(tag3 == JVM_CONSTANT_Utf8);
+            super_class = value3.str;
+        }
 
         // ------------------------------ interfaces count -----------------------------
 
@@ -226,14 +260,14 @@ export struct RawClassfile {
 
         auto fields_count = r.readu2();
         for (uint16_t i = 0; i < fields_count; i++) {
-            fields.emplace_back(r);
+            fields.emplace_back(r, constant_pool);
         }
 
         // ----------------------------------- methods ----------------------------------
 
         auto methods_count = r.readu2();
         for (uint16_t i = 0; i < methods_count; i++) {
-            methods.emplace_back(r);
+            methods.emplace_back(r, constant_pool);
         }
 
         // ---------------------------------- attributes --------------------------------
@@ -250,17 +284,23 @@ export struct RawClassfile {
         oss << "minor version: " << minor_version << endl;
         oss << "major version: " << major_version << endl;
         oss << "constant pool: " << constant_pool.size() << endl;
-        for (auto &x: constant_pool) {
-            if (x.first == JVM_CONSTANT_Utf8) {
-                cout << (char *)x.second.str->c_str() << endl;
-            }
-        }
+//        for (auto &x: constant_pool) {
+//            if (x.first == JVM_CONSTANT_Utf8) {
+//                cout << (char *)x.second.str->c_str() << endl;
+//            }
+//        }
         oss << "access flags: " << access_flags << endl;
-        oss << "this class: " << this_class << endl;
-        oss << "super class: " << super_class << endl;
+        oss << "this class: " << (char *) this_class->c_str() << endl;
+        oss << "super class: " << (char *) super_class->c_str() << endl;
         oss << "interfaces: " << interfaces.size() << endl;
         oss << "fields: " << fields.size() << endl;
+        for (auto &f: fields) {
+            oss << "    " << f.to_str();
+        }
         oss << "methods: " << methods.size() << endl;
+        for (auto &m: methods) {
+            oss << "    " << m.to_str();
+        }
         oss << "attributes: " << attributes.size() << endl;
         return oss.str();
     }

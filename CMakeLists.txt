@@ -75,7 +75,7 @@ set(TEST_SOURCE_FILES
 #SET_TARGET_PROPERTIES(jvm PROPERTIES OUTPUT_NAME "jvm" PREFIX "")
 
 # 生成可运行的虚拟机
-add_executable(jvmcc ${SOURCE_FILES} src/cmd/jvmcc.cpp)
+add_executable(jvmcc ${SOURCE_FILES} src/jvmcc.cpp)
 
 #add_executable(javap src/cmd/javap.cpp)
 

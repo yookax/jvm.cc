@@ -200,8 +200,7 @@ public:
         index.read_from(*reader, header);
         resources = reader->curr_pos();
     } catch(...) {
-        std::cerr << "WARNING: Failed to create a memory mapping, "
-                     "which will significantly affect the running speed of the JVM." << endl;
+        panic("ERROR: Failed to create a memory mapping.\n");
     }
 
 //     redirectIndex = hash(path, DEFAULT_SEED) % table_length;

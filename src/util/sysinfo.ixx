@@ -231,10 +231,11 @@ export struct MemMapping {
     MemMapping(const char *file_path) {
         assert(file_path != nullptr);
         // 打开文件
-        HANDLE file = CreateFileA(file_path, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        HANDLE file = CreateFileA(file_path, GENERIC_READ, FILE_SHARE_READ, nullptr,
+                                  OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
         if (file == INVALID_HANDLE_VALUE) {
             std::cerr << "Unable to open the file. " << file_path << std::endl;
-            throw 1;
+            throw GetLastError();
         }
 
         // 创建文件映射对象
@@ -242,7 +243,7 @@ export struct MemMapping {
         if (mapping == nullptr) {
             std::cerr << "Unable to create the file mapping. " << file_path << std::endl;
             CloseHandle(file);
-            throw 2;
+            throw GetLastError();
         }
 
         // 将文件映射到内存
@@ -255,7 +256,7 @@ export struct MemMapping {
 
         if (address == nullptr) {
             std::cerr << "Unable to map the file to memory. " << file_path << std::endl;
-            throw 3;
+            throw GetLastError();
         }
     }
 
