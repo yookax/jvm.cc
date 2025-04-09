@@ -74,7 +74,6 @@ void yield0(Frame *f) {
 void sleepNanos0(Frame *f) {
     slot_t *args = f->lvars;
     auto nanos = slot::get<jlong>(args);
-
     this_thread::sleep_for(std::chrono::nanoseconds(nanos));
 }
 

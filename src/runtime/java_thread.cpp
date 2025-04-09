@@ -104,16 +104,16 @@ static void *invoke_run(void *args) {
 // 下面调用run方法，reference.cpp waitForReferencePendingList 会造成死循环。
 // 暂时先屏蔽调用， 待 waitForReferencePendingList 正确实现后再解除
 
-    // jref tobj = (jref) args;
+    // jref java_thread = (jref) args;
     // auto t = new Thread;
-    // t->bind(tobj);
-    // setStatus(tobj, RUNNING);
-    // TRACE("Create a thread(%s).\n", getNameUtf8(tobj));
+    // t->bind(java_thread);
+    // setStatus(java_thread, RUNNING);
+    // TRACE("Create a thread(%s).\n", getNameUtf8(java_thread));
 
-    // Method *run = tobj->clazz->lookupMethod(S(run), "()V");
-    // return (void *) execJava(run, { rslot(tobj) });
+    // Method *run = java_thread->clazz->lookupMethod(S(run), "()V");
+    // return (void *) execJava(run, { rslot(java_thread) });
 }
 
-void java_lang_Thread::start(jref tobj) {
-    // std::thread t(invoke_run, tobj);
+void java_lang_Thread::start(jref java_thread) {
+//    std::thread t(invoke_run, java_thread);
 }
