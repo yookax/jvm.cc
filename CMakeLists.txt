@@ -60,6 +60,7 @@ set(SOURCE_FILES ${MINIZIP_FILES}
         src/native/jdk/internal/reflect/DirectMethodHandleAccessor-NativeAccessor.cpp
         src/native/java/lang/StackTraceElement.cpp
         src/native/jdk/internal/reflect/DirectConstructorHandleAccessor-NativeAccessor.cpp
+        src/runtime/java_thread.cpp
 )
 
 # 这里生成 jvm.dll

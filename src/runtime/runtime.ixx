@@ -123,8 +123,15 @@ public:
 export std::vector<Thread *> g_all_java_thread;
 
 export namespace java_lang_Thread {
+    void init(jref java_thread, jref thread_group, const char *name);
+
+    void set_vm_thread(Object *java_thread, Thread *t);
+    Thread *get_vm_thread(Object *java_thread);
+
     void start(jref tobj);
     bool isAlive(jref tobj);
+
+    jlong get_eetop(jref java_thread);
 
     void setStatus(jref tobj, jint status);
     jint getStatus(jref tobj);

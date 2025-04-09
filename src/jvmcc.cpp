@@ -240,8 +240,6 @@ static void run_all_java_tests() {
     // object.StringTest1
     // PrintTest
     // SwingTest
-    // Base64Test
-    // RecordTest
     // UnicodeTest
     // invoke.MethodHandleNativesTest
     // NumberFormatTest
@@ -253,19 +251,12 @@ static void run_all_java_tests() {
     // classloader.Demo01
     // stream.StreamTest1
     // stream.TestDefaultInterface
-    // network.UrlTest
-    // network.InetAddressTest
     // thread.AliveTest
     // thread.DumpAllThreads
     // thread.InterruptFlagTest
     // thread.InterruptionTest
     // thread.RunnableTest
     // thread.ThreadSubClassTest
-
-    string exclude[] = {
-            "network.SocketListenTest",
-            "network.SocketConnectTest",
-    };
 
     jvmcc.append(" -silent-when-no-main -cp ").append(class_path).append(" ");
 
@@ -274,17 +265,6 @@ static void run_all_java_tests() {
             // inner class, do not test
             continue;
         }
-
-        bool b = false;
-        for (string &s: exclude) {
-            if (s == cf) {
-                b = true;
-                break;
-            }
-        }
-        if (b)
-            continue;
-
         string s = jvmcc + cf;
         printf("-------------------- %s --------------------\n", cf.c_str());
         std::system(s.c_str());

@@ -121,7 +121,7 @@ void dumpThreads(Frame *f) {
 
     for (size_t i = 0; i < len; i++) {
         jref tobj = threads->getElt<jref>(i);
-        Thread *thread = Thread::from(tobj);
+        Thread *thread = java_lang_Thread::get_vm_thread(tobj);
         jarrRef arr = thread->dump(-1);
         result->setRefElt(i, arr);
     }
@@ -151,7 +151,7 @@ void setPriority0(Frame *f) {
 void interrupt0(Frame *f) {
     slot_t *args = f->lvars;
     auto _this = slot::get<jref>(args);
-    Thread *t = Thread::from(_this);
+    Thread *t = java_lang_Thread::get_vm_thread(_this);
     t->interrupted = true;
 }
 

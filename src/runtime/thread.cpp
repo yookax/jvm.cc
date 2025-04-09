@@ -59,12 +59,11 @@ using namespace java_lang_Thread;
 //#define PARK_RUNNING   1
 //#define PARK_PERMIT    2
 
-//vector<Thread *> g_all_java_thread;
-
 // static pthread_key_t key;
-thread_local Thread *curr_thread;
+thread_local Thread *curr_thread = nullptr;
 
 Thread *get_current_thread() {
+    assert(curr_thread != nullptr);
     return curr_thread;
 }
 
@@ -78,30 +77,16 @@ Thread::Thread() {
     g_all_java_thread.push_back(this);
 }
 
-// Various field and method into java.lang.Thread cached at startup and used in thread creation
-static int eetop_id;
-static int thread_status_id;
-static int holder_id;
-static int name_id;
-static int tid_id;
-
 // Cached java.lang.Thread class
 static Class *thread_class;
 
-// Cached java.lang.Thread$FieldHolder class
-static Class *field_holder_class;
-
-//Thread *g_main_thread;
-
 void Thread::bind(Object *tobj0) {
+    assert(tobj0 != nullptr);
     if (tobj != nullptr) {
-        // todo error
+        return;
     }
-    if (tobj0 == nullptr)    
-        tobj0 = Allocator::object(thread_class);
-
     tobj = tobj0;
-    tobj->set_field_value<jlong>(eetop_id, (jlong) this);
+    java_lang_Thread::set_vm_thread(tobj, this);
 }
 
 // jref to_java_lang_management_ThreadInfo(const Thread *thrd, jbool locked_monitors, 
@@ -127,22 +112,15 @@ void Thread::bind(Object *tobj0) {
 //     return thread_info;
 // }
 
+void init_java_thread();
+
 void init_thread() {
-    // pthread_key_create(&key, nullptr);
-    
     g_main_thread = new Thread;
 
+    init_java_thread();
+
     thread_class = load_boot_class("java/lang/Thread");
-    field_holder_class = load_boot_class("java/lang/Thread$FieldHolder");
     init_class(thread_class);
-    init_class(field_holder_class);
-
-    eetop_id = thread_class->lookup_field("eetop", "J")->id;
-    name_id = thread_class->lookup_field("name", "Ljava/lang/String;")->id;
-    holder_id = thread_class->lookup_field("holder", "Ljava/lang/Thread$FieldHolder;")->id;
-    tid_id = thread_class->lookup_field("tid", "J")->id;
-
-    thread_status_id = field_holder_class->lookup_field("threadStatus", "I")->id;
     
     /* Get system Thread group */
 
@@ -158,92 +136,10 @@ void init_thread() {
     execJava(constructor, { rslot(g_sys_thread_group) });
 
     /* Init main thread */
- 
-    g_main_thread->bind();
-    // public Thread(ThreadGroup group, String name)
-    constructor = thread_class->get_constructor("(Ljava/lang/ThreadGroup;Ljava/lang/String;)V");
-    execJava(constructor, {
-                                rslot(g_main_thread->tobj), 
-                                rslot(g_sys_thread_group), 
-                                rslot(Allocator::string(MAIN_THREAD_NAME))
-                            });
 
-    jref holder = g_main_thread->tobj->get_field_value<jref>(holder_id);
-    holder->set_field_value<jint>("priority", THREAD_NORM_PRIORITY);
-    setStatus(g_main_thread->tobj, RUNNING);
-}
-
-Thread *Thread::from(Object *tobj) {
-    assert(tobj != nullptr);
-    assert(0 <= eetop_id && eetop_id < tobj->clazz->inst_fields_count);
-
-    auto eetop = tobj->get_field_value<jlong>(eetop_id);
-    auto t = (Thread *)eetop;
-
-    assert(t != nullptr && t->tobj == tobj);
-    return t;
-}
-
-Thread *Thread::from(jlong tid) {
-    unimplemented
-}
-
-void java_lang_Thread::setStatus(Object *tobj, jint status) {
-    jref holder = tobj->get_field_value<jref>(holder_id);
-    holder->set_field_value<jint>(thread_status_id, status);
-}
-
-jint java_lang_Thread::getStatus(Object *tobj) {
-    jref holder = tobj->get_field_value<jref>(holder_id);
-    return holder->get_field_value<jint>(thread_status_id);
-}
-
-static void *invoke_run(void *args) {
-    return nullptr;
-
-// 下面调用run方法，reference.cpp waitForReferencePendingList 会造成死循环。
-// 暂时先屏蔽调用， 待 waitForReferencePendingList 正确实现后再解除   
-
-    // jref tobj = (jref) args;
-    // auto t = new Thread;
-    // t->bind(tobj);
-    // setStatus(tobj, RUNNING);
-    // TRACE("Create a thread(%s).\n", getNameUtf8(tobj));
-
-    // Method *run = tobj->clazz->lookupMethod(S(run), "()V");
-    // return (void *) execJava(run, { rslot(tobj) });
-}
-
-void java_lang_Thread::start(jref tobj) {
-//    pthread_t th;
-//    if (pthread_create(&th, nullptr, invoke_run, tobj) != 0) {
-//        // todo error
-//        panic("pthread_create");
-//    }
-
-//    std::thread t(invoke_run, tobj);
-}
-
-bool java_lang_Thread::isAlive(jref tobj) {
-    assert(tobj != nullptr);
-    jint status = getStatus(tobj);
-    // todo BLOCKED 算不算 alive
-    return (status > 0 && status != TERMINATED); 
-}
-
-const char *java_lang_Thread::getNameUtf8(jref tobj) {
-    assert(tobj != nullptr);
-    return java_lang_String::to_utf8(java_lang_Thread::getName(tobj));
-}
-
-const jstrRef java_lang_Thread::getName(jref tobj) {
-    assert(tobj != nullptr);
-    return tobj->get_field_value<jref>(name_id);
-}
-
-const jlong java_lang_Thread::getTid(jref tobj) {
-    assert(tobj != nullptr);
-    return tobj->get_field_value<jlong>(tid_id);
+    jref java_thread = Allocator::object(thread_class);
+    g_main_thread->bind(java_thread);
+    java_lang_Thread::init(java_thread, g_sys_thread_group, MAIN_THREAD_NAME);
 }
 
 Frame *Thread::alloc_frame(Method *m, bool vm_invoke) {
