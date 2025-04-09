@@ -3,6 +3,7 @@
 
 module native;
 
+import std.threading;
 import slot;
 import runtime;
 import object;
@@ -13,8 +14,8 @@ import class_loader;
  */
 // private static native Reference<?> getAndClearReferencePendingList();
 void getAndClearReferencePendingList(Frame *f) {
-    unimplemented // todo
-    // f->pushr(nullptr);
+    f->pushr(nullptr);
+    //unimplemented // todo
 }
 
 /*
@@ -31,6 +32,7 @@ void hasReferencePendingList(Frame *f) {
 // private static native void waitForReferencePendingList();
 void waitForReferencePendingList(Frame *f) {
     // todo
+    std::this_thread::sleep_for(std::chrono::hours(100));
 }
 
 // private native boolean refersTo0(Object o);

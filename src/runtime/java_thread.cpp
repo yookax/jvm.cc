@@ -98,22 +98,22 @@ const jlong java_lang_Thread::getTid(jref java_thread) {
     return java_thread->get_field_value<jlong>(tid_id);
 }
 
-static void *invoke_run(void *args) {
-    return nullptr;
-
+static void invoke_run(jref java_thread) {
 // 下面调用run方法，reference.cpp waitForReferencePendingList 会造成死循环。
 // 暂时先屏蔽调用， 待 waitForReferencePendingList 正确实现后再解除
 
-    // jref java_thread = (jref) args;
-    // auto t = new Thread;
-    // t->bind(java_thread);
-    // setStatus(java_thread, RUNNING);
-    // TRACE("Create a thread(%s).\n", getNameUtf8(java_thread));
+    printvm("%s\n", getNameUtf8(java_thread));
 
-    // Method *run = java_thread->clazz->lookupMethod(S(run), "()V");
-    // return (void *) execJava(run, { rslot(java_thread) });
+     auto t = new Thread;
+     t->bind(java_thread);
+//     setStatus(java_thread, RUNNING);
+     TRACE("Create a thread(%s).\n", getNameUtf8(java_thread));
+
+     Method *run = java_thread->clazz->lookup_method("run", "()V");
+     execJava(run, { rslot(java_thread) });
 }
 
 void java_lang_Thread::start(jref java_thread) {
 //    std::thread t(invoke_run, java_thread);
+//    t.detach();
 }

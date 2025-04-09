@@ -6,7 +6,7 @@ public class RunnableTest implements Runnable {
         Thread t = new Thread(new RunnableTest());
         t.start();
         
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.println("main:" + i);
         }
         t.join();
@@ -14,7 +14,7 @@ public class RunnableTest implements Runnable {
 
     @Override
     public void run() {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.println("run:" + i);
         }
     }
