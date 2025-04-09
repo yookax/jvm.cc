@@ -82,11 +82,11 @@ static Class *thread_class;
 
 void Thread::bind(Object *tobj0) {
     assert(tobj0 != nullptr);
-    if (tobj != nullptr) {
+    if (java_thread != nullptr) {
         return;
     }
-    tobj = tobj0;
-    java_lang_Thread::set_vm_thread(tobj, this);
+    java_thread = tobj0;
+    java_lang_Thread::set_vm_thread(java_thread, this);
 }
 
 // jref to_java_lang_management_ThreadInfo(const Thread *thrd, jbool locked_monitors, 

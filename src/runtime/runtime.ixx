@@ -80,7 +80,7 @@ export class Thread {
 public:
     Frame *top_frame = nullptr;
 
-    Object *tobj = nullptr;  // 所关联的 Object of java.lang.Thread
+    Object *java_thread = nullptr;  // 所关联的 Object of java.lang.Thread
     std::thread::id tid;     // 所关联的 local thread 对应的id
 
     jbool interrupted = false;
@@ -102,9 +102,6 @@ public:
     Thread();
 
     void bind(Object *tobj = nullptr);
-
-    static Thread *from(Object *tobj);
-    static Thread *from(jlong tid);
 
     Frame *alloc_frame(Method *, bool vm_invoke);
     void pop_frame();

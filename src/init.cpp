@@ -225,8 +225,8 @@ void init_jvm() {
     assert(g_app_class_loader != nullptr);
 
     // Main Thread Set ContextClassLoader
-    g_main_thread->tobj->set_field_value<jref>("contextClassLoader",
-                                     "Ljava/lang/ClassLoader;", g_app_class_loader);
+    g_main_thread->java_thread->set_field_value<jref>("contextClassLoader",
+                                                      "Ljava/lang/ClassLoader;", g_app_class_loader);
     g_vm_initing = false;
     TRACE("init jvm is over.\n");
 }

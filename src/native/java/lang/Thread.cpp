@@ -39,7 +39,7 @@ void currentCarrierThread(Frame *f) {
 // public static native Thread currentThread();
 void currentThread(Frame *f) {
     Thread *t = get_current_thread();
-    f->pushr(t->tobj);
+    f->pushr(t->java_thread);
 }
 
 /*
@@ -134,7 +134,7 @@ void getThreads(Frame *f) {
 
     int i = 0;
     for (Thread *t: g_all_java_thread) {
-        threads->setRefElt(i, t->tobj);
+        threads->setRefElt(i, t->java_thread);
         i++;
     }
 
