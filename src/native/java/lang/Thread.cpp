@@ -62,11 +62,7 @@ void setScopedValueCache(Frame *f) {
 
 // static native void ensureMaterializedForStackWalk(Object o);
 void ensureMaterializedForStackWalk(Frame *f) {
-//    slot_t *args = f->lvars;
-//    auto o = slot::get<jref>(args);
-//    //cout << o->clazz->name << endl;
-//    return;
-    unimplemented
+    // todo
 }
 
 // private static native void yield0();

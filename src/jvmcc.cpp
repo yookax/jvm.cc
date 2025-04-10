@@ -5,6 +5,7 @@
 
 import std.core;
 import std.filesystem;
+import std.threading;
 import slot;
 import heap;
 import convert;

@@ -80,13 +80,15 @@ Thread::Thread() {
 // Cached java.lang.Thread class
 static Class *thread_class;
 
-void Thread::bind(Object *tobj0) {
-    assert(tobj0 != nullptr);
-    if (java_thread != nullptr) {
-        return;
+void Thread::bind(std::thread *local_thread0, Object *java_thread0) {
+    assert(java_thread0 != nullptr);
+    if (java_thread == nullptr) {
+        java_thread = java_thread0;
+        java_lang_Thread::set_vm_thread(java_thread, this);
     }
-    java_thread = tobj0;
-    java_lang_Thread::set_vm_thread(java_thread, this);
+    if (local_thread == nullptr) {
+        local_thread = local_thread0;
+    }
 }
 
 // jref to_java_lang_management_ThreadInfo(const Thread *thrd, jbool locked_monitors, 
@@ -138,7 +140,7 @@ void init_thread() {
     /* Init main thread */
 
     jref java_thread = Allocator::object(thread_class);
-    g_main_thread->bind(java_thread);
+    g_main_thread->bind(nullptr, java_thread);
     java_lang_Thread::init(java_thread, g_sys_thread_group, MAIN_THREAD_NAME);
 }
 

@@ -98,22 +98,38 @@ const jlong java_lang_Thread::getTid(jref java_thread) {
     return java_thread->get_field_value<jlong>(tid_id);
 }
 
-static void invoke_run(jref java_thread) {
+static condition_variable cv;
+static mutex cv_mtx;
+
+static void invoke_run(std::thread *local_thread, jref java_thread) {
 // 下面调用run方法，reference.cpp waitForReferencePendingList 会造成死循环。
 // 暂时先屏蔽调用， 待 waitForReferencePendingList 正确实现后再解除
 
-    printvm("%s\n", getNameUtf8(java_thread));
+    unique_lock<mutex> lock(cv_mtx);
+
+    //printvm("%s\n", getNameUtf8(java_thread));
 
      auto t = new Thread;
-     t->bind(java_thread);
+     t->bind(local_thread, java_thread);
 //     setStatus(java_thread, RUNNING);
      TRACE("Create a thread(%s).\n", getNameUtf8(java_thread));
+    lock.unlock();
+    cv.notify_one();
 
-     Method *run = java_thread->clazz->lookup_method("run", "()V");
-     execJava(run, { rslot(java_thread) });
+    Method *run = java_thread->clazz->lookup_method("run", "()V");
+    execJava(run, { rslot(java_thread) });
 }
 
+static mutex new_thread_mutex;
+
 void java_lang_Thread::start(jref java_thread) {
-//    std::thread t(invoke_run, java_thread);
+    scoped_lock lock(new_thread_mutex);
+    unique_lock<mutex> _lock(cv_mtx);
+
+    auto x = new std::thread;
+    std::thread t(invoke_run, x, java_thread);
+    cv.wait(_lock);
+
+    *x = std::move(t);
 //    t.detach();
 }

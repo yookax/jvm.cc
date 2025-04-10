@@ -82,6 +82,7 @@ public:
 
     Object *java_thread = nullptr;  // 所关联的 Object of java.lang.Thread
     std::thread::id tid;     // 所关联的 local thread 对应的id
+    std::thread *local_thread = nullptr;
 
     jbool interrupted = false;
 
@@ -101,7 +102,7 @@ public:
 
     Thread();
 
-    void bind(Object *tobj = nullptr);
+    void bind(std::thread *local_thread0, Object *java_thread0);
 
     Frame *alloc_frame(Method *, bool vm_invoke);
     void pop_frame();
