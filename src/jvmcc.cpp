@@ -82,7 +82,7 @@ int run_jvm(int argc, char* argv[]) {
 
     init_jvm();
 
-    Class *main_class = loadClass(g_app_class_loader, utf8::dot_2_slash(main_class_name));
+    Class *main_class = load_class(g_app_class_loader, utf8::dot_2_slash(main_class_name));
     if (main_class == nullptr) {
         panic("main_class == NULL"); // todo
     }

@@ -373,7 +373,7 @@ Class *ConstantPool::resolve_class(u2 i) {
         return (Class *) info[i];
     }
     
-    Class *c = loadClass(owner->loader, class_name(i));
+    Class *c = load_class(owner->loader, class_name(i));
     set_type(i, JVM_CONSTANT_ResolvedClass);
     set_info(i, (slot_t) c);
 

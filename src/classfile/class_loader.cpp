@@ -284,7 +284,7 @@ ArrayClass *load_array_class(Object *loader, const utf8_t *arr_class_name) {
     assert(arr_class_name[0] == '['); // must be array class name
 
     const char *elt_class_name = arr_class_name_2_elt_class_name(arr_class_name);
-    Class *c = loadClass(loader, elt_class_name);
+    Class *c = load_class(loader, elt_class_name);
     if (c == nullptr)
         return nullptr; // todo
 
@@ -349,7 +349,7 @@ Class *find_loaded_class(Object *class_loader, const utf8_t *name) {
     return nullptr;
 }
 
-Class *loadClass(Object *class_loader, const utf8_t *name) {
+Class *load_class(Object *class_loader, const utf8_t *name) {
     assert(name != nullptr);
 //    assert(isSlashName(name));
 
@@ -369,7 +369,7 @@ Class *loadClass(Object *class_loader, const utf8_t *name) {
     // todo 再尝试用扩展classLoader load the class
 
     // public Class<?> loadClass(String name) throws ClassNotFoundException
-    Method *m = class_loader->clazz->lookup_method("loadClass",
+    Method *m = class_loader->clazz->lookup_method("load_class",
                                    "(Ljava/lang/String;)Ljava/lang/Class;");
     assert(m != nullptr && !m->access_flags.is_static());
 

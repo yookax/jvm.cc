@@ -103,7 +103,7 @@ Class *ArrayClass::get_component_class() {
     auto buf = new char[last + 1];
     strncpy(buf, comp_name, last);
     buf[last] = 0;
-    comp_class = loadClass(loader, buf);
+    comp_class = load_class(loader, buf);
     delete[] buf;
     return comp_class;
 }

@@ -587,7 +587,7 @@ void forName0(Frame *f) {
     auto caller = slot::get<jref>(args);
 
     // todo
-    Class *c = loadClass(loader, java_lang_String::to_utf8(classname));
+    Class *c = load_class(loader, java_lang_String::to_utf8(classname));
     if (c == nullptr) {
         throw java_lang_ClassNotFoundException(); // todo msg
         // todo ClassNotFoundException

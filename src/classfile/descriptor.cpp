@@ -55,7 +55,7 @@ static Object *convertDescElement2ClassObject(const char *&b, const char *e, jre
         }
 
         b++; // jump 'L'
-        auto c = loadClass(loader, string(b, t - b).c_str());
+        auto c = load_class(loader, string(b, t - b).c_str());
         b = t + 1;
         return c->java_mirror;
     }

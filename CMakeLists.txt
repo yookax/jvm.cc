@@ -27,9 +27,17 @@ endif()
 # 包含 minizip 头文件目录
 # target_include_directories(jvmcc PRIVATE lib/zlib-1.3.1/minizip)
 
+#find_package(ZLIB)
+#if(ZLIB_FOUND)
+##    target_include_directories(clib PRIVATE ${CURL_INCLUDE_DIR})
+##    target_link_libraries(curltest ${CURL_LIBRARY})
+#else()
+#    message(FATAL_ERROR ”ZLIB library not found”)
+#endif()
+
 add_subdirectory(lib/minizip)
 
-set(SOURCE_FILES ${MINIZIP_FILES}
+set(SOURCE_FILES
         src/interpreter.cpp src/classfile/descriptor.cpp src/classfile/module.cpp
         src/encoding.cpp src/classfile/poly.cpp
         src/runtime/thread.cpp src/runtime/heap.cpp src/classfile/method.cpp
@@ -71,7 +79,7 @@ set(SOURCE_FILES ${MINIZIP_FILES}
 # 总之一句话，无论Debug版还是Release版jvm.dll中导出所有zip.dll和java.dll中所依赖的函数。
 
 # 生成可运行的虚拟机
-add_executable(jvmcc ${SOURCE_FILES} src/jvmcc.cpp)
+add_executable(jvmcc ${SOURCE_FILES} ${MINIZIP_FILES} src/jvmcc.cpp)
 
 #add_executable(javap src/cmd/javap.cpp)
 

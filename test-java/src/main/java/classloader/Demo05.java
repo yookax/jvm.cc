@@ -16,7 +16,7 @@ public class Demo05 {
 		Thread.currentThread().setContextClassLoader(new FileSystemClassLoader("d:/myjava/"));
 		System.out.println(Thread.currentThread().getContextClassLoader());
 		
-		Class<Demo01> c = (Class<Demo01>) Thread.currentThread().getContextClassLoader().loadClass("com.bjsxt.test.Demo01");
+		Class<Demo01> c = (Class<Demo01>) Thread.currentThread().getContextClassLoader().load_class("com.bjsxt.test.Demo01");
 		System.out.println(c);
 		System.out.println(c.getClassLoader());
 		

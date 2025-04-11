@@ -15,7 +15,7 @@ public class Demo04 {
 //		System.out.println(c);
 		
 		DecrptClassLoader loader = new DecrptClassLoader("d:/myjava/temp");
-		Class<?> c = loader.loadClass("HelloWorld");
+		Class<?> c = loader.load_class("HelloWorld");
 		System.out.println(c);
 		
 	}

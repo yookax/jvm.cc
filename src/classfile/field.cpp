@@ -115,7 +115,7 @@ jclsRef Field::get_type() {
         auto buf = new utf8_t[strlen(descriptor)];
         // don't include the first 'L' and the last ';'
         buf[strlen(strcpy(buf, descriptor + 1)) - 1] = 0;
-        auto c = loadClass(clazz->loader, buf)->java_mirror;
+        auto c = load_class(clazz->loader, buf)->java_mirror;
         delete[] buf;
         return c;
     }

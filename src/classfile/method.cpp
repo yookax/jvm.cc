@@ -46,7 +46,7 @@ jclsRef Method::get_return_type() {
 
 jarrRef Method::get_exception_types() {
     jint count = (jint) checked_exceptions.size();
-    auto ac = (ArrayClass *) loadClass(clazz->loader, "[Ljava/lang/Class;");
+    auto ac = (ArrayClass *) load_class(clazz->loader, "[Ljava/lang/Class;");
     jarrRef exception_types = Allocator::array(ac, count);
 
     for (int i = 0; i < count; i++) {
@@ -324,7 +324,7 @@ int Method::find_exception_handler(Class *exception_type, size_t pc) {
             if (t.catch_type == nullptr)  // catch all
                 return t.handler_pc;
             if (!t.catch_type->resolved) {
-                t.catch_type->clazz = loadClass(clazz->loader, t.catch_type->class_name);
+                t.catch_type->clazz = load_class(clazz->loader, t.catch_type->class_name);
                 t.catch_type->resolved = true;
             }
             if (exception_type->is_subclass_of(t.catch_type->clazz))

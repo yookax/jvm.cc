@@ -186,7 +186,7 @@ void Class::parse_attribute(BytecodeReader &r, u2 this_idx) {
             for (u2 j = 0; j < num; j++) {
                 utf8_t *class_name = cp->class_name(r.readu2());
                 nest_members.push_back(class_name);
-                // 不要在这里 loadClass，有死循环的问题。
+                // 不要在这里 load_class，有死循环的问题。
                 // 比如java.lang.invoke.TypeDescriptor
                 // 和其NestMember：java.lang.invoke.TypeDescriptor$OfField
             }
@@ -978,7 +978,7 @@ vector<void *>& Class::get_nest_members() {
         return host->nest_members;
 
     for (auto &p: host->nest_members) {
-        p = loadClass(loader, (const utf8_t *) p);
+        p = load_class(loader, (const utf8_t *) p);
     }
 
     host->nest_members.push_back(host); 

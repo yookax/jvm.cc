@@ -47,7 +47,7 @@ export utf8_set &get_boot_packages();
  *    - non-array classes: java/lang/Object ...
  *    - array classes: [Ljava/lang/Object; ...
  */
-export Class *loadClass(Object *class_loader, const utf8_t *name);
+export Class *load_class(Object *class_loader, const utf8_t *name);
 
 export Class *find_loaded_class(Object *class_loader, const utf8_t *name);
 

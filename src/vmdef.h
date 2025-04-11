@@ -113,15 +113,6 @@ JavaValueType = std::is_same_v<T, jint>
                 || std::is_same_v<T, jfloat> || std::is_same_v<T, jlong>
                 || std::is_same_v<T, jdouble> || std::is_same_v<T, jref>;
 
-struct Property {
-    const utf8_t *name;
-    const utf8_t *value;
-    Property(const utf8_t *name0, const utf8_t *value0): name(name0), value(value0) {
-        assert(name != nullptr);
-        assert(value != nullptr);
-    }
-};
-
 /* This number, mandated by the JVM spec as 255,
  * is the maximum number of slots
  * that any Java method can receive in its argument list.
