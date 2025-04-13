@@ -369,7 +369,7 @@ Class *load_class(Object *class_loader, const utf8_t *name) {
     // todo 再尝试用扩展classLoader load the class
 
     // public Class<?> loadClass(String name) throws ClassNotFoundException
-    Method *m = class_loader->clazz->lookup_method("load_class",
+    Method *m = class_loader->clazz->lookup_method("loadClass",
                                    "(Ljava/lang/String;)Ljava/lang/Class;");
     assert(m != nullptr && !m->access_flags.is_static());
 
