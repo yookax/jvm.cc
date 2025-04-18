@@ -78,5 +78,7 @@ export std::u8string *mutf8_to_new_utf8(const uint8_t *mutf8, size_t len) {
 export std::u16string utf8_to_utf16(const std::u8string& utf8_str);
 export std::optional<std::string> utf8_to_latin1(const std::u8string& utf8_str);
 
+// ---------------------------------------------------------------------------------------
+
 export void test_utf8_to_latin1();
 export void test_utf8_to_utf16();

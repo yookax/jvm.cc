@@ -10,9 +10,8 @@ project(jvmcc)
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 # set(CMAKE_CXX_EXTENSIONS OFF)
-
+set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts")
 endif()
@@ -80,14 +79,6 @@ set(SOURCE_FILES
 
 # 生成可运行的虚拟机
 add_executable(jvmcc ${SOURCE_FILES} ${MINIZIP_FILES} src/jvmcc.cpp)
-
-#add_executable(javap src/cmd/javap.cpp)
-
-#add_executable(jmod ${MINIZIP_FILES} src/cmd/jmod.cpp)
-
-#add_executable(jimage src/cmd/jimage.cpp)
-
-#add_executable(jvmcc-test ${SOURCE_FILES} ${SOURCE_FILES})
 
 # 创建CXX_MODULES类型的FILE_SET
 target_sources(jvmcc

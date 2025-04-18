@@ -245,51 +245,41 @@ u8string *mutf8_to_utf8(const uint8_t *mutf8, size_t len, u8string *utf8) {
             i += 2;
         } else if ((byte & 0x80) == 0) {
             // 单字节字符
-//            utf8 += static_cast<char>(byte);
             utf8->push_back(byte);
             ++i;
         } else if ((byte & 0xE0) == 0xC0) {
             // 双字节字符
             if (i + 1 < len) {
-                uint8_t nextByte = mutf8[++i];
-//                utf8 += static_cast<char>(byte);
-//                utf8 += static_cast<char>(nextByte);
+                uint8_t next_byte = mutf8[++i];
                 utf8->push_back(byte);
-                utf8->push_back(nextByte);
+                utf8->push_back(next_byte);
             }
             ++i;
         } else if ((byte & 0xF0) == 0xE0) {
             // 三字节字符
             if (i + 2 < len) {
-                uint8_t nextByte1 = mutf8[++i];
-                uint8_t nextByte2 = mutf8[++i];
-//                utf8 += static_cast<char>(byte);
-//                utf8 += static_cast<char>(nextByte1);
-//                utf8 += static_cast<char>(nextByte2);
+                uint8_t next_byte1 = mutf8[++i];
+                uint8_t next_byte2 = mutf8[++i];
                 utf8->push_back(byte);
-                utf8->push_back(nextByte1);
-                utf8->push_back(nextByte2);
+                utf8->push_back(next_byte1);
+                utf8->push_back(next_byte2);
             }
             ++i;
         } else if ((byte & 0xF8) == 0xF0) {
             // 处理 Java 虚拟机使用的两个三字节格式
             if (i + 5 < len) {
-                uint32_t codePoint = ((mutf8[i] & 0x07) << 18) |
+                uint32_t code_point = ((mutf8[i] & 0x07) << 18) |
                                      ((mutf8[i + 1] & 0x3F) << 12) |
                                      ((mutf8[i + 2] & 0x3F) << 6) |
                                      ((mutf8[i + 3] & 0x07) << 18) |
                                      ((mutf8[i + 4] & 0x3F) << 12) |
                                      (mutf8[i + 5] & 0x3F);
-                if (codePoint >= 0x10000 && codePoint <= 0x10FFFF) {
+                if (code_point >= 0x10000 && code_point <= 0x10FFFF) {
                     // 转换为标准 UTF-8 的四字节编码
-//                    utf8 += static_cast<char>(0xF0 | ((codePoint >> 18) & 0x07));
-//                    utf8 += static_cast<char>(0x80 | ((codePoint >> 12) & 0x3F));
-//                    utf8 += static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F));
-//                    utf8 += static_cast<char>(0x80 | (codePoint & 0x3F));
-                    utf8->push_back(0xF0 | ((codePoint >> 18) & 0x07));
-                    utf8->push_back(0x80 | ((codePoint >> 12) & 0x3F));
-                    utf8->push_back(0x80 | ((codePoint >> 6) & 0x3F));
-                    utf8->push_back(0x80 | (codePoint & 0x3F));
+                    utf8->push_back(0xF0 | ((code_point >> 18) & 0x07));
+                    utf8->push_back(0x80 | ((code_point >> 12) & 0x3F));
+                    utf8->push_back(0x80 | ((code_point >> 6) & 0x3F));
+                    utf8->push_back(0x80 | (code_point & 0x3F));
                 }
             }
             i += 6;
