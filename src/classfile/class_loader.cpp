@@ -1,7 +1,9 @@
 module;
 #include <cassert>
+#ifdef ENABLE_ZLIB
+#include <unzip.h>
+#endif
 #include "../vmdef.h"
-#include "../../lib/minizip/unzip.h"
 
 module class_loader;
 
@@ -123,6 +125,8 @@ static void init_classpath() {
     }
 }
 
+#ifdef ENABLE_ZLIB
+
 enum ClassLocation {
     IN_JAR,
     IN_MODULE
@@ -188,6 +192,7 @@ static optional<pair<u1 *, size_t>> read_class(const char *path,
         throw java_io_IOException(string("unzReadCurrentFile failed: ") + path);
     return make_pair(bytecode, uncompressed_size);
 }
+#endif
 
 /*
  * Read JDK 类库中的类，不包括Array Class.
@@ -208,6 +213,7 @@ static optional<pair<const u1 *, size_t>> read_boot_class(const utf8_t *class_na
             }
         }
     } else {
+#ifdef ENABLE_ZLIB
         // The jimage is invalid, read from the jmods.
         for (auto &mod : jdk_modules) {
             auto content = read_class(mod.c_str(), class_name, IN_MODULE);
@@ -215,6 +221,7 @@ static optional<pair<const u1 *, size_t>> read_boot_class(const utf8_t *class_na
                 return content;
             }
         }
+#endif
     }
 
     return nullopt;
