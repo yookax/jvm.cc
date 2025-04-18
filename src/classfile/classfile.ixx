@@ -10,7 +10,7 @@ import slot;
 import access_flags;
 import encoding;
 import constants;
-import bytecode_reader;
+import bytes_reader;
 
 // 从 1 开始计数，第0位无效
 export class ConstantPool {
@@ -26,7 +26,7 @@ private:
     // Empty ConstantPool
     explicit ConstantPool(Class *c);
 
-    ConstantPool(Class *c, BytecodeReader &r);
+    ConstantPool(Class *c, BytesReader &r);
 
 public:
     ~ConstantPool();
@@ -139,7 +139,7 @@ export struct ModuleAttribute {
         // then no version information about the current module is present.
         const utf8_t *version;
 
-        explicit Require(ConstantPool &cp, BytecodeReader &r);
+        explicit Require(ConstantPool &cp, BytesReader &r);
     };
     std::vector<Require> _requires;
 
@@ -148,7 +148,7 @@ export struct ModuleAttribute {
         u2 flags;
         std::vector<const utf8_t *> exports_to;
 
-        explicit Export(ConstantPool &cp, BytecodeReader &r);
+        explicit Export(ConstantPool &cp, BytesReader &r);
     };
     std::vector<Export> exports;
 
@@ -157,7 +157,7 @@ export struct ModuleAttribute {
         u2 flags;
         std::vector<const utf8_t *> opens_to;
 
-        explicit Open(ConstantPool &cp, BytecodeReader &r);
+        explicit Open(ConstantPool &cp, BytesReader &r);
     };
     std::vector<Open> opens;
 
@@ -167,11 +167,11 @@ export struct ModuleAttribute {
         const utf8_t *class_name;
         std::vector<const utf8_t *> provides_with;
 
-        explicit Provide(ConstantPool &cp, BytecodeReader &r);
+        explicit Provide(ConstantPool &cp, BytesReader &r);
     };
     std::vector<Provide> provides;
 
-    explicit ModuleAttribute(ConstantPool &cp, BytecodeReader &r);
+    explicit ModuleAttribute(ConstantPool &cp, BytesReader &r);
 };
 
 
@@ -183,7 +183,7 @@ export struct Annotation {
     u1 *data = nullptr;
     u4 len = 0;
 
-    void parse(BytecodeReader &r, u4 attr_len) {
+    void parse(BytesReader &r, u4 attr_len) {
         len = attr_len;
         data = new u1[len];
         memcpy(data, r.curr_pos(), len);
@@ -230,7 +230,7 @@ export struct BootstrapMethod {
 
     Class *owner;
 
-    explicit BootstrapMethod(Class *owner0, BytecodeReader &r);
+    explicit BootstrapMethod(Class *owner0, BytesReader &r);
 
     // slot_t *resolveArgs(ConstantPool *cp, slot_t *result);
     bool resolve_args(jobjArrRef &result);
@@ -346,7 +346,7 @@ public:
         Annotation rt_visi_type_annos;  // Runtime Visible Type Annotations
         Annotation rt_invisi_type_annos;// Runtime Invisible Type Annotations
 
-        RecordComponent(BytecodeReader &r, ConstantPool &cp);
+        RecordComponent(BytesReader &r, ConstantPool &cp);
     };
     std::vector<RecordComponent> record; // Present if is this class is a record
 
@@ -376,7 +376,7 @@ private:
 
     // 计算字段的个数，同时给它们编号
     void calc_fields_id();
-    void parse_attribute(BytecodeReader &r, u2 this_idx);
+    void parse_attribute(BytesReader &r, u2 this_idx);
 
     void create_vtable();
     void create_itable();
@@ -583,7 +583,7 @@ public:
         int id;
     };
 
-    Field(Class *c, BytecodeReader &r);
+    Field(Class *c, BytesReader &r);
 
     Field(Class *, const utf8_t *name, const utf8_t *descriptor, int access_flags);
 
@@ -648,7 +648,7 @@ private:
         // const utf8_t *name = nullptr;
         u2 access_flags;
 
-        explicit MethodParameter(ConstantPool &cp, BytecodeReader &r) {
+        explicit MethodParameter(ConstantPool &cp, BytesReader &r) {
             name_index = r.readu2();
             // If the value of the name_index item is zero,
             // then this parameters element indicates a formal parameter with no name.
@@ -678,7 +678,7 @@ private:
         };
         u2 index;
 
-        explicit LocalVarTable(BytecodeReader &r) {
+        explicit LocalVarTable(BytesReader &r) {
             start_pc = r.readu2();
             u2 length = r.readu2();
             end_pc = start_pc + length;
@@ -715,7 +715,7 @@ public:
             };
         } *catch_type = nullptr;
 
-        ExceptionTable(Class *clazz, BytecodeReader &r);
+        ExceptionTable(Class *clazz, BytesReader &r);
     };
 
     std::vector<ExceptionTable> exception_tables;
@@ -724,12 +724,12 @@ private:
     // 用来创建 polymorphic method
     Method(Class *c, const utf8_t *name, const utf8_t *descriptor, int acc);
 
-    void parse_code_attr(BytecodeReader &r);
+    void parse_code_attr(BytesReader &r);
     void determine_ret_type();
     void gen_native_method_info();
 
 public:
-    Method(Class *c, BytecodeReader &r);
+    Method(Class *c, BytesReader &r);
 
     /*
      * 判断此方法是否由 invokevirtual 指令调用，

@@ -179,7 +179,7 @@ void set_boot_loader_unnamed_module(jref module) {
 }
 
 
-ModuleAttribute::ModuleAttribute(ConstantPool &cp, BytecodeReader &r) {
+ModuleAttribute::ModuleAttribute(ConstantPool &cp, BytesReader &r) {
     module_name = cp.module_name(r.readu2());
     module_flags = r.readu2();
     u2 v = r.readu2();
@@ -211,14 +211,14 @@ ModuleAttribute::ModuleAttribute(ConstantPool &cp, BytecodeReader &r) {
     }
 }
 
-ModuleAttribute::Require::Require(ConstantPool &cp, BytecodeReader &r) {
+ModuleAttribute::Require::Require(ConstantPool &cp, BytesReader &r) {
     require_module_name = cp.module_name(r.readu2());
     flags = r.readu2();
     u2 v = r.readu2();
     version = v == 0 ? nullptr : cp.utf8(v);
 }
 
-ModuleAttribute::Export::Export(ConstantPool &cp, BytecodeReader &r) {
+ModuleAttribute::Export::Export(ConstantPool &cp, BytesReader &r) {
     export_package_name = cp.package_name(r.readu2());
     flags = r.readu2();
     u2 exports_to_count = r.readu2();
@@ -227,7 +227,7 @@ ModuleAttribute::Export::Export(ConstantPool &cp, BytecodeReader &r) {
     }
 }
 
-ModuleAttribute::Open::Open(ConstantPool &cp, BytecodeReader &r) {
+ModuleAttribute::Open::Open(ConstantPool &cp, BytesReader &r) {
     open_package_name = cp.package_name(r.readu2());
     flags = r.readu2();
     u2 exports_to_count = r.readu2();
@@ -236,7 +236,7 @@ ModuleAttribute::Open::Open(ConstantPool &cp, BytecodeReader &r) {
     }
 }
 
-ModuleAttribute::Provide::Provide(ConstantPool &cp, BytecodeReader &r) {
+ModuleAttribute::Provide::Provide(ConstantPool &cp, BytesReader &r) {
     class_name = cp.class_name(r.readu2());
     u2 provides_with_count = r.readu2();
     for (u2 i = 0; i < provides_with_count; i++) {

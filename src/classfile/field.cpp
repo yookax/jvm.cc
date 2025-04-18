@@ -10,7 +10,7 @@ import primitive;
 
 using namespace std;
 
-Field::Field(Class *c, BytecodeReader &r) {
+Field::Field(Class *c, BytesReader &r) {
     assert(c != nullptr);
 
     clazz = c;

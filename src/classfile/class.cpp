@@ -15,7 +15,7 @@ using namespace std;
 using namespace slot;
 using namespace utf8;
 
-BootstrapMethod::BootstrapMethod(Class *owner0, BytecodeReader &r): owner(owner0) {
+BootstrapMethod::BootstrapMethod(Class *owner0, BytesReader &r): owner(owner0) {
     assert(owner != nullptr);
     bootstrap_method_ref = r.readu2();
     u2 num = r.readu2();
@@ -75,7 +75,7 @@ void Class::calc_fields_id() {
     inst_fields_count = ins_id;
 }
 
-Class::RecordComponent::RecordComponent(BytecodeReader &r, ConstantPool &cp) {
+Class::RecordComponent::RecordComponent(BytesReader &r, ConstantPool &cp) {
     name = cp.utf8(r.readu2());
     descriptor = cp.utf8(r.readu2());
 
@@ -101,7 +101,7 @@ Class::RecordComponent::RecordComponent(BytecodeReader &r, ConstantPool &cp) {
     }
 }
 
-void Class::parse_attribute(BytecodeReader &r, u2 this_idx) {
+void Class::parse_attribute(BytesReader &r, u2 this_idx) {
     u2 attr_count = r.readu2();
 
     for (int i = 0; i < attr_count; i++) {
@@ -381,7 +381,7 @@ void Class::generate_pkg_name() {
 Class::Class(jref class_loader, const u1 *bytecode, size_t len): loader(class_loader) {
     assert(bytecode != nullptr);
 
-    BytecodeReader r(bytecode, len);
+    BytesReader r(bytecode, len, std::endian::big);
 
     u4 magic = r.readu4();
     if (magic != 0xcafebabe) {

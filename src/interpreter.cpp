@@ -8,7 +8,7 @@ import slot;
 import runtime;
 import object;
 import classfile;
-import bytecode_reader;
+import bytes_reader;
 import class_loader;
 import dll;
 import native;
@@ -27,12 +27,12 @@ using namespace utf8;
  * 得到当前指令前面最近一条 aload 指令的 index 值。
  * 失败返回小于0
  */
-static int get_prev_aload_opc_index(BytecodeReader &r) {
+static int get_prev_aload_opc_index(BytesReader &r) {
     // 五种指令（aload, aload_0, aload_1, aload_2, aload_3）
     // 其中（aload_0, aload_1, aload_2, aload_3）指令长度为1，
     // aload 指令长度为2，如果 aload 前面有 wide指令，这aload 指令长度为3
 
-    r.savePC();
+    r.save_pc();
     
     int index_in_lvars = -1;
     auto curr = r.pc;
@@ -61,7 +61,7 @@ static int get_prev_aload_opc_index(BytecodeReader &r) {
         }
     }
     
-    r.recoverPC(); 
+    r.recover_pc();
     return index_in_lvars;
 }
 
@@ -109,7 +109,7 @@ static slot_t *exec(jref &excep) {
 
     int ret_value_slots_count;
 
-    BytecodeReader *reader = &frame->reader;
+    BytesReader *reader = &frame->reader;
     Class *clazz = frame->method->clazz;
     ConstantPool *cp = frame->method->clazz->cp;
     // slot_t *ostack = frame->ostack;

@@ -20,7 +20,7 @@ ConstantPool::ConstantPool(Class *c): owner(c), size(1) {
     type[0] = JVM_CONSTANT_Invalid; // constant pool 从 1 开始计数，第0位无效
 }
 
-ConstantPool::ConstantPool(Class *c, BytecodeReader &r): owner(c) {
+ConstantPool::ConstantPool(Class *c, BytesReader &r): owner(c) {
     assert(owner != nullptr);
 
     size = r.readu2();

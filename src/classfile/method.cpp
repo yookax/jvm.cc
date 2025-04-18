@@ -9,7 +9,7 @@ import class_loader;
 
 using namespace std;
 
-Method::ExceptionTable::ExceptionTable(Class *clazz, BytecodeReader &r) {
+Method::ExceptionTable::ExceptionTable(Class *clazz, BytesReader &r) {
     start_pc = r.readu2();
     end_pc = r.readu2();
     handler_pc = r.readu2();
@@ -102,7 +102,7 @@ u2 Method::cal_args_slots_count(const utf8_t *descriptor, bool is_static) {
 /*
  * 解析方法的 code 属性
  */
-void Method::parse_code_attr(BytecodeReader &r) {
+void Method::parse_code_attr(BytesReader &r) {
     max_stack = r.readu2();
     max_locals = r.readu2();
     code_len = r.readu4();
@@ -205,7 +205,7 @@ void Method::gen_native_method_info() {
     }
 }
 
-Method::Method(Class *c, BytecodeReader &r) {
+Method::Method(Class *c, BytesReader &r) {
     assert(c != nullptr);
 
     clazz = c;
@@ -380,7 +380,7 @@ string Method::toString() const {
 string Method::get_bytecode_string() const {
     ostringstream oss;
 
-    BytecodeReader r(code, code_len);
+    BytesReader r(code, code_len, std::endian::big);
     ConstantPool *cp = clazz->cp;
 
     while (r.has_more()) {

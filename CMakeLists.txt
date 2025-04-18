@@ -20,14 +20,14 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8 /execution-charset:utf-8 /experimental:module ") # /W4
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8 /experimental:module ") # /W4
 endif()
 
 find_package(ZLIB)
 if(ZLIB_FOUND)
     add_definitions(-DENABLE_ZLIB)
-#    target_include_directories(clib PRIVATE ${CURL_INCLUDE_DIR})
-#    target_link_libraries(curltest ${CURL_LIBRARY})
+#    target_include_directories()
+#    target_link_libraries()
 endif()
 
 file(GLOB_RECURSE

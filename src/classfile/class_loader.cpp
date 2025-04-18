@@ -572,7 +572,7 @@ TEST_CASE(test_classloader)
     }
 
     auto bc = getAllBootClasses();
-    printf("---\n\tboot classes count: %d\n", bc->size());
+    printf("---\n\tboot classes count: %zd\n", bc->size());
     for (auto &p: *bc) {
         printf("\t\t%s\n", p.first);
     }

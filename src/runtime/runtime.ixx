@@ -8,11 +8,11 @@ import std.core;
 import std.threading;
 import slot;
 import classfile;
-import bytecode_reader;
+import bytes_reader;
 
 export struct Frame {
     Method *method;
-    BytecodeReader reader;
+    BytesReader reader;
 
     /*
      * this frame 执行的函数是否由虚拟机调用
@@ -30,7 +30,7 @@ export struct Frame {
     slot_t *ostack;  // operand stack,指向栈顶，当前值(*ostack)无效
 
     Frame(Method *m, bool vm_invoke0, slot_t *lvars0, slot_t *ostack0, Frame *prev0)
-            : method(m), reader(m->code, m->code_len), vm_invoke(vm_invoke0),
+            : method(m), reader(m->code, m->code_len, std::endian::big), vm_invoke(vm_invoke0),
               prev(prev0), lvars(lvars0), ostack(ostack0)
     { assert(m != nullptr && lvars != nullptr && ostack != nullptr); }
 
