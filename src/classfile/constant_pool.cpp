@@ -2,7 +2,7 @@ module;
 #include <cassert>
 #include "../vmdef.h"
 
-module classfile;
+module constant_pool;
 
 import std.core;
 import slot;
