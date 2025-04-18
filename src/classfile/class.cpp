@@ -367,14 +367,15 @@ void Class::generate_pkg_name() {
     } else {
         *p = 0; // 得到包名
         slash_2_dot(pkg);
-        const utf8_t *hashed = utf8_pool::find(pkg);
-        if (hashed != nullptr) {
-            free(pkg);
-            pkg_name = hashed;
-        } else {
-            pkg_name = pkg;
-            utf8_pool::save(pkg_name);
-        }
+        pkg_name = pkg;
+//        const utf8_t *hashed = utf8_pool::find(pkg);
+//        if (hashed != nullptr) {
+//            free(pkg);
+//            pkg_name = hashed;
+//        } else {
+//            pkg_name = pkg;
+//            utf8_pool::save(pkg_name);
+//        }
     }
 }
 

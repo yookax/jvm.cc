@@ -15,6 +15,48 @@ export class ConstantPool {
 public:
     u1 *type = nullptr;
     slot_t *info = nullptr;
+
+    union Value {
+        uint16_t index;
+        int32_t i32;
+        int64_t i64;
+        float f32;
+        double f64;
+
+        MUTF8 mutf8;
+        utf8_t *buf;
+
+        struct {
+            uint16_t _1;
+            uint16_t _2;
+        } double_u2;
+
+        struct {
+            uint16_t name_index;
+            uint16_t descriptor_index;
+        } name_and_type;
+
+        struct {
+            uint16_t class_index;
+            uint16_t name_and_type_index;
+        } field, method, interface_method;
+
+        struct {
+            uint16_t bootstrap_method_attr_index;
+            uint16_t name_and_type_index;
+        } dynamic, invoke_dynamic;
+
+        struct {
+            uint8_t reference_kind;
+            uint16_t reference_index;
+        } method_handle;
+
+        Class *resolved_class;
+        Method *resolved_method;
+        Field *resolved_field;
+        Object *resolved_string;
+    } *values = nullptr;
+
     u2 size = 0;
 
 private:
@@ -94,4 +136,3 @@ public:
 
 export Method *find_invoke_dynamic_invoker(
         Class *c, ConstantPool::ResolvedInvDyn *inv_dyn, Object *&appendix);
-

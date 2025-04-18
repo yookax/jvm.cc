@@ -1,4 +1,5 @@
 module;
+#include <cassert>
 #include <cstdint>
 #include "vmdef.h"
 
@@ -13,15 +14,28 @@ import std.core;
  * this vm 操作的utf8字符串，要求以'\0'结尾并且不包含utf8的结束符.
  */
 
-export namespace utf8_pool {
-    // save a utf8 string to pool.
-    // 如不存在，返回新插入的值
-    // 如果已存在，则返回池中的值。
-    const utf8_t *save(const utf8_t *utf8);
+//export namespace utf8_pool {
+//    // save a utf8 string to pool.
+//    // 如不存在，返回新插入的值
+//    // 如果已存在，则返回池中的值。
+//    const utf8_t *save(const utf8_t *utf8);
+//
+//    // get utf8 from pool, return null if not exist.
+//    const utf8_t *find(const utf8_t *utf8);
+//}
 
-    // get utf8 from pool, return null if not exist.
-    const utf8_t *find(const utf8_t *utf8);
-}
+export struct MUTF8 {
+    const u1 *s;
+    u2 len_by_byte;
+
+    bool operator==(const MUTF8& other) const {
+        return (len_by_byte == other.len_by_byte) && (memcmp(s, other.s, len_by_byte) == 0);
+    }
+
+    bool operator<(const MUTF8& other) const {
+        return memcmp(s, other.s, std::min(len_by_byte, other.len_by_byte)) < 0;
+    }
+};
 
 export namespace utf8 {
     size_t hash(const utf8_t *utf8);

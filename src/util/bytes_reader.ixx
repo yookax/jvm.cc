@@ -44,10 +44,9 @@ public:
 
     void read_bytes(u1 *buf, size_t _len) {
         assert(buf != nullptr);
-
         memcpy(buf, bytes + pc, _len);
         pc += _len;
-        assert(pc < len);
+        assert(pc <= len);
     }
 
     u1 peeku1() {

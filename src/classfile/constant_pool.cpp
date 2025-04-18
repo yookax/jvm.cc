@@ -29,6 +29,7 @@ ConstantPool::ConstantPool(Class *c, BytesReader &r): owner(c) {
     type[0] = JVM_CONSTANT_Invalid; // constant pool 从 1 开始计数，第0位无效
 
     info = new slot_t[size];
+    values = new Value[size];
 
     for (u2 i = 1; i < size; i++) {
         u1 tag = r.readu1();
@@ -38,9 +39,12 @@ ConstantPool::ConstantPool(Class *c, BytesReader &r): owner(c) {
             case JVM_CONSTANT_String:
             case JVM_CONSTANT_MethodType:
             case JVM_CONSTANT_Module:
-            case JVM_CONSTANT_Package:
-                set_info(i, r.readu2());
+            case JVM_CONSTANT_Package: {
+                slot_t index = r.readu2();
+                set_info(i, index);
+                values[i].index = index;
                 break;
+            }
             case JVM_CONSTANT_NameAndType:
             case JVM_CONSTANT_Fieldref:
             case JVM_CONSTANT_Methodref:
@@ -50,53 +54,69 @@ ConstantPool::ConstantPool(Class *c, BytesReader &r): owner(c) {
                 slot_t index1 = r.readu2();
                 slot_t index2 = r.readu2();
                 set_info(i, (index2 << 16) + index1);
+                values[i].double_u2._1 = index1;
+                values[i].double_u2._2 = index2;
                 break;
             }
             case JVM_CONSTANT_Integer: {
                 u1 bytes[4];
                 r.read_bytes(bytes, 4);
-                set_int(i, bytes_to_int32(bytes, std::endian::big));
+                auto x = bytes_to_int32(bytes, std::endian::big);
+                set_int(i, x);
+                values[i].i32 = x;
                 break;
             }
             case JVM_CONSTANT_Float: {
                 u1 bytes[4];
                 r.read_bytes(bytes, 4);
-                set_float(i, bytes_to_float(bytes, std::endian::big));
+                auto x = bytes_to_float(bytes, std::endian::big);
+                set_float(i, x);
+                values[i].f32 = x;
                 break;
             }
             case JVM_CONSTANT_Long: {
                 u1 bytes[8];
                 r.read_bytes(bytes, 8);
-                set_long(i, bytes_to_int64(bytes, std::endian::big));
+                auto x = bytes_to_int64(bytes, std::endian::big);
+                set_long(i, x);
+                values[i].i64 = x;
                 set_type(++i, JVM_CONSTANT_Placeholder);
                 break;
             }
             case JVM_CONSTANT_Double: {
                 u1 bytes[8];
                 r.read_bytes(bytes, 8);
-                set_double(i, bytes_to_double(bytes, std::endian::big));
+                auto x = bytes_to_double(bytes, std::endian::big);
+                set_double(i, x);
+                values[i].f64 = x;
                 set_type(++i, JVM_CONSTANT_Placeholder);
                 break;
             }
             case JVM_CONSTANT_Utf8: {
                 u2 utf8_len = r.readu2();
+                values[i].mutf8.s = r.curr_pos();
+                values[i].mutf8.len_by_byte = utf8_len;
+
                 auto buf = new utf8_t[utf8_len + 1];
                 r.read_bytes((u1 *) buf, utf8_len);
                 buf[utf8_len] = 0;
 
-                const char *utf8 = utf8_pool::find(buf);
-                if (utf8 == nullptr) {
-                    utf8 = utf8_pool::save(buf);
-                } else {
-                    delete[] buf;
-                }
-                set_info(i, (slot_t) utf8);
+//                const char *utf8 = utf8_pool::find(buf);
+//                if (utf8 == nullptr) {
+//                    utf8 = utf8_pool::save(buf);
+//                } else {
+//                    delete[] buf;
+//                }
+                set_info(i, (slot_t) buf);
+                values[i].buf = buf;
                 break;
             }
             case JVM_CONSTANT_MethodHandle: {
                 slot_t index1 = r.readu1(); // 这里确实是 readu1, reference_kind
                 slot_t index2 = r.readu2(); // reference_index
                 set_info(i, (index2 << 16) + index1);
+                values[i].method_handle.reference_kind = index1;
+                values[i].method_handle.reference_index = index2;
                 break;
             }
             default:
@@ -137,77 +157,88 @@ utf8_t *ConstantPool::utf8(u2 i) const {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Utf8);
-    return (utf8_t *)(info[i]);
+//    return (utf8_t *)(info[i]);
+    return values[i].buf;
 }
 
 utf8_t *ConstantPool::string(u2 i) const {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_String);
-    return utf8((u2)info[i]);
+//    return utf8((u2)info[i]);
+    return utf8(values[i].index);
 }
 
 utf8_t *ConstantPool::class_name(u2 i) const {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Class);
-    return utf8((u2)info[i]);
+ //   return utf8((u2)info[i]);
+    return utf8(values[i].index);
 }
 
 utf8_t *ConstantPool::module_name(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Module);
-    return utf8((u2)info[i]);
+    //return utf8((u2)info[i]);
+    return utf8(values[i].index);
 }
 
 utf8_t *ConstantPool::package_name(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Package);
-    return utf8((u2)info[i]);
+  //  return utf8((u2)info[i]);
+    return utf8(values[i].index);
 }
 
 utf8_t *ConstantPool::name_of_name_and_type(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_NameAndType);
-    return utf8((u2)info[i]);
+//    return utf8((u2)info[i]);
+    return utf8(values[i].name_and_type.name_index);
 }
 
 utf8_t *ConstantPool::type_of_name_and_type(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_NameAndType);
-    return utf8((u2) (info[i] >> 16));
+//    return utf8((u2) (info[i] >> 16));
+    return utf8(values[i].name_and_type.descriptor_index);
 }
 
 u2 ConstantPool::field_class_index(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Fieldref);
-    return (u2)info[i];
+//    return (u2)info[i];
+    return values[i].field.class_index;
 }
 
 utf8_t *ConstantPool::field_class_name(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Fieldref);
-    return class_name((u2)info[i]);
+//    return class_name((u2)info[i]);
+    return class_name(values[i].field.class_index);
 }
 
 utf8_t *ConstantPool::field_name(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Fieldref);
-    return name_of_name_and_type((u2) (info[i] >> 16));
+//    return name_of_name_and_type((u2) (info[i] >> 16));
+    return name_of_name_and_type(values[i].field.name_and_type_index);
 }
 
 utf8_t *ConstantPool::field_type(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Fieldref);
-    return type_of_name_and_type((u2) (info[i] >> 16));
+//    return type_of_name_and_type((u2) (info[i] >> 16));
+    return type_of_name_and_type(values[i].field.name_and_type_index);
 }
 
 u2 ConstantPool::method_class_index(u2 i) {
@@ -277,14 +308,16 @@ u2 ConstantPool::method_handle_reference_kind(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_MethodHandle);
-    return (u2) info[i];
+//    return (u2) info[i];
+    return values[i].method_handle.reference_kind;
 }
 
 u2 ConstantPool::method_handle_reference_index(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_MethodHandle);
-    return (u2) (info[i] >> 16);
+//    return (u2) (info[i] >> 16);
+    return values[i].method_handle.reference_index;
 }
 
 u2 ConstantPool::invoke_dynamic_bootstrap_method_index(u2 i) {
@@ -312,7 +345,8 @@ jint ConstantPool::get_int(u2 i) const {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Integer);
-    return slot::get<jint>(info + i);
+//    return slot::get<jint>(info + i);
+    return values[i].i32;
 }
 
 void ConstantPool::set_int(u2 i, jint new_int) {
@@ -326,7 +360,8 @@ jfloat ConstantPool::get_float(u2 i) const {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Float);
-    return slot::get<jfloat>(info + i);
+//    return slot::get<jfloat>(info + i);
+    return values[i].f32;
 }
 
 void ConstantPool::set_float(u2 i, jfloat new_float) {
@@ -340,7 +375,8 @@ jlong ConstantPool::get_long(u2 i) const {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Long);
-    return slot::get<jlong>(info + i);
+//    return slot::get<jlong>(info + i);
+    return values[i].i64;
 }
 
 void ConstantPool::set_long(u2 i, jlong new_long) {
@@ -354,7 +390,8 @@ jdouble ConstantPool::get_double(u2 i) const {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(type[i] == JVM_CONSTANT_Double);
-    return slot::get<jdouble>(info + i);
+//    return slot::get<jdouble>(info + i);
+    return values[i].f64;
 }
 
 void ConstantPool::set_double(u2 i, jdouble new_double) {
@@ -370,12 +407,14 @@ Class *ConstantPool::resolve_class(u2 i) {
     assert(type[i] == JVM_CONSTANT_Class or type[i] == JVM_CONSTANT_ResolvedClass);
 
     if (type[i] == JVM_CONSTANT_ResolvedClass) {
-        return (Class *) info[i];
+        return values[i].resolved_class;
+//        return (Class *) info[i];
     }
     
     Class *c = load_class(owner->loader, class_name(i));
     set_type(i, JVM_CONSTANT_ResolvedClass);
-    set_info(i, (slot_t) c);
+//    set_info(i, (slot_t) c);
+    values[i].resolved_class = c;
 
     assert(c != nullptr);
     return c;

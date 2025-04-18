@@ -228,7 +228,8 @@ static void resolve(Frame *frame) {
         UNREACHABLE(" "); // todo msg
     }
 
-    const utf8_t *name = utf8_pool::save(java_lang_String::to_utf8(name_str));
+    //const utf8_t *name = utf8_pool::save(java_lang_String::to_utf8(name_str));
+    const utf8_t *name = java_lang_String::to_utf8(name_str);
     if (strcmp(name, "<clinit>") == 0) {
         panic("11111111111"); // todo
     }
