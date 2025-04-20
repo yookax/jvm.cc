@@ -123,13 +123,13 @@ static void invoke_run(std::thread *local_thread, jref java_thread) {
 static mutex new_thread_mutex;
 
 void java_lang_Thread::start(jref java_thread) {
-    scoped_lock lock(new_thread_mutex);
-    unique_lock<mutex> _lock(cv_mtx);
-
-    auto x = new std::thread;
-    std::thread t(invoke_run, x, java_thread);
-    cv.wait(_lock);
-
-    *x = std::move(t);
-//    t.detach();
+//    scoped_lock lock(new_thread_mutex);
+//    unique_lock<mutex> _lock(cv_mtx);
+//
+//    auto x = new std::thread;
+//    std::thread t(invoke_run, x, java_thread);
+//    cv.wait(_lock);
+//
+//    *x = std::move(t);
+//    // t.detach();
 }

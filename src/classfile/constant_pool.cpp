@@ -135,138 +135,134 @@ utf8_t *ConstantPool::utf8(u2 i) const {
 utf8_t *ConstantPool::string(u2 i) const {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_String);
+    assert(types[i] == JVM_CONSTANT_String);
     return utf8(values[i].index);
 }
 
 utf8_t *ConstantPool::class_name(u2 i) const {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_Class);
+    assert(types[i] == JVM_CONSTANT_Class);
     return utf8(values[i].index);
 }
 
 utf8_t *ConstantPool::module_name(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_Module);
+    assert(types[i] == JVM_CONSTANT_Module);
     return utf8(values[i].index);
 }
 
 utf8_t *ConstantPool::package_name(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_Package);
+    assert(types[i] == JVM_CONSTANT_Package);
     return utf8(values[i].index);
 }
 
 utf8_t *ConstantPool::name_of_name_and_type(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_NameAndType);
+    assert(types[i] == JVM_CONSTANT_NameAndType);
     return utf8(values[i].name_and_type.name_index);
 }
 
 utf8_t *ConstantPool::type_of_name_and_type(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_NameAndType);
+    assert(types[i] == JVM_CONSTANT_NameAndType);
     return utf8(values[i].name_and_type.descriptor_index);
 }
 
 utf8_t *ConstantPool::field_name(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_Fieldref);
+    assert(types[i] == JVM_CONSTANT_Fieldref);
     return name_of_name_and_type(values[i].field.name_and_type_index);
 }
 
 utf8_t *ConstantPool::field_type(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_Fieldref);
+    assert(types[i] == JVM_CONSTANT_Fieldref);
     return type_of_name_and_type(values[i].field.name_and_type_index);
 }
 
 utf8_t *ConstantPool::method_name(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_Methodref);
+    assert(types[i] == JVM_CONSTANT_Methodref);
     return name_of_name_and_type(values[i].method.name_and_type_index);
 }
 
 utf8_t *ConstantPool::method_type(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_Methodref);
+    assert(types[i] == JVM_CONSTANT_Methodref);
     return type_of_name_and_type(values[i].method.name_and_type_index);
 }
 
 utf8_t *ConstantPool::interface_method_name(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_InterfaceMethodref);
+    assert(types[i] == JVM_CONSTANT_InterfaceMethodref);
     return name_of_name_and_type(values[i].interface_method.name_and_type_index);
 }
 
 utf8_t *ConstantPool::interface_method_type(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_InterfaceMethodref);
+    assert(types[i] == JVM_CONSTANT_InterfaceMethodref);
     return type_of_name_and_type(values[i].interface_method.name_and_type_index);
 }
 
 utf8_t *ConstantPool::method_type_descriptor(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_MethodType);
+    assert(types[i] == JVM_CONSTANT_MethodType);
     return utf8(values[i].index);
 }
 
 u2 ConstantPool::invoke_dynamic_bootstrap_method_index(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_InvokeDynamic);
+    assert(types[i] == JVM_CONSTANT_InvokeDynamic);
     return values[i].invoke_dynamic.bootstrap_method_attr_index;
 }
 
 utf8_t *ConstantPool::invoke_dynamic_method_name(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_InvokeDynamic);
+    assert(types[i] == JVM_CONSTANT_InvokeDynamic);
     return name_of_name_and_type(values[i].invoke_dynamic.name_and_type_index);
 }
 
 utf8_t *ConstantPool::invoke_dynamic_method_type(u2 i) {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_InvokeDynamic);
+    assert(types[i] == JVM_CONSTANT_InvokeDynamic);
     return type_of_name_and_type(values[i].invoke_dynamic.name_and_type_index);
 }
 
 jint ConstantPool::get_int(u2 i) const {
-    std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_Integer);
+    assert(types[i] == JVM_CONSTANT_Integer);
     return values[i].i32;
 }
 
 jfloat ConstantPool::get_float(u2 i) const {
-    std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_Float);
+    assert(types[i] == JVM_CONSTANT_Float);
     return values[i].f32;
 }
 
 jlong ConstantPool::get_long(u2 i) const {
-    std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(types[i] == JVM_CONSTANT_Long);
     return values[i].i64;
 }
 
 jdouble ConstantPool::get_double(u2 i) const {
-    std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(types[i] == JVM_CONSTANT_Double);
     return values[i].f64;
@@ -378,14 +374,14 @@ Object *ConstantPool::resolve_string(u2 i) {
 Object *ConstantPool::resolve_method_type(u2 i) {
     lock_guard<recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_MethodType);
+    assert(types[i] == JVM_CONSTANT_MethodType);
     return findMethodType(method_type_descriptor(i), owner->loader);
 }
 
 Object *ConstantPool::resolve_method_handle(u2 i) {
     lock_guard<recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
-    assert(type[i] == JVM_CONSTANT_MethodHandle);
+    assert(types[i] == JVM_CONSTANT_MethodHandle);
 
     u2 kind = values[i].method_handle.reference_kind;//method_handle_reference_kind(i);
     u2 index = values[i].method_handle.reference_index;//method_handle_reference_index(i);
