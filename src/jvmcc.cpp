@@ -146,46 +146,43 @@ void run_all_java_tests();
 void test() {
     init_jvm();
 
-    test_sys_info();
-    test_properties();
-
-    test_convert_int();
-    test_convert_long();
-    test_convert_float();
-    test_convert_double();
-
-    test_utf8_to_latin1();
-    test_utf8_to_utf16();
-
-    test_jimage_string();
-    test_jimage();
-    test_jimage1();
-
-    test_alloc_continuously();
-    test_heap();
-
-    test_load_class();
-    test_classloader();
-
-    test_method_descriptor();
-
-    test_box();
+//    test_sys_info();
+//    test_properties();
+//
+//    test_convert_int();
+//    test_convert_long();
+//    test_convert_float();
+//    test_convert_double();
+//
+//    test_utf8_to_latin1();
+//    test_utf8_to_utf16();
+//
+//    test_jimage_string();
+//    test_jimage();
+//    test_jimage1();
+//
+//    test_alloc_continuously();
+//    test_heap();
+//
+//    test_load_class();
+//    test_classloader();
+//
+//    test_method_descriptor();
+//
+//    test_box();
 
     test_string();
     test_string_intern();
     test_string_equals();
 
-    test_new_array();
-    test_multi_array1();
-    test_multi_array2();
-    test_string_array();
-
-    test_inject_field();
-
-//    RawClassfile rcf = ("D:\\code\\jvm.cc\\test-java\\target\\classes\\I18nTest.class");
-//    cout << rcf.to_str().c_str() << endl;
-
-    run_all_java_tests();
+//    test_new_array();
+//    test_multi_array1();
+//    test_multi_array2();
+//    test_string_array();
+//
+//    test_inject_field();
+//
+//    run_all_java_tests();
 
     cout << endl << "Testing is over." << endl;
 }

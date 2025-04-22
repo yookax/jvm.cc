@@ -109,6 +109,25 @@ utf8_t *java_lang_String::to_utf8(jstrRef so) {
     UNREACHABLE("%d", code);
 }
 
+u8string java_lang_String::_to_utf8(jstrRef so) {
+    assert(so != nullptr);
+    assert(g_string_class != nullptr);
+    assert(so->is_string_object());
+
+    // byte[] value;
+    auto value = so->get_field_value<jref>("value", "[B");
+    auto coder = so->get_field_value<jbyte>("coder");
+    if (coder == STRING_CODE_LATIN1) {
+        u8string s((char8_t *)value->data, value->arr_len);
+        return s;
+    } else if (coder == STRING_CODE_UTF16) {
+        u16string s((char16_t *)value->data, value->arr_len / sizeof(char16_t));
+        return utf16_to_utf8(s);
+    }
+
+    UNREACHABLE("%d", coder);
+}
+
 unicode_t *java_lang_String::to_unicode(jstrRef so) {
     assert(so != nullptr);
     assert(g_string_class != nullptr);
@@ -216,24 +235,24 @@ jstrRef java_lang_String::intern(jstrRef so) {
 
 // ---------------------------------------------------------------------------------------
 
-static const utf8_t *utf8s[] = {
-        "Hello, World!",
-        "你好，世界！",
-        "こんにちは、世界！",
+static const u8string utf8s[] = {
+    u8"Hello, World!",
+    u8"你好，世界！",
+    u8"こんにちは、世界！",
 };
 
 TEST_CASE(test_string)
-    for (auto s: utf8s) {
+    for (auto& s: utf8s) {
         auto so = Allocator::string(s);
-        auto u = java_lang_String::to_utf8(so);
-        if (!utf8::equals(s, u)) {
-            printf("failed\n");
+        auto u = java_lang_String::_to_utf8(so);
+        if (s != u) {
+            printf("%s\n%s\nfailed\n", (char *) s.c_str(), (char *) u.c_str());
         }
     }
 }
 
 TEST_CASE(test_string_intern)
-    for (auto s: utf8s) {
+    for (auto& s: utf8s) {
         auto so1 = Allocator::string(s);
         auto so2 = Allocator::string(s);
 
@@ -246,7 +265,7 @@ TEST_CASE(test_string_intern)
 }
 
 TEST_CASE(test_string_equals)
-    for (auto s: utf8s) {
+    for (auto& s: utf8s) {
         auto so1 = Allocator::string(s);
         auto so2 = Allocator::string(s);
 
