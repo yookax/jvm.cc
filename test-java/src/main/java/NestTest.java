@@ -1,4 +1,3 @@
-
 public class NestTest {
     public static void main(String[] args) {
         System.out.println("---NestTest's NestHost");

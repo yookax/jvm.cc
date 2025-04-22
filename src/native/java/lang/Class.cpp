@@ -441,7 +441,7 @@ void getConstantPool(Frame *f) {
 
     Class *cpc = load_boot_class("jdk/internal/reflect/ConstantPool");
     jref cp = Allocator::object(cpc);
-    cp->set_field_value<jref>("constantPoolOop", "Ljava/lang/Object;", (jref) &(c->cp));
+    cp->set_field_value<jref>("constantPoolOop", "Ljava/lang/Object;", (jref)(c->cp));
     f->pushr(cp);
 }
 

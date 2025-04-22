@@ -74,6 +74,7 @@ void init_native() {
     REGISTRY_ALL(jdk_internal_misc_CDS_registerNatives);
     REGISTRY_ALL(jdk_internal_misc_Signal_registerNatives);
     REGISTRY_ALL(jdk_internal_reflect_Reflection_registerNatives);
+    REGISTRY_ALL(jdk_internal_reflect_ConstantPool_registerNatives);
     REGISTRY_ALL(jdk_internal_reflect_DirectMethodHandleAccessor$NativeAccessor_registerNatives);
     REGISTRY_ALL(jdk_internal_reflect_DirectConstructorHandleAccessor$NativeAccessor_registerNatives);
     REGISTRY_ALL(jdk_internal_loader_BootLoader_registerNatives);
