@@ -188,6 +188,8 @@ export struct Allocator {
     // 多维数组
     static Object *multi_array(ArrayClass *ac, jint dim, const jint lens[]);
 
+    static jstrRef string(const std::u8string& utf8);
+    static jstrRef string(const MUTF8& mutf8);
     static jstrRef string(const utf8_t *str);
     static jstrRef string(const unicode_t *str, jsize len);
 };

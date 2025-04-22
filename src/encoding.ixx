@@ -86,9 +86,44 @@ export u8string mutf8_to_utf8(const uint8_t *mutf8, size_t len) {
     return utf8;
 }
 
+export u8string mutf8_to_utf8(const MUTF8& mutf8) {
+    return mutf8_to_utf8(mutf8.s, mutf8.len_by_byte);
+}
+
 export u8string *mutf8_to_new_utf8(const uint8_t *mutf8, size_t len) {
     auto s = new u8string;
     return mutf8_to_utf8(mutf8, len, s);
+}
+
+export u8string utf16_to_utf8(const u16string& utf16_str) {
+    u8string utf8_result;
+    for (size_t i = 0; i < utf16_str.size(); ++i) {
+        char16_t c = utf16_str[i];
+        if (c <= 0x7F) {
+            // 单字节字符
+            utf8_result.push_back(static_cast<char8_t>(c));
+        } else if (c <= 0x7FF) {
+            // 双字节字符
+            utf8_result.push_back(static_cast<char8_t>(0xC0 | (c >> 6)));
+            utf8_result.push_back(static_cast<char8_t>(0x80 | (c & 0x3F)));
+        } else {
+            if (c >= 0xD800 && c <= 0xDBFF && i + 1 < utf16_str.size() && utf16_str[i + 1] >= 0xDC00 && utf16_str[i + 1] <= 0xDFFF) {
+                // 处理代理对
+                uint32_t code_point = 0x10000 + ((c - 0xD800) << 10) + (utf16_str[i + 1] - 0xDC00);
+                utf8_result.push_back(static_cast<char8_t>(0xF0 | (code_point >> 18)));
+                utf8_result.push_back(static_cast<char8_t>(0x80 | ((code_point >> 12) & 0x3F)));
+                utf8_result.push_back(static_cast<char8_t>(0x80 | ((code_point >> 6) & 0x3F)));
+                utf8_result.push_back(static_cast<char8_t>(0x80 | (code_point & 0x3F)));
+                ++i;
+            } else {
+                // 三字节字符
+                utf8_result.push_back(static_cast<char8_t>(0xE0 | (c >> 12)));
+                utf8_result.push_back(static_cast<char8_t>(0x80 | ((c >> 6) & 0x3F)));
+                utf8_result.push_back(static_cast<char8_t>(0x80 | (c & 0x3F)));
+            }
+        }
+    }
+    return utf8_result;
 }
 
 export u16string utf8_to_utf16(const u8string& utf8_str);
@@ -96,5 +131,54 @@ export optional<string> utf8_to_latin1(const u8string& utf8_str);
 
 // ---------------------------------------------------------------------------------------
 
-export void test_utf8_to_latin1();
-export void test_utf8_to_utf16();
+struct {
+    std::u8string s8;
+    std::u16string s16;
+} arr[] = {
+        { u8"Hello, World!", u"Hello, World!" },
+        { u8"你好，世界！", u"你好，世界！" },
+        { u8"こんにちは、世界！", u"こんにちは、世界！" },
+        { u8"안녕하세요, 세상!", u"안녕하세요, 세상!" },
+        { u8"Привет, мир!", u"Привет, мир!" },
+        { u8"مرحبًا بالعالم!", u"مرحبًا بالعالم!" },
+        { u8"Olá, mundo!", u"Olá, mundo!" },
+        { u8"Hej, världen!", u"Hej, världen!" },
+        { u8"Xin chào, thế giới!", u"Xin chào, thế giới!" },
+        { u8"Hello, 你好😀", u"Hello, 你好😀" },
+        { u8"👋世界！", u"👋世界！" },
+};
+
+export TEST_CASE(test_utf8_to_latin1)
+//    for (auto &a: arr) {
+//        auto x = utf8_to_latin1(a.s8);
+//        if (x.has_value()) {
+//            std::cout << (char *) a.s8.c_str() << " <---> "<< x.value() << std::endl;
+//        }
+//    }
+}
+
+export TEST_CASE(test_utf8_to_utf16)
+    bool failed = false;
+    for (auto &a: arr) {
+        if (utf8_to_utf16(a.s8) != a.s16) {
+            failed = true;
+            std::cerr << "failed. " << (const char *) a.s8.c_str() << std::endl;
+        }
+    }
+
+    if(!failed)
+        cout << "passed." << endl;
+}
+
+export TEST_CASE(test_utf16_to_utf8)
+    bool failed = false;
+    for (auto &a: arr) {
+        if (utf16_to_utf8(a.s16) != a.s8) {
+            failed = true;
+            std::cerr << "failed. " << (const char *) a.s8.c_str() << std::endl;
+        }
+    }
+
+    if(!failed)
+        cout << "passed." << endl;
+}

@@ -21,6 +21,44 @@ using namespace unicode;
 #define STRING_CODE_LATIN1 0
 #define STRING_CODE_UTF16 1
 
+jstrRef Allocator::string(const u8string& utf8) {
+    std::string latin1;
+    u16string u16;
+    const void *data;
+    size_t len_by_byte;
+    jbyte coder;
+
+    optional<std::string> opt = utf8_to_latin1(utf8);
+    if (opt.has_value()) {
+        latin1 = opt.value();
+        data = latin1.c_str();
+        len_by_byte = latin1.length();
+        coder = STRING_CODE_LATIN1;
+    } else {
+        u16 = utf8_to_utf16(utf8);
+        data = u16.c_str();
+        len_by_byte = u16.length() * sizeof(char16_t);
+        coder = STRING_CODE_UTF16;
+    }
+
+    init_class(g_string_class);
+    jstrRef so = Allocator::object(g_string_class);
+
+    // set java/lang/String 的 value 变量赋值
+    // private final byte[] value;
+    jarrRef value = Allocator::array("[B", len_by_byte); // [B
+    memcpy(value->data, data, len_by_byte);
+    so->set_field_value<jref>("value", "[B", value);
+
+    so->set_field_value<jbyte>("coder", coder);
+    return so;
+}
+
+jstrRef Allocator::string(const MUTF8& mutf8) {
+    u8string utf8 = mutf8_to_utf8(mutf8);
+    return Allocator::string(utf8);
+}
+
 jstrRef Allocator::string(const utf8_t *str) {
     assert(g_string_class != nullptr && str != nullptr);
 
