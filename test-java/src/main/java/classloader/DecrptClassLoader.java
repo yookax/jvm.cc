@@ -28,7 +28,7 @@ public class DecrptClassLoader  extends ClassLoader {
 		}else{
 			ClassLoader parent = this.getParent();
 			try {
-				c = parent.load_class(name);	   //委派给父类加载
+				c = parent.loadClass(name);	   //委派给父类加载
 			} catch (Exception e) {
 //				e.printStackTrace();
 			}

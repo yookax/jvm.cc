@@ -7,6 +7,8 @@ export module encoding;
 
 import std.core;
 
+using namespace std;
+
 /*
  * jvm内部使用的utf8是一种改进过的utf8，与标准的utf8有所不同，
  * 具体参考 jvms。
@@ -25,15 +27,15 @@ import std.core;
 //}
 
 export struct MUTF8 {
-    const u1 *s;
-    u2 len_by_byte;
+    const uint8_t *s;
+    uint16_t len_by_byte;
 
     bool operator==(const MUTF8& other) const {
         return (len_by_byte == other.len_by_byte) && (memcmp(s, other.s, len_by_byte) == 0);
     }
 
     bool operator<(const MUTF8& other) const {
-        return memcmp(s, other.s, std::min(len_by_byte, other.len_by_byte)) < 0;
+        return memcmp(s, other.s, min(len_by_byte, other.len_by_byte)) < 0;
     }
 };
 
@@ -68,29 +70,29 @@ export namespace utf8 {
     };
 }
 
-export std::u8string unicode_to_utf8(const std::wstring& wstr);
-export std::u8string unicode_to_utf8(const unicode_t *wstr, size_t len);
+export u8string unicode_to_utf8(const wstring& wstr);
+export u8string unicode_to_utf8(const unicode_t *wstr, size_t len);
 
 export namespace unicode {
     // 由调用者 delete[] utf8 string
     utf8_t *to_utf8(const unicode_t *unicode, size_t len);
 }
 
-export std::u8string *mutf8_to_utf8(const uint8_t *mutf8, size_t len, std::u8string *utf8);
+export u8string *mutf8_to_utf8(const uint8_t *mutf8, size_t len, u8string *utf8);
 
-export std::u8string mutf8_to_utf8(const uint8_t *mutf8, size_t len) {
-    std::u8string utf8;
+export u8string mutf8_to_utf8(const uint8_t *mutf8, size_t len) {
+    u8string utf8;
     mutf8_to_utf8(mutf8, len, &utf8);
     return utf8;
 }
 
-export std::u8string *mutf8_to_new_utf8(const uint8_t *mutf8, size_t len) {
-    auto s = new std::u8string;
+export u8string *mutf8_to_new_utf8(const uint8_t *mutf8, size_t len) {
+    auto s = new u8string;
     return mutf8_to_utf8(mutf8, len, s);
 }
 
-export std::u16string utf8_to_utf16(const std::u8string& utf8_str);
-export std::optional<std::string> utf8_to_latin1(const std::u8string& utf8_str);
+export u16string utf8_to_utf16(const u8string& utf8_str);
+export optional<string> utf8_to_latin1(const u8string& utf8_str);
 
 // ---------------------------------------------------------------------------------------
 

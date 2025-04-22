@@ -48,7 +48,7 @@ public class ClassLoader9Test {
 
         c1 = loader1.loadClass("java.sql.Array");
         System.out.println(c1.getClassLoader());
-        c1 = loader2.load_class("java.sql.Array");
+        c1 = loader2.loadClass("java.sql.Array");
         System.out.println(c1.getClassLoader());
 
         c1 = loader1.loadClass("sun.tools.attach.AttachProviderImpl");

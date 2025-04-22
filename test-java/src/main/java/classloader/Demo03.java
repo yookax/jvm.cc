@@ -13,7 +13,7 @@ public class Demo03 {
 		Class<?> c3 = loader2.loadClass("com.bjsxt.gaoqi.HelloWorld");
 
 		Class<?> c4 = loader2.loadClass("java.lang.String");
-		Class<?> c5 = loader2.load_class("com.bjsxt.test.Demo01");
+		Class<?> c5 = loader2.loadClass("com.bjsxt.test.Demo01");
 		
 		
 		System.out.println(c.hashCode());
