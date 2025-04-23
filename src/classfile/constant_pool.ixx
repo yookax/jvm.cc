@@ -84,7 +84,9 @@ public:
     void set_type(u2 i, u1 new_type);
 
     utf8_t *utf8(u2 i) const;
+private:
     utf8_t *string(u2 i) const;
+public:
     utf8_t *class_name(u2 i) const;
     utf8_t *module_name(u2 i);
     utf8_t *package_name(u2 i);
