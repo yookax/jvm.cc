@@ -155,6 +155,7 @@ void test() {
 
     test_utf8_to_latin1();
     test_utf8_to_utf16();
+    test_utf16_to_utf8();
 
     test_jimage_string();
     test_jimage();

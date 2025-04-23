@@ -235,26 +235,20 @@ jstrRef java_lang_String::intern(jstrRef so) {
 
 // ---------------------------------------------------------------------------------------
 
-static const u8string utf8s[] = {
-    u8"Hello, World!",
-    u8"你好，世界！",
-    u8"こんにちは、世界！",
-};
-
 TEST_CASE(test_string)
-    for (auto& s: utf8s) {
-        auto so = Allocator::string(s);
+    for (auto& s: strings_for_testing) {
+        auto so = Allocator::string(s.s8);
         auto u = java_lang_String::_to_utf8(so);
-        if (s != u) {
-            printf("%s\n%s\nfailed\n", (char *) s.c_str(), (char *) u.c_str());
+        if (s.s8 != u) {
+            printf("%s\n%s\nfailed\n", (char *) s.s8.c_str(), (char *) u.c_str());
         }
     }
 }
 
 TEST_CASE(test_string_intern)
-    for (auto& s: utf8s) {
-        auto so1 = Allocator::string(s);
-        auto so2 = Allocator::string(s);
+    for (auto& s: strings_for_testing) {
+        auto so1 = Allocator::string(s.s8);
+        auto so2 = Allocator::string(s.s8);
 
         auto intern1 = java_lang_String::intern(so1);
         auto intern2 = java_lang_String::intern(so2);
@@ -265,9 +259,9 @@ TEST_CASE(test_string_intern)
 }
 
 TEST_CASE(test_string_equals)
-    for (auto& s: utf8s) {
-        auto so1 = Allocator::string(s);
-        auto so2 = Allocator::string(s);
+    for (auto& s: strings_for_testing) {
+        auto so1 = Allocator::string(s.s8);
+        auto so2 = Allocator::string(s.s8);
 
         if (!java_lang_String::equals(so1, so2))
             printf("failed\n");

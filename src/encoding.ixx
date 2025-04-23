@@ -131,25 +131,8 @@ export optional<string> utf8_to_latin1(const u8string& utf8_str);
 
 // ---------------------------------------------------------------------------------------
 
-struct {
-    std::u8string s8;
-    std::u16string s16;
-} arr[] = {
-        { u8"Hello, World!", u"Hello, World!" },
-        { u8"你好，世界！", u"你好，世界！" },
-        { u8"こんにちは、世界！", u"こんにちは、世界！" },
-        { u8"안녕하세요, 세상!", u"안녕하세요, 세상!" },
-        { u8"Привет, мир!", u"Привет, мир!" },
-        { u8"مرحبًا بالعالم!", u"مرحبًا بالعالم!" },
-        { u8"Olá, mundo!", u"Olá, mundo!" },
-        { u8"Hej, världen!", u"Hej, världen!" },
-        { u8"Xin chào, thế giới!", u"Xin chào, thế giới!" },
-        { u8"Hello, 你好😀", u"Hello, 你好😀" },
-        { u8"👋世界！", u"👋世界！" },
-};
-
 export TEST_CASE(test_utf8_to_latin1)
-//    for (auto &a: arr) {
+//    for (auto &a: strings_for_testing) {
 //        auto x = utf8_to_latin1(a.s8);
 //        if (x.has_value()) {
 //            std::cout << (char *) a.s8.c_str() << " <---> "<< x.value() << std::endl;
@@ -159,7 +142,7 @@ export TEST_CASE(test_utf8_to_latin1)
 
 export TEST_CASE(test_utf8_to_utf16)
     bool failed = false;
-    for (auto &a: arr) {
+    for (auto &a: strings_for_testing) {
         if (utf8_to_utf16(a.s8) != a.s16) {
             failed = true;
             std::cerr << "failed. " << (const char *) a.s8.c_str() << std::endl;
@@ -172,7 +155,7 @@ export TEST_CASE(test_utf8_to_utf16)
 
 export TEST_CASE(test_utf16_to_utf8)
     bool failed = false;
-    for (auto &a: arr) {
+    for (auto &a: strings_for_testing) {
         if (utf16_to_utf8(a.s16) != a.s8) {
             failed = true;
             std::cerr << "failed. " << (const char *) a.s8.c_str() << std::endl;
