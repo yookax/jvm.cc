@@ -204,7 +204,6 @@ export void array_copy(jarrRef dst, jint dst_pos, const jarrRef src, jint src_po
 /*-------- String --------*/
 
 export namespace java_lang_String {
-//    std::u8string _to_utf8(jstrRef so);
     utf8_t *to_utf8(jstrRef);
     bool equals(jstrRef, jstrRef);
     size_t hash(jstrRef);

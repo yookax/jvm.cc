@@ -1,6 +1,5 @@
 module;
 #include <cassert>
-//#include <pthread.h>
 #include "vmdef.h"
 
 module encoding;
@@ -8,28 +7,6 @@ module encoding;
 import std.core;
 
 using namespace std;
-
-//static unordered_set<const utf8_t *, utf8::Hash, utf8::Comparator> utf8Set;
-////static pthread_rwlock_t lock = PTHREAD_RWLOCK_INITIALIZER;
-//
-//const utf8_t *utf8_pool::save(const utf8_t *utf8) {
-//    assert(utf8 != nullptr);
-//
-//    //pthread_rwlock_wrlock(&lock);
-//    const utf8_t *s = *utf8Set.insert(utf8).first;
-//    //pthread_rwlock_unlock(&lock);
-//    return s;
-//}
-//
-//const utf8_t *utf8_pool::find(const utf8_t *utf8) {
-//    assert(utf8 != nullptr);
-//
-//    //pthread_rwlock_rdlock(&lock);
-//    auto iter = utf8Set.find(utf8);
-//    const utf8_t *s = iter == utf8Set.end() ? nullptr : *iter;
-//    //pthread_rwlock_unlock(&lock);
-//    return s;
-//}
 
 static inline unicode_t get_utf8_char(const utf8_t *&utf8) {
     assert(utf8 != nullptr);
@@ -87,11 +64,11 @@ bool utf8::equals(const utf8_t *p1, const utf8_t *p2) {
     return !(*p1 || *p2);
 }
 
-// bool utf8::equals(const utf8_t *p1, const utf8_t *p2)
-// {
-//     assert(p1 != nullptr && p2 != nullptr);
-//     return (p1 == p2) || (strcmp(p1, p2) == 0);
-// }
+//bool utf8::equals(const utf8_t *p1, const utf8_t *p2)
+//{
+//    assert(p1 != nullptr && p2 != nullptr);
+//    return (p1 == p2) || (strcmp(p1, p2) == 0);
+//}
 
 utf8_t *utf8::dup(const utf8_t *utf8) {
     assert(utf8 != nullptr);
@@ -132,108 +109,6 @@ utf8_t *utf8::slash_2_dot(utf8_t *utf8) {
 utf8_t *utf8::slash_2_dot_dup(const utf8_t *utf8) {
     assert(utf8 != nullptr);
     return slash_2_dot(dup(utf8));
-}
-
-unicode_t *utf8::toUnicode(const utf8_t *utf8, size_t unicode_len) {
-    assert(utf8 != nullptr);
-
-    auto buf = new unicode_t[unicode_len + 1];
-    buf[unicode_len] = 0;
-
-    for (int i = 0; i < unicode_len; i++) {
-        if (*utf8) {
-            buf[i] = get_utf8_char(utf8);
-        }
-    }
-
-//    auto tmp = buf;
-//    while (*utf8) {
-//        *tmp++ = get_utf8_char(utf8);
-//    }
-//    // 不应该写出buf的范围
-//    assert(buf[unicode_len] == 0);
-    return buf;
-}
-
-// 将此unicode转化为utf8时，有多少字节
-static size_t utf8_bytes_count(const unicode_t *unicode, size_t len) {
-    assert(unicode != nullptr);
-    size_t count = 0;
-
-    for(; len > 0; len--) {
-        auto c = *unicode++;
-        count += (c == 0 || c > 0x7f) ? (c > 0x7ff ? 3 : 2) : 1;
-    }
-
-    return count;
-}
-
-// Unicode 转 UTF-8
-u8string unicode_to_utf8(const unicode_t *wstr, size_t len) {
-    u8string utf8_str;
-    for (size_t i = 0; i < len; i++) {
-        unicode_t wc = wstr[i];
-        if (wc <= 0x7F) {
-            // 单字节字符
-            utf8_str.push_back(static_cast<char8_t>(wc));
-        } else if (wc <= 0x7FF) {
-            // 双字节字符
-            utf8_str.push_back(static_cast<char8_t>(0xC0 | ((wc >> 6) & 0x1F)));
-            utf8_str.push_back(static_cast<char8_t>(0x80 | (wc & 0x3F)));
-        } else if (wc <= 0xFFFF) {
-            // 三字节字符
-            utf8_str.push_back(static_cast<char8_t>(0xE0 | ((wc >> 12) & 0x0F)));
-            utf8_str.push_back(static_cast<char8_t>(0x80 | ((wc >> 6) & 0x3F)));
-            utf8_str.push_back(static_cast<char8_t>(0x80 | (wc & 0x3F)));
-        }
-    }
-    return utf8_str;
-}
-
-// Unicode 转 UTF-8
-u8string unicode_to_utf8(const wstring& wstr) {
-    u8string utf8_str;
-    for (wchar_t wc : wstr) {
-        if (wc <= 0x7F) {
-            // 单字节字符
-            utf8_str.push_back(static_cast<char8_t>(wc));
-        } else if (wc <= 0x7FF) {
-            // 双字节字符
-            utf8_str.push_back(static_cast<char8_t>(0xC0 | ((wc >> 6) & 0x1F)));
-            utf8_str.push_back(static_cast<char8_t>(0x80 | (wc & 0x3F)));
-        } else if (wc <= 0xFFFF) {
-            // 三字节字符
-            utf8_str.push_back(static_cast<char8_t>(0xE0 | ((wc >> 12) & 0x0F)));
-            utf8_str.push_back(static_cast<char8_t>(0x80 | ((wc >> 6) & 0x3F)));
-            utf8_str.push_back(static_cast<char8_t>(0x80 | (wc & 0x3F)));
-        }
-    }
-    return utf8_str;
-}
-
-utf8_t *unicode::to_utf8(const unicode_t *unicode, size_t len) {
-    assert(unicode != nullptr);
-
-    auto utf8 = new utf8_t[utf8_bytes_count(unicode, len) + 1];
-    auto p = utf8;
-
-    for(; len > 0; len--) {
-        auto c = *unicode++;
-        if((c == 0) || (c > 0x7f)) {
-            if(c > 0x7ff) {
-                *p++ = (utf8_t) ((c >> 12) | 0xe0);
-                *p++ = (utf8_t) (((c >> 6) & 0x3f) | 0x80);
-            } else {
-                *p++ = (utf8_t) ((c >> 6) | 0xc0);
-            }
-            *p++ = (utf8_t) ((c & 0x3f) | 0x80);
-        } else {
-            *p++ = (utf8_t) (c);
-        }
-    }
-
-    *p = 0;
-    return utf8;
 }
 
 u8string *mutf8_to_utf8(const uint8_t *mutf8, size_t len, u8string *utf8) {

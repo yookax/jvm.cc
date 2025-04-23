@@ -11,7 +11,6 @@ import interpreter;
 using namespace std;
 using namespace slot;
 using namespace utf8;
-using namespace unicode;
 
 // set java/lang/String 的 coder 变量赋值
 // private final byte coder;
@@ -79,22 +78,11 @@ utf8_t *java_lang_String::to_utf8(jstrRef so) {
     assert(g_string_class != nullptr);
     assert(so->is_string_object());
 
-    // byte[] value;
-    jarrRef value = so->get_field_value<jref>("value", "[B");
-
-    jbyte code = so->get_field_value<jbyte>("coder");
-    if (code == STRING_CODE_LATIN1) {
-        auto utf8 = new utf8_t[value->arr_len + 1];//(utf8_t *)vm_malloc(sizeof(utf8_t) * (value->arr_len + 1));
-        utf8[value->arr_len] = 0;
-        memcpy(utf8, value->data, value->arr_len * sizeof(jbyte));
-        return utf8;
-    }
-    if (code == STRING_CODE_UTF16) {
-        utf8_t *utf8 = unicode::to_utf8((unicode_t *)value->data, value->arr_len);
-        return utf8;
-    }
-
-    UNREACHABLE("%d", code);
+    u8string u8 = jstring_to_u8string(so);
+    auto buf = new char8_t[u8.length() + 1];
+    buf[u8.length()] = 0;
+    memcpy(buf, u8.c_str(), u8.length() * sizeof(char8_t));
+    return (char *)buf;
 }
 
 u8string jstring_to_u8string(jstrRef so) {
