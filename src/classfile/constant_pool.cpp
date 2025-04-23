@@ -132,11 +132,18 @@ utf8_t *ConstantPool::utf8(u2 i) const {
     return values[i].buf;
 }
 
-utf8_t *ConstantPool::string(u2 i) const {
+MUTF8& ConstantPool::mutf8(u2 i) const {
+    std::lock_guard<std::recursive_mutex> lock(mutex);
+    assert(0 < i && i < size);
+    assert(types[i] == JVM_CONSTANT_Utf8);
+    return values[i].mutf8;
+}
+
+MUTF8& ConstantPool::string(u2 i) const {
     std::lock_guard<std::recursive_mutex> lock(mutex);
     assert(0 < i && i < size);
     assert(types[i] == JVM_CONSTANT_String);
-    return utf8(values[i].index);
+    return mutf8(values[i].index);
 }
 
 utf8_t *ConstantPool::class_name(u2 i) const {
@@ -363,7 +370,7 @@ Object *ConstantPool::resolve_string(u2 i) {
         return values[i].resolved_string;
     }
 
-    const utf8_t *str = string(i);    
+    const MUTF8& str = string(i);
     Object *so = java_lang_String::intern(Allocator::string(str));
 
     set_type(i, JVM_CONSTANT_ResolvedString);
@@ -543,10 +550,10 @@ string ConstantPool::toString() const {
                 oss << ". [class name] " << values[i].resolved_class->name << endl;
                 break;
             case JVM_CONSTANT_String:
-                oss << ". [string] " << string(i) << endl;
+                //oss << ". [string] " << string(i) << endl;
                 break;
             case JVM_CONSTANT_ResolvedString:
-                oss << ". [string] " << java_lang_String::to_utf8(values[i].resolved_string) << endl;
+                //oss << ". [string] " << java_lang_String::to_utf8(values[i].resolved_string) << endl;
                 break;
             case JVM_CONSTANT_MethodType:
             case JVM_CONSTANT_Module:

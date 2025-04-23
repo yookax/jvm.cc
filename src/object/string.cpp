@@ -65,25 +65,13 @@ jstrRef Allocator::string(const utf8_t *str) {
     init_class(g_string_class);
     //assert(g_string_class->lookup_field("COMPACT_STRINGS", "Z")->static_value.z);
 
-    jstrRef so = Allocator::object(g_string_class);
     size_t len = length(str);
 
-    // set java/lang/String 的 value 变量赋值
-    // private final byte[] value;
-    jarrRef value = Allocator::array("[B", len); // [B
-    memcpy(value->data, str, len);
-    so->set_field_value<jref>("value", "[B", value);
+    MUTF8 mutf8;
+    mutf8.s = (const uint8_t *)str;
+    mutf8.len_by_byte = len;
 
-    so->set_field_value<jbyte>("coder", STRING_CODE_LATIN1);
-    return so;
-}
-
-jstrRef Allocator::string(const unicode_t *str, jsize len) {
-    assert(str != nullptr && len >= 0);
-    utf8_t *utf8 = unicode::to_utf8(str, len);
-    jstrRef so = Allocator::string(utf8);
-    //delete[] utf8; todo
-    return so;
+    return Allocator::string(mutf8);
 }
 
 utf8_t *java_lang_String::to_utf8(jstrRef so) {
@@ -93,7 +81,7 @@ utf8_t *java_lang_String::to_utf8(jstrRef so) {
 
     // byte[] value;
     jarrRef value = so->get_field_value<jref>("value", "[B");
-    
+
     jbyte code = so->get_field_value<jbyte>("coder");
     if (code == STRING_CODE_LATIN1) {
         auto utf8 = new utf8_t[value->arr_len + 1];//(utf8_t *)vm_malloc(sizeof(utf8_t) * (value->arr_len + 1));
@@ -109,7 +97,7 @@ utf8_t *java_lang_String::to_utf8(jstrRef so) {
     UNREACHABLE("%d", code);
 }
 
-u8string java_lang_String::_to_utf8(jstrRef so) {
+u8string jstring_to_u8string(jstrRef so) {
     assert(so != nullptr);
     assert(g_string_class != nullptr);
     assert(so->is_string_object());
@@ -128,29 +116,6 @@ u8string java_lang_String::_to_utf8(jstrRef so) {
     UNREACHABLE("%d", coder);
 }
 
-unicode_t *java_lang_String::to_unicode(jstrRef so) {
-    assert(so != nullptr);
-    assert(g_string_class != nullptr);
-    assert(so->is_string_object());
-    
-    // byte[] value;
-    jarrRef value = so->get_field_value<jref>("value", "[B");
-
-    jbyte code = so->get_field_value<jbyte>("coder");
-    if (code == STRING_CODE_LATIN1) {
-        unicode_t *u = utf8::toUnicode((utf8_t *)value->data, value->arr_len);
-        return u;
-    }
-    if (code == STRING_CODE_UTF16) {
-        auto u = new unicode_t[value->arr_len + 1];//(unicode_t *)vm_malloc(sizeof(unicode_t) * (value->arr_len + 1));
-        u[value->arr_len] = 0;
-        memcpy(u, value->data, value->arr_len * sizeof(jbyte));
-        return u;
-    }
-
-    UNREACHABLE("%d", code);
-}
-
 bool java_lang_String::equals(jstrRef x, jstrRef y) {
     assert(x != nullptr && y != nullptr);
     assert(x->is_string_object() && y->is_string_object());
@@ -166,40 +131,6 @@ size_t java_lang_String::hash(jstrRef x) {
     // public int hashCode();
     Method *hash_code = g_string_class->get_method("hashCode", "()I");
     return (size_t) slot::get<jint>(execJava(hash_code, { rslot(x) }));
-}
-
-jsize java_lang_String::length(jstrRef so) {
-    // todo
-    
-    // private final byte coder;
-    // 可取一下两值之一：
-    // @Native static final byte LATIN1 = 0;
-    // @Native static final byte UTF16  = 1;
-    jbyte code = so->get_field_value<jbyte>("coder");
-    if (code == 1) {
-        unimplemented
-    } else {
-        // private final byte[] value;
-        jarrRef value = so->get_field_value<jref>("value", "[B");
-        return value->arr_len;
-    }
-}
-
-jsize java_lang_String::uft_length(jstrRef so) {
-    // todo
-    
-    // private final byte coder;
-    // 可取一下两值之一：
-    // @Native static final byte LATIN1 = 0;
-    // @Native static final byte UTF16  = 1;
-    jbyte code = so->get_field_value<jbyte>("coder");
-    if (code == 1) {
-        unimplemented
-    } else {
-        // private final byte[] value;
-        jarrRef value = so->get_field_value<jref>("value", "[B");
-        return value->arr_len;
-    }
 }
 
 /*--------------------------- String Pool ---------------------------*/
@@ -238,7 +169,7 @@ jstrRef java_lang_String::intern(jstrRef so) {
 TEST_CASE(test_string)
     for (auto& s: strings_for_testing) {
         auto so = Allocator::string(s.s8);
-        auto u = java_lang_String::_to_utf8(so);
+        auto u = jstring_to_u8string(so);
         if (s.s8 != u) {
             printf("%s\n%s\nfailed\n", (char *) s.s8.c_str(), (char *) u.c_str());
         }

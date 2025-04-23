@@ -191,7 +191,6 @@ export struct Allocator {
     static jstrRef string(const std::u8string& utf8);
     static jstrRef string(const MUTF8& mutf8);
     static jstrRef string(const utf8_t *str);
-    static jstrRef string(const unicode_t *str, jsize len);
 };
 
 /*-------- Array --------*/
@@ -205,15 +204,15 @@ export void array_copy(jarrRef dst, jint dst_pos, const jarrRef src, jint src_po
 /*-------- String --------*/
 
 export namespace java_lang_String {
-    std::u8string _to_utf8(jstrRef so);
+//    std::u8string _to_utf8(jstrRef so);
     utf8_t *to_utf8(jstrRef);
-    unicode_t *to_unicode(jstrRef);
     bool equals(jstrRef, jstrRef);
     size_t hash(jstrRef);
-    jsize length(jstrRef);
-    jsize uft_length(jstrRef);
     jstrRef intern(jstrRef);
 }
+
+// convert object of java/lang/String to std::u8string
+std::u8string jstring_to_u8string(jstrRef so);
 
 /*-------- Primary Box --------*/
 
