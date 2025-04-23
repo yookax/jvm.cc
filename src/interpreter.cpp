@@ -497,22 +497,22 @@ do { \
     frame->push##t(v1 oper v2); \
     break; \
 }
-            case JVM_OPC_iadd: BINARY_OP(jint, i, +);
-            case JVM_OPC_ladd: BINARY_OP(jlong, l, +);
-            case JVM_OPC_fadd: BINARY_OP(jfloat, f, +);
-            case JVM_OPC_dadd: BINARY_OP(jdouble, d, +);
-            case JVM_OPC_isub: BINARY_OP(jint, i, -);
-            case JVM_OPC_lsub: BINARY_OP(jlong, l, -);
-            case JVM_OPC_fsub: BINARY_OP(jfloat, f, -);
-            case JVM_OPC_dsub: BINARY_OP(jdouble, d, -);
+            case JVM_OPC_iadd: BINARY_OP(jint, i, +)
+            case JVM_OPC_ladd: BINARY_OP(jlong, l, +)
+            case JVM_OPC_fadd: BINARY_OP(jfloat, f, +)
+            case JVM_OPC_dadd: BINARY_OP(jdouble, d, +)
+            case JVM_OPC_isub: BINARY_OP(jint, i, -)
+            case JVM_OPC_lsub: BINARY_OP(jlong, l, -)
+            case JVM_OPC_fsub: BINARY_OP(jfloat, f, -)
+            case JVM_OPC_dsub: BINARY_OP(jdouble, d, -)
             case JVM_OPC_imul:
                 //BINARY_OP(jint, i, *);
                 frame->ostack--;
                 slot::set<jint>(frame->ostack-1, slot::get<jint>(frame->ostack-1) * slot::get<jint>(frame->ostack));
                 break;
-            case JVM_OPC_lmul: BINARY_OP(jlong, l, *);
-            case JVM_OPC_fmul: BINARY_OP(jfloat, f, *);
-            case JVM_OPC_dmul: BINARY_OP(jdouble, d, *);
+            case JVM_OPC_lmul: BINARY_OP(jlong, l, *)
+            case JVM_OPC_fmul: BINARY_OP(jfloat, f, *)
+            case JVM_OPC_dmul: BINARY_OP(jdouble, d, *)
 
 #define ZERO_DIVISOR_CHECK(value) \
 do { \
@@ -542,7 +542,7 @@ do { \
                 break;
             case JVM_OPC_lrem:
                 ZERO_DIVISOR_CHECK(slot::get<jlong>(frame->ostack - 2));
-                BINARY_OP(jlong, l, %);
+                BINARY_OP(jlong, l, %)
 #undef ZERO_DIVISOR_CHECK
 
             case JVM_OPC_frem: {
@@ -622,12 +622,12 @@ do { \
                 frame->pushl((x >> shift) & ~(((((jlong)1) << size) >> shift) << 1));
                 break;
             }
-            case JVM_OPC_iand: BINARY_OP(jint,  i, &);
-            case JVM_OPC_land: BINARY_OP(jlong, l, &);
-            case JVM_OPC_ior:  BINARY_OP(jint,  i, |);
-            case JVM_OPC_lor:  BINARY_OP(jlong, l, |);
-            case JVM_OPC_ixor: BINARY_OP(jint,  i, ^);
-            case JVM_OPC_lxor: BINARY_OP(jlong, l, ^);
+            case JVM_OPC_iand: BINARY_OP(jint,  i, &)
+            case JVM_OPC_land: BINARY_OP(jlong, l, &)
+            case JVM_OPC_ior:  BINARY_OP(jint,  i, |)
+            case JVM_OPC_lor:  BINARY_OP(jlong, l, |)
+            case JVM_OPC_ixor: BINARY_OP(jint,  i, ^)
+            case JVM_OPC_lxor: BINARY_OP(jlong, l, ^)
 #undef BINARY_OP
 
             case JVM_OPC_iinc:
@@ -1028,30 +1028,7 @@ do { \
                     throw java_lang_IncompatibleClassChangeError(m->toString());
                 }
 
-//                if (strcmp(m->name, "utf16hashCode") == 0) {
-//                    auto& x = m->clazz->name;
-//                    int i=3;
-//                }
-//                if (strcmp(m->clazz->name, "jdk/internal/util/ArraysSupport") == 0) {
-//                    int i=3;
-//                }
                 init_class(m->clazz);
-//                if (strcmp(m->clazz->name, "jdk/internal/util/ArraysSupport") == 0) {
-//                    Field* fff = m->clazz->get_field("JLA");
-//                    auto xx = fff->static_value.r;
-//                    cout << xx <<endl;
-//                    int i=3;
-//                }
-
-//                Field* jla = m->clazz->get_field("JLA");
-//                if (jla == nullptr)
-//                    jla = m->clazz->get_field("jla");
-//                if (jla != nullptr) {
-//                    auto xx = jla->static_value.r;
-//                    if (xx != nullptr) {
-//                        cout << m->clazz->name << endl;
-//                    }
-//                }
 
                 frame->ostack -= m->arg_slots_count;
                 resolved_method = m;
