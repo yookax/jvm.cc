@@ -457,7 +457,9 @@ Class *define_class(jref class_loader, jstrRef name,
 
 Class *init_class(Class *c) {
     assert(c != nullptr);
-
+//    if (strcmp(c->name, "jdk/internal/util/ArraysSupport") == 0) {
+//        int i=3;
+//    }
     if (c->initialized()) {
         return c;
     }
@@ -476,7 +478,6 @@ Class *init_class(Class *c) {
 
     // 在这里先行 set inited true, 如不这样，后面执行<clinit>时，
     // 可能调用putstatic等函数也会触发<clinit>的调用造成死循环。
-
     c->state = Class::State::INITED;
 
     Method *m = c->get_method("<clinit>", "()V");

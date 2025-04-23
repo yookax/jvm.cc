@@ -156,7 +156,7 @@ do { \
 #define LOG_LEVEL_VERBOSE 4 
 
 // 日志级别，默认为 LOG_LEVEL_ERR
-#define LOG_LEVEL LOG_LEVEL_ERR 
+#define LOG_LEVEL LOG_LEVEL_ERR
 
 #define ERR     printvm
 #define WARN    printvm

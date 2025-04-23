@@ -102,7 +102,7 @@ static const utf8_t *get_opc_operating_obj_name(Frame *frame, int opc) {
 static slot_t *exec(jref &excep) {
     Thread *thread = get_current_thread();
     Frame *frame = thread->top_frame;
-    TRACE("executing frame: %s", frame->toString().c_str());
+    TRACE("executing frame: %s\n", frame->toString().c_str());
 
     Method *resolved_method = nullptr;
     int index;
@@ -133,7 +133,7 @@ do { \
     /*ostack = frame->ostack; */ \
     lvars = frame->lvars; \
     _this = frame->method->access_flags.is_static() ? (jref) clazz : slot::get<jref>(lvars); \
-    TRACE("executing frame: %s", frame->toString().c_str()); \
+    TRACE("executing frame: %s\n", frame->toString().c_str()); \
 } while(false)
 
     if (excep != nullptr) {
@@ -838,10 +838,10 @@ do { \
             case JVM_OPC_return: {
                 ret_value_slots_count = 0;
             _method_return:
-                TRACE("will return: %s", frame->toString().c_str());
+                TRACE("will return: %s\n", frame->toString().c_str());
                 thread->pop_frame();
                 Frame *invoke_frame = thread->top_frame;
-                TRACE("invoke frame: %s", invoke_frame == nullptr ? "NULL" : invoke_frame->toString().c_str());
+                TRACE("invoke frame: %s\n", invoke_frame == nullptr ? "NULL" : invoke_frame->toString().c_str());
                 frame->ostack -= ret_value_slots_count;
                 slot_t *ret_value = frame->ostack;
                 if (frame->vm_invoke || invoke_frame == nullptr) {
@@ -1028,7 +1028,30 @@ do { \
                     throw java_lang_IncompatibleClassChangeError(m->toString());
                 }
 
+//                if (strcmp(m->name, "utf16hashCode") == 0) {
+//                    auto& x = m->clazz->name;
+//                    int i=3;
+//                }
+//                if (strcmp(m->clazz->name, "jdk/internal/util/ArraysSupport") == 0) {
+//                    int i=3;
+//                }
                 init_class(m->clazz);
+//                if (strcmp(m->clazz->name, "jdk/internal/util/ArraysSupport") == 0) {
+//                    Field* fff = m->clazz->get_field("JLA");
+//                    auto xx = fff->static_value.r;
+//                    cout << xx <<endl;
+//                    int i=3;
+//                }
+
+//                Field* jla = m->clazz->get_field("JLA");
+//                if (jla == nullptr)
+//                    jla = m->clazz->get_field("jla");
+//                if (jla != nullptr) {
+//                    auto xx = jla->static_value.r;
+//                    if (xx != nullptr) {
+//                        cout << m->clazz->name << endl;
+//                    }
+//                }
 
                 frame->ostack -= m->arg_slots_count;
                 resolved_method = m;
@@ -1095,7 +1118,7 @@ do { \
                 goto _invoke_method;
             }
             case JVM_OPC_invokenative: {
-                TRACE("%s", frame->toString().c_str());
+                TRACE("%s\n", frame->toString().c_str());
 
                 // todo 不需要在这里做任何同步的操作
 
@@ -1255,7 +1278,7 @@ do { \
                         frame->pushr(eo);
                         reader->pc = (size_t) handler_pc;
 
-                        TRACE("athrow: find exception handler: %s", frame->toString().c_str());
+                        TRACE("athrow: find exception handler: %s\n", frame->toString().c_str());
                         break;
                     }
 
@@ -1274,7 +1297,7 @@ do { \
                         throw UncaughtJavaException(eo);
                     }
 
-                    TRACE("athrow: pop frame: %s", frame->toString().c_str());
+                    TRACE("athrow: pop frame: %s\n", frame->toString().c_str());
                     CHANGE_FRAME(frame->prev);
                 }
                 break;

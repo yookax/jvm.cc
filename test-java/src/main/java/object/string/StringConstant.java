@@ -1,10 +1,7 @@
-package java12;
+package object.string;
 
 import java.util.Optional;
 
-/**
- *
- */
 public class StringConstant {
 
     private static void testDescribeConstable() {

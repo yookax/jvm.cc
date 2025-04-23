@@ -175,12 +175,12 @@ void init_jvm() {
     // static final boolean BIG_ENDIAN;
     // static final boolean UNALIGNED_ACCESS;
     // static final int DATA_CACHE_LINE_FLUSH_SIZE;
-    Class *uc = load_boot_class("jdk/internal/misc/UnsafeConstants");
-    init_class(uc);
-
-    uc->lookup_field("ADDRESS_SIZE0", "I")->static_value.i = sizeof(void *);
-    uc->lookup_field("PAGE_SIZE", "I")->static_value.i = page_size();
-    uc->lookup_field("BIG_ENDIAN", "Z")->static_value.z = std::endian::native == std::endian::big;
+//    Class *uc = load_boot_class("jdk/internal/misc/UnsafeConstants");
+//    init_class(uc);
+//
+//    uc->lookup_field("ADDRESS_SIZE0", "I")->static_value.i = sizeof(void *);
+//    uc->lookup_field("PAGE_SIZE", "I")->static_value.i = page_size();
+//    uc->lookup_field("BIG_ENDIAN", "Z")->static_value.z = std::endian::native == std::endian::big;
     // todo UNALIGNED_ACCESS
     // todo DATA_CACHE_LINE_FLUSH_SIZE
 
@@ -193,15 +193,23 @@ void init_jvm() {
     // AccessibleObject.java中说AccessibleObject类会在initPhase1阶段初始化，
     // 但我没有在initPhase1中找到初始化AccessibleObject的代码
     // 所以`暂时`先在这里初始化一下。待日后研究清楚了再说。
-    Class *acc = load_boot_class("java/lang/reflect/AccessibleObject");
-    init_class(acc);
+//    Class *acc = load_boot_class("java/lang/reflect/AccessibleObject");
+//    init_class(acc);
 
     Class *sys = load_boot_class("java/lang/System");
     init_class(sys);
-    
     Method *m = sys->lookup_method("initPhase1", "()V");
     assert(m != nullptr);
     execJava(m);
+
+    // 由于在 'initPhase1' 阶段才会调用setJavaLangAccess();
+    // 在 'initPhase1' 之前初始化的 ‘jdk/internal/util/ArraysSupport’ 类，其 ‘JLA’ 变量是空值。
+    //      private static final JavaLangAccess JLA = SharedSecrets.getJavaLangAccess();
+    // 现在在 'initPhase1' 执行完后，重新初始化 ‘jdk/internal/util/ArraysSupport’ 类，
+    // 以确保 ‘JLA’ 变量得到正确的值。
+    Class *as = load_boot_class("jdk/internal/util/ArraysSupport");
+    as->state = Class::State::LOADED;
+    init_class(as);
 
     // private static int initPhase2(boolean printToStderr, boolean printStackTrace);
     // init module system

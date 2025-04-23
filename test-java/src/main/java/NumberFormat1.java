@@ -1,13 +1,7 @@
-package java12;
-
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/**
- *
- */
 public class NumberFormat1 {
-
     public static void main(String[] args) {
         //支持压缩数字格式化
         NumberFormat cnf = NumberFormat.getCompactNumberInstance(Locale.US, NumberFormat.Style.SHORT);

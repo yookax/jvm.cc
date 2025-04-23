@@ -1,4 +1,4 @@
-package java8.time;
+package datetime;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -10,9 +10,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- *
- */
 public class LocalTime1 {
 
     public static void main(String[] args) {
