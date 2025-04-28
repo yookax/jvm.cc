@@ -235,7 +235,7 @@ static unordered_map<const utf8_t *, Class *, utf8::Hash, utf8::Comparator> boot
 // vm中所有存在的 class loaders，include "boot class loader".
 static unordered_set<const Object *> loaders;
 
-static void addClassToClassLoader(Object *class_loader, Class *c) {
+static void add_class_to_class_loader(Object *class_loader, Class *c) {
     assert(c != nullptr);
     if (class_loader == BOOT_CLASS_LOADER) {
         boot_classes.insert(make_pair(c->name, c));
@@ -270,7 +270,7 @@ Class *load_boot_class(const utf8_t *name) {
     Class *c = nullptr;
     if (PRIMITIVE::check_class_name(name)) {
         c = new Class(name);
-        addClassToClassLoader(BOOT_CLASS_LOADER, c);
+        add_class_to_class_loader(BOOT_CLASS_LOADER, c);
     } else {
         auto content = read_boot_class(name);
         if (content.has_value()) { // find out
@@ -280,7 +280,7 @@ Class *load_boot_class(const utf8_t *name) {
 
     if (c != nullptr) {
         boot_packages.insert(c->pkg_name);
-        // addClassToClassLoader(BOOT_CLASS_LOADER, c);
+        // add_class_to_class_loader(BOOT_CLASS_LOADER, c);
     }
     
     return c;
@@ -305,7 +305,7 @@ ArrayClass *load_array_class(Object *loader, const utf8_t *arr_class_name) {
     if (arr_class->loader == BOOT_CLASS_LOADER) {
         boot_packages.insert(arr_class->pkg_name); // todo array class 的pkg_name是啥
     }
-    addClassToClassLoader(arr_class->loader, arr_class);
+    add_class_to_class_loader(arr_class->loader, arr_class);
     return (ArrayClass *) arr_class;
 }
 
@@ -386,14 +386,14 @@ Class *load_class(Object *class_loader, const utf8_t *name) {
     jclsRef co = slot::get<jref>(slot);
     assert(co != nullptr && co->jvm_mirror != nullptr);
     c = co->jvm_mirror;
-    addClassToClassLoader(class_loader, c);
+    add_class_to_class_loader(class_loader, c);
     // init_class(c); /////////// todo /////////////////////////////////////////
     return c;
 }
 
 Class *define_class(jref class_loader, const u1 *bytecode, size_t len) {
     auto c = new Class(class_loader, bytecode, len);
-    addClassToClassLoader(class_loader, c);
+    add_class_to_class_loader(class_loader, c);
     return c;
 }
 
@@ -412,7 +412,7 @@ Class *define_class(jref class_loader, const char *name, const jbyte *buf,
         c->source_file_name = strdup(source);
     }
 
-    // addClassToClassLoader(class_loader, c);
+    // add_class_to_class_loader(class_loader, c);
     return c;
 }
 
@@ -440,7 +440,7 @@ Class *define_class(Class *lookup, const char *name, const jbyte *buf,
     }
 
     // todo `c`的 classloader 是不是lookup的classloader
-    // addClassToClassLoader(lookup->loader, c);
+    // add_class_to_class_loader(lookup->loader, c);
     return c;
 }
 

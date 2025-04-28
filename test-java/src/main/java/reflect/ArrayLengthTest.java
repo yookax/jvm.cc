@@ -4,7 +4,9 @@ import java.lang.reflect.Array;
 
 public class ArrayLengthTest {
     public static void main(String[] args) {
-        System.out.println(nullArrayLength() && nonArrayLength() && arrayLength() ? "passed" : "failed");
+        System.out.println(nullArrayLength());
+        System.out.println(nonArrayLength());
+        System.out.println(arrayLength());
     }
 
     public static boolean nullArrayLength() {

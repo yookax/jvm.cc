@@ -9,8 +9,8 @@ import object;
 import exception;
 
 #define VERIFY_NULL    if (array == nullptr) { throw java_lang_NullPointerException(); }
-#define VERIFY_ILLEGAL if (array == nullptr) { throw java_lang_IllegalArgumentException("Argument is not an array"); }
-#define VERIFY_BOUNDS  if (array == nullptr) { throw java_lang_ArrayIndexOutOfBoundsException(); } // todo msg
+#define VERIFY_ILLEGAL if (!array->is_array_object()) { throw java_lang_IllegalArgumentException("Argument is not an array"); }
+#define VERIFY_BOUNDS  if (!array->check_bounds(index)) { throw java_lang_ArrayIndexOutOfBoundsException(); } // todo msg
 
 #define GET_ARRAY_AND_INDEX \
     slot_t *args = f->lvars; \
@@ -188,7 +188,7 @@ void getDouble(Frame *f) {
 
 //public static native void set(Object array, int index, Object value)
 //    throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
-void _set(Frame *f) {
+void set(Frame *f) {
     GET_ARRAY_AND_INDEX
     jref value = slot::get<jref>(args);
     if (value == nullptr) {
@@ -395,7 +395,7 @@ void java_lang_reflect_Array_registerNatives() {
     R(getFloat, "(Ljava/lang/Object;I)F");
     R(getDouble, "(Ljava/lang/Object;I)D");
 
-    R(_set, "(Ljava/lang/Object;ILjava/lang/Object;)V");
+    R(set, "(Ljava/lang/Object;ILjava/lang/Object;)V");
     R(setBoolean, "(Ljava/lang/Object;IZ)V");
     R(setByte, "(Ljava/lang/Object;IB)V");
     R(setChar, "(Ljava/lang/Object;IC)V");
