@@ -238,10 +238,14 @@ void init_jvm() {
     // Main Thread Set ContextClassLoader
     g_main_thread->java_thread->set_field_value<jref>("contextClassLoader",
                                                       "Ljava/lang/ClassLoader;", g_app_class_loader);
+
+    Class *mhn = load_boot_class("java/lang/invoke/MethodHandleNatives");
+    init_class(mhn);
+
     g_vm_initing = false;
     TRACE("init jvm is over.\n");
 
-    // ------------------ 测试是否初始化成功 --------------------------
+    // -------------------------------- 测试是否初始化成功 --------------------------------
 
     Class *_c = load_boot_class("jdk/internal/access/SharedSecrets");
     if (_c == nullptr) {
