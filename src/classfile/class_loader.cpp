@@ -263,7 +263,7 @@ Class *load_boot_class(const utf8_t *name) {
 
     auto iter = boot_classes.find(name);
     if (iter != boot_classes.end()) {
-        TRACE("find loaded class (%s) from pool.", name);
+        TRACE("find loaded class (%s) from pool.\n", name);
         return iter->second;
     }
 

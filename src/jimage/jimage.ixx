@@ -33,7 +33,6 @@ export optional<pair<const uint8_t *, size_t>> get_resource_from_jimage(const ch
     return jf->get_resource(path);
 }
 
-
 export TEST_CASE(test_jimage_string)
     static struct {
         int hash_code;
@@ -65,18 +64,18 @@ static auto _u8s = {// /<module>/<package>/<base>.<extension>
 };
 
 export TEST_CASE(test_jimage)
-    JImageFile jf("d:/modules");
-    jf.print();
-
-    for (auto u8: _u8s) {
-        cout << "---\n[" << (const char *)u8 << "]" << endl;
-        auto location = jf.find_location(u8);
-        if (!location.has_value()) {
-            cout << "not find" << endl;
-            continue;
-        }
-        cout << location.value().to_str(jf.index.strings);
-    }
+    // JImageFile jf("d:/modules");
+    // jf.print();
+    //
+    // for (auto u8: _u8s) {
+    //     cout << "---\n[" << (const char *)u8 << "]" << endl;
+    //     auto location = jf.find_location(u8);
+    //     if (!location.has_value()) {
+    //         cout << "not find" << endl;
+    //         continue;
+    //     }
+    //     cout << location.value().to_str(jf.index.strings);
+    // }
 }
 
 export TEST_CASE(test_jimage1)

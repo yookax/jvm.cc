@@ -551,6 +551,13 @@ void Class::generate_class_object() {
 
         // Set by VM
         // private transient Object classData;    todo
+
+        // Set by the VM
+        // private final transient char modifiers;  todo
+
+        // Set by the VM if the Class is a primitive type.
+        // private final transient boolean primitive;
+        java_mirror->set_field_value<jbool>("primitive", "Z", is_prim_class() ? jtrue : jfalse);
     }
     assert(java_mirror != nullptr);
 }

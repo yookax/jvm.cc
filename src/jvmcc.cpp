@@ -87,7 +87,7 @@ int run_jvm(int argc, char* argv[]) {
         panic("main_class == NULL"); // todo
     }
 
-  //  init_class(main_class);
+    init_class(main_class);
 
     Method *main_method = main_class->lookup_method("main", "([Ljava/lang/String;)V");
     if (main_method == nullptr) {

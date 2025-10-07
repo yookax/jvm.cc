@@ -106,7 +106,7 @@ static string find_jdk_dir() {
     // 	}
     // }
 
-    // 尝试在以下几个目录查找
+    // Where to find the jdk
     vector<string> common_paths = {
             "C:\\Program Files\\Java",
             "C:\\ProgramData\\Java",
@@ -193,8 +193,11 @@ void init_jvm() {
     // AccessibleObject.java中说AccessibleObject类会在initPhase1阶段初始化，
     // 但我没有在initPhase1中找到初始化AccessibleObject的代码
     // 所以`暂时`先在这里初始化一下。待日后研究清楚了再说。
-//    Class *acc = load_boot_class("java/lang/reflect/AccessibleObject");
-//    init_class(acc);
+    Class *acc = load_boot_class("java/lang/reflect/AccessibleObject");
+    init_class(acc);
+
+    Class *rf = load_boot_class("jdk/internal/reflect/ReflectionFactory");
+    init_class(rf);
 
     Class *sys = load_boot_class("java/lang/System");
     init_class(sys);
@@ -237,4 +240,39 @@ void init_jvm() {
                                                       "Ljava/lang/ClassLoader;", g_app_class_loader);
     g_vm_initing = false;
     TRACE("init jvm is over.\n");
+
+    // ------------------ 测试是否初始化成功 --------------------------
+
+    Class *_c = load_boot_class("jdk/internal/access/SharedSecrets");
+    if (_c == nullptr) {
+        panic("jdk/internal/access/SharedSecrets");
+    }
+    Field *_f = _c->get_field("javaLangAccess");
+    if (_f == nullptr) {
+        panic("javaLangAccess");
+    }
+    if (_f->static_value.r == nullptr) {
+        panic("jla");
+    }
+    _f = _c->get_field("javaLangReflectAccess");
+    if (_f == nullptr) {
+        panic("jdk/internal/reflect/ReflectionFactory");
+    }
+    if (_f->static_value.r == nullptr) {
+        panic("jlra");
+    }
+
+    // -----------
+
+    _c = load_boot_class("jdk/internal/reflect/ReflectionFactory");
+    if (_c == nullptr) {
+        panic("jdk/internal/reflect/ReflectionFactory");
+    }
+    _f = _c->get_field("soleInstance");
+    if (_f == nullptr) {
+        panic("soleInstance");
+    }
+    if (_f->static_value.r == nullptr) {
+        panic("si");
+    }
 }

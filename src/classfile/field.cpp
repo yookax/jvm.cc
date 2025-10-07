@@ -1,4 +1,4 @@
-module;
+﻿module;
 #include <cassert>
 #include "../vmdef.h"
 

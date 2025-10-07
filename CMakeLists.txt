@@ -15,12 +15,12 @@ set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 message(STATUS "C++: ${CMAKE_CXX_COMPILER}")
 message(STATUS "C++ Compilation flags: " ${CMAKE_CXX_FLAGS})
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules")
-endif()
+#if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules")
+#endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8 /experimental:module ") # /W4
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8  /experimental:module ") # /W4
 endif()
 
 find_package(ZLIB)

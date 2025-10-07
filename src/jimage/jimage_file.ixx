@@ -227,6 +227,7 @@ public:
         else
             return nullopt;
     }
+
     optional<pair<const uint8_t *, size_t>> get_resource(const char8_t *path) {
         optional<JImageLocation> loc = find_location(path);
         if (!loc.has_value()) {

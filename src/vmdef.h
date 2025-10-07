@@ -18,7 +18,8 @@
  
 #define VM_VERSION "1.0" // version of this jvm, a string.
 
-#define JAVA_COMPAT_MAJOR_VERSION "24"
+// Compatible Java version
+#define JAVA_COMPAT_MAJOR_VERSION "25"
 
 // jvm 最大支持的classfile版本
 #define JVM_MAX_CLASSFILE_MAJOR_VERSION 60

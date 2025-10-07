@@ -12,11 +12,11 @@ using namespace std;
 // jdk/internal/util/SystemProps.java
 
 enum {
-    _display_country_NDX = 0, // "user.country"
-    _display_language_NDX, // "user.language"
-    _display_script_NDX, // "user.script"
-    _display_variant_NDX, // "user.variant"
-    _file_encoding_NDX,
+    _display_country_NDX = 0,
+    _display_language_NDX,
+    _display_script_NDX,
+    _display_variant_NDX,
+    //_file_encoding_NDX,
     _file_separator_NDX,
     _format_country_NDX,
     _format_language_NDX,
@@ -32,6 +32,7 @@ enum {
     _https_proxyPort_NDX,
     _java_io_tmpdir_NDX,
     _line_separator_NDX,
+    _native_encoding_NDX,
     _os_arch_NDX,
     _os_name_NDX,
     _os_version_NDX,
@@ -40,6 +41,7 @@ enum {
     _socksProxyHost_NDX,
     _socksProxyPort_NDX,
     _stderr_encoding_NDX,
+    _stdin_encoding_NDX,
     _stdout_encoding_NDX,
     _sun_arch_abi_NDX,
     _sun_arch_data_model_NDX,
@@ -79,7 +81,8 @@ export void init_properties() {
     platform_properties[_user_home_NDX] = strdup(get_user_home_dir().c_str());
     platform_properties[_user_dir_NDX] = get_current_working_directory();
     platform_properties[_line_separator_NDX] = line_separator();
-    platform_properties[_file_encoding_NDX] = "UTF-8";
+    //platform_properties[_file_encoding_NDX] = "UTF-8";
+    platform_properties[_native_encoding_NDX] = "UTF-8";
     platform_properties[_sun_jnu_encoding_NDX] = "UTF-8";
     platform_properties[_file_separator_NDX] = file_separator();
     platform_properties[_path_separator_NDX] = path_separator();

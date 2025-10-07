@@ -38,7 +38,6 @@ public class ArrayClassTest {
         // public final native void java.lang.Object.notify(),
         // public final native void java.lang.Object.notifyAll()
         boolean b6 = 9 == c.getMethods().length;
-
         boolean b7 = 0 == c.getDeclaredMethods().length;
         return b1 && b2 && b3 && b4 && b5 && b6 && b7;
     }
