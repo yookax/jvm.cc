@@ -4,7 +4,7 @@ A tiny JVM written in C++.
 ## Development environment
 * Win10
 * cl
-* jdk24
+* jdk25
  
 ## Run
 Ensure you already set `JAVA_HOME` environment variable.
