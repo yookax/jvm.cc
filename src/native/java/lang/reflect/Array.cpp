@@ -78,22 +78,31 @@ void get(Frame *f) {
     switch (array->clazz->name[1]) {
         case 'Z': // boolean[]
             o = bool_box(array->getElt<jbool>(index));
+            break;
         case 'B': // byte[]
             o = byte_box(array->getElt<jbyte>(index));
+            break;
         case 'C': // char[]
             o = char_box(array->getElt<jchar>(index));
+            break;
         case 'S': // short[]
             o = short_box(array->getElt<jshort>(index));
+            break;
         case 'I': // int[]
             o = int_box(array->getElt<jint>(index));
+            break;
         case 'J': // long[]
             o = long_box(array->getElt<jlong>(index));
+            break;
         case 'F': // float[]
             o = float_box(array->getElt<jfloat>(index));
+            break;
         case 'D': // double[]
             o = double_box(array->getElt<jdouble>(index));
+            break;
         default:  // reference array
             o = array->getElt<jref>(index);
+            break;
     }
     f->pushr(o);
 }
