@@ -34,8 +34,8 @@ Heap::~Heap() {
  * 否则跳过此 free chunk
  * 如果到堆尾，返回0
  */
-address_t Heap::jump_freelist(address_t p) {
-    assert(is_in(p));
+address_t Heap::jumpFreelist(address_t p) {
+    assert(isIn(p));
 
     for (auto curr = freelist; curr != nullptr; curr = curr->next) {
         if (p < curr->head)
@@ -55,7 +55,7 @@ address_t Heap::jump_freelist(address_t p) {
     return p;
 }
 
-void *Heap::do_alloc(size_t len) {
+void *Heap::doAlloc(size_t len) {
     lock();
 
     void *p = nullptr;
@@ -95,13 +95,13 @@ over:
 }
 
 void *Heap::alloc(size_t len) {
-    void *p = do_alloc(len);
+    void *p = doAlloc(len);
     if (p != nullptr)
         return p;
 
 //    gc();
 
-    //p = do_alloc(len);
+    //p = doAlloc(len);
     //if (p != nullptr)
     //    return p;
 
@@ -110,7 +110,7 @@ void *Heap::alloc(size_t len) {
 }
 
 void Heap::recycle(address_t p, size_t len) {
-    assert(is_in(p));
+    assert(isIn(p));
 
    // lock();
 
@@ -166,7 +166,7 @@ over:
    // unlock();
 }
 
-size_t Heap::count_free_memory() const {
+size_t Heap::countFreeMemory() const {
     size_t free_mem = 0;
     for (Chunk *chunk = freelist; chunk != nullptr; chunk = chunk->next) {
         free_mem += chunk->len;
@@ -181,7 +181,7 @@ bool Heap::find(Object *o) {
     const address_t end = starting_address + size;
     
     for (auto curr = starting_address; curr < end;) {
-        curr = jump_freelist(curr);
+        curr = jumpFreelist(curr);
         if (curr == 0)
             return false;
         auto obj = (Object *) curr;
@@ -197,7 +197,7 @@ void Heap::traversal(void (* touch)(Object *)) {
     const address_t end = starting_address + size;
     
     for (auto curr = starting_address; curr < end;) {
-        curr = jump_freelist(curr);
+        curr = jumpFreelist(curr);
         if (curr == 0)
             return;
         auto obj = (Object *) curr;
@@ -206,11 +206,11 @@ void Heap::traversal(void (* touch)(Object *)) {
     }
 }
 
-void Heap::collect_garbage() {
+void Heap::collectGarbage() {
     const address_t end = starting_address + size;
 
     for (auto curr = starting_address; curr < end;) {
-        curr = jump_freelist(curr);
+        curr = jumpFreelist(curr);
         if (curr == 0)
             return;
         auto o = (Object *) curr;
@@ -236,11 +236,11 @@ void Heap::display() {
 }
 
 // 判断slot存放的是不是一个Java Object Reference
-static bool is_java_object_reference(const slot_t *slot) {
+static bool isJavaObjectReference(const slot_t *slot) {
     assert(slot != nullptr);
 
     address_t p = *slot;
-    if (!g_heap->is_in(p)) {
+    if (!g_heap->isIn(p)) {
         return false;
     }
 
@@ -263,7 +263,7 @@ static bool is_java_object_reference(const slot_t *slot) {
 /*
  * 分析一个可达的对象，此对象引用的对象也是可达的
  */
-static void analysis_reachable_object(jref obj) {
+static void analysisReachableObject(jref obj) {
     assert(obj != nullptr);
     assert(obj->reachable); // 分析一个可达的对象
 
@@ -276,7 +276,7 @@ static void analysis_reachable_object(jref obj) {
             jref o = arr->getElt<jref>(i);
             if (o != nullptr) {
                 o->reachable = true; // 此对象可达
-                analysis_reachable_object(o);
+                analysisReachableObject(o);
             }
         }
 
@@ -287,10 +287,10 @@ static void analysis_reachable_object(jref obj) {
     int count = obj->clazz->inst_fields_count;
     for (int i = 0; i < count; i++) {
         slot_t *slot = obj->data + i;
-        if (is_java_object_reference(slot)) {
+        if (isJavaObjectReference(slot)) {
             jref o = slot::get<jref>(slot);
             o->reachable = true;
-            analysis_reachable_object(o);
+            analysisReachableObject(o);
         }
     }
 }
@@ -300,19 +300,19 @@ static void analysis_class(Class *c) {
 
     // 1. 分析类静态属性引用的对象
     for (Field *f: c->fields) {
-        if (!f->access_flags.is_static() || f->is_prim_field())
+        if (!f->access_flags.isStatic() || f->is_prim_field())
             continue;
 
         // static and reference field of a class
         jref o = f->static_value.r;
         o->reachable = true;
-        analysis_reachable_object(o);
+        analysisReachableObject(o);
     }
 
     // 2. 分析类对象中引用的对象
     Object *co = c->java_mirror;
     co->reachable = true;
-    analysis_reachable_object(co);
+    analysisReachableObject(co);
 }
 
 /*
@@ -325,7 +325,7 @@ static void analysis_class(Class *c) {
     d.本地方法栈中JNI的引用的对象
     e.ClassObject对象（保存在本地内存）中所引用的对象
  */
-static void reachability_analysis() {
+static void reachabilityAnalysis() {
     /* 虚拟机栈(栈桢中的本地变量表)中的引用的对象 */
     for (Thread *t: g_all_java_thread) {
         for (Frame *frame = t->top_frame; frame != nullptr; frame = frame->prev) {
@@ -333,10 +333,10 @@ static void reachability_analysis() {
             u2 max_locals = frame->method->max_locals;
 
             for (u2 i = 0; i < max_locals; i++) {
-                if (is_java_object_reference(lvars + i)) {
+                if (isJavaObjectReference(lvars + i)) {
                     jref o = slot::get<jref>(lvars + i);
                     o->reachable = true;
-                    analysis_reachable_object(o);
+                    analysisReachableObject(o);
                 }
             }
 
@@ -382,8 +382,8 @@ void gc() {
 //        }
     });
 
-    reachability_analysis();
-    g_heap->collect_garbage();
+    reachabilityAnalysis();
+    g_heap->collectGarbage();
 
     g_heap->unlock();
 }
@@ -397,15 +397,15 @@ TEST_CASE(test_alloc_continuously)
         auto heap = new Heap(dis(gen));
         int alloced_size = 0;
 
-        for (auto free_size = heap->count_free_memory(); free_size > 0;) {
+        for (auto free_size = heap->countFreeMemory(); free_size > 0;) {
             // 创建一个均匀分布，范围是[1, size]
             std::uniform_int_distribution<> d(1, free_size);
             auto len = d(gen);
             alloced_size += len;
             heap->alloc(len);
 
-            free_size = heap->count_free_memory();
-            if (alloced_size + free_size != heap->get_size()) {
+            free_size = heap->countFreeMemory();
+            if (alloced_size + free_size != heap->getSize()) {
                 delete heap;
                 printf("failed");
             }
@@ -422,8 +422,8 @@ TEST_CASE(test_heap)
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    for (auto free_memory = heap->count_free_memory();
-         free_memory > 0; free_memory = heap->count_free_memory()) {
+    for (auto free_memory = heap->countFreeMemory();
+         free_memory > 0; free_memory = heap->countFreeMemory()) {
         // 创建一个均匀分布，范围是[1, heap->get_size()]
         std::uniform_int_distribution<> dis(1, free_memory);
 

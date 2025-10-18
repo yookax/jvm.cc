@@ -25,7 +25,7 @@ export struct Annotation {
     void parse(BytesReader &r, u4 attr_len) {
         len = attr_len;
         data = new u1[len];
-        memcpy(data, r.curr_pos(), len);
+        memcpy(data, r.currPos(), len);
         r.skip(len);
     }
 };
@@ -578,7 +578,7 @@ public:
      * 参考 https://www.zhihu.com/question/45131640
      */
     [[nodiscard]] bool is_virtual() const {
-        return !access_flags.is_private() && !access_flags.is_static() && !utf8::equals(name, "<init>");
+        return !access_flags.isPrivate() && !access_flags.isStatic() && !utf8::equals(name, "<init>");
 //        return !isPrivate() && !isStatic() && !utf8::equals(name, "<init>");
     }
 
@@ -595,7 +595,7 @@ public:
     static u2 cal_args_slots_count(const utf8_t *descriptor, bool is_static);
 
     void cal_args_slots_count() {
-        arg_slots_count = cal_args_slots_count(descriptor, access_flags.is_static());
+        arg_slots_count = cal_args_slots_count(descriptor, access_flags.isStatic());
     }
 
     // [Ljava/lang/Class;

@@ -54,7 +54,7 @@ void getSuperclass(Frame *f) {
     auto _this = slot::get<jref>(args++)->jvm_mirror;
 
     jref sup = nullptr;
-    if (_this->access_flags.is_interface()
+    if (_this->access_flags.isInterface()
             || _this->is_prim_class()
             || _this->check_class_name("void")
             || (_this->super_class == nullptr))
@@ -122,7 +122,7 @@ void isInterface(Frame *f) {
     slot_t *args = f->lvars;
     auto _this = slot::get<jref>(args);
     auto c = _this->jvm_mirror;
-    f->pushi(c->access_flags.is_interface() ? 1 : 0);
+    f->pushi(c->access_flags.isInterface() ? 1 : 0);
 }
 
 // public native boolean isArray();
@@ -187,7 +187,7 @@ void getDeclaredFields0(Frame *frame) {
     // invoke constructor of class java/lang/reflect/Field
     for (size_t i = 0; i < c->fields.size(); i++) {
         auto f = c->fields[i];
-        if (public_only && !f->access_flags.is_public())
+        if (public_only && !f->access_flags.isPublic())
             continue;
 
         Object *o = Allocator::object(field_reflect_class);
@@ -202,8 +202,8 @@ void getDeclaredFields0(Frame *frame) {
             rslot(intern(Allocator::string(f->name))),               // name
             rslot(f->get_type()),                               // type
             islot(f->access_flags.get()),                            // modifiers todo
-            islot(f->access_flags.is_final() ? jtrue : jfalse),              // trusted Final todo
-            islot(f->access_flags.is_static() ? i : f->id),                  // slot
+            islot(f->access_flags.isFinal() ? jtrue : jfalse),              // trusted Final todo
+            islot(f->access_flags.isStatic() ? i : f->id),                  // slot
             rslot(sig),                                        // signature
             rslot(get_annotation_as_byte_array(f->rt_visi_annos)), // annotations
         });
@@ -248,7 +248,7 @@ void getDeclaredMethods0(Frame *f) {
 
     for (size_t i = 0; i < c->methods.size(); i++) {
         Method *m = c->methods[i];
-        if (public_only && !m->access_flags.is_public())
+        if (public_only && !m->access_flags.isPublic())
             continue;
         if ((strcmp(m->name, "<clinit>") == 0) || (strcmp(m->name, "<init>") == 0))
             continue;

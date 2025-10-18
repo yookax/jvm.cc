@@ -353,7 +353,7 @@ static void getMembers(Frame *f) {
                 count++;
                 int flags = methodFlags(m) | IS_METHOD;
 
-                flags |= (m->access_flags.is_static() ? JVM_REF_invokeStatic : JVM_REF_invokeVirtual) << REFERENCE_KIND_SHIFT;
+                flags |= (m->access_flags.isStatic() ? JVM_REF_invokeStatic : JVM_REF_invokeVirtual) << REFERENCE_KIND_SHIFT;
 
                 member_name->set_field_value<jint>(MN_flags_field, flags);
                 member_name->set_field_value<jref>(MN_clazz_field, m->clazz->java_mirror);

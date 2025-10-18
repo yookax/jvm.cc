@@ -119,7 +119,7 @@ static void init_classpath() {
         const char *cp = getenv("CLASSPATH");
         if (cp == nullptr) {
             // 没有在启动命令中指定CLASSPATH，也没有设置CLASSPATH环境变量，那么就将当前路径设为CLASSPATH
-            cp = get_current_working_directory();
+            cp = getCurrentWorkingDirectory();
         }
         strcpy(classpath, cp);
     }
@@ -268,7 +268,7 @@ Class *load_boot_class(const utf8_t *name) {
     }
 
     Class *c = nullptr;
-    if (PRIMITIVE::check_class_name(name)) {
+    if (PRIMITIVE::checkClassName(name)) {
         c = new Class(name);
         add_class_to_class_loader(BOOT_CLASS_LOADER, c);
     } else {
@@ -378,7 +378,7 @@ Class *load_class(Object *class_loader, const utf8_t *name) {
     // public Class<?> loadClass(String name) throws ClassNotFoundException
     Method *m = class_loader->clazz->lookup_method("loadClass",
                                    "(Ljava/lang/String;)Ljava/lang/Class;");
-    assert(m != nullptr && !m->access_flags.is_static());
+    assert(m != nullptr && !m->access_flags.isStatic());
 
     utf8_t *dot_name = slash_2_dot_dup(name);
     slot_t *slot = execJava(m, { rslot(class_loader), rslot(Allocator::string(dot_name)) });
@@ -504,7 +504,7 @@ Object *get_platform_classloader() {
 
     // public static ClassLoader getPlatformClassLoader();
     Method *get = c->get_method("getPlatformClassLoader", "()Ljava/lang/ClassLoader;");
-    if (get == nullptr || !get->access_flags.is_static()) {
+    if (get == nullptr || !get->access_flags.isStatic()) {
         // todo error
     }
     return execJavaR(get);
@@ -515,7 +515,7 @@ Object *get_app_classloader() {
 
     // public static ClassLoader getSystemClassLoader();
     Method *get = c->get_method("getSystemClassLoader", "()Ljava/lang/ClassLoader;");
-    if (get == nullptr || !get->access_flags.is_static()) {
+    if (get == nullptr || !get->access_flags.isStatic()) {
         // todo error
     }
     return execJavaR(get);

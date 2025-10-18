@@ -51,37 +51,37 @@ ConstantPool::ConstantPool(Class *c, BytesReader &r): owner(c) {
                 break;
             case JVM_CONSTANT_Integer: {
                 u1 bytes[4];
-                r.read_bytes(bytes, 4);
-                values[i].i32 = bytes_to_int32(bytes, std::endian::big);
+                r.readBytes(bytes, 4);
+                values[i].i32 = bytesToInt32(bytes, std::endian::big);
                 break;
             }
             case JVM_CONSTANT_Float: {
                 u1 bytes[4];
-                r.read_bytes(bytes, 4);
-                values[i].f32 = bytes_to_float(bytes, std::endian::big);
+                r.readBytes(bytes, 4);
+                values[i].f32 = bytesToFloat(bytes, std::endian::big);
                 break;
             }
             case JVM_CONSTANT_Long: {
                 u1 bytes[8];
-                r.read_bytes(bytes, 8);
-                values[i].i64 = bytes_to_int64(bytes, std::endian::big);
+                r.readBytes(bytes, 8);
+                values[i].i64 = bytesToInt64(bytes, std::endian::big);
                 set_type(++i, JVM_CONSTANT_Placeholder);
                 break;
             }
             case JVM_CONSTANT_Double: {
                 u1 bytes[8];
-                r.read_bytes(bytes, 8);
-                values[i].f64 = bytes_to_double(bytes, std::endian::big);
+                r.readBytes(bytes, 8);
+                values[i].f64 = bytesToDouble(bytes, std::endian::big);
                 set_type(++i, JVM_CONSTANT_Placeholder);
                 break;
             }
             case JVM_CONSTANT_Utf8: {
                 u2 utf8_len = r.readu2();
-                values[i].mutf8.s = r.curr_pos();
+                values[i].mutf8.s = r.currPos();
                 values[i].mutf8.len_by_byte = utf8_len;
 
                 auto buf = new utf8_t[utf8_len + 1];
-                r.read_bytes((u1 *) buf, utf8_len);
+                r.readBytes((u1 *) buf, utf8_len);
                 buf[utf8_len] = 0;
 
 //                const char *utf8 = utf8_pool::find(buf);

@@ -108,7 +108,7 @@ void Method::parse_code_attr(BytesReader &r) {
     code_len = r.readu4();
     // m->code = r.currPos();
     code = new u1[code_len];
-    memcpy(code, r.curr_pos(), code_len);
+    memcpy(code, r.currPos(), code_len);
     r.skip(code_len);
 
     // parse exception tables
@@ -229,7 +229,7 @@ Method::Method(Class *c, BytesReader &r) {
         } else if (strcmp("Deprecated", attr_name) == 0) {
             deprecated = true;
         } else if (strcmp("Synthetic", attr_name) == 0) {
-            access_flags.set_synthetic();
+            access_flags.setSynthetic();
         } else if (strcmp("Signature", attr_name) == 0) {
             signature = cp.utf8(r.readu2());
         } else if (strcmp("MethodParameters", attr_name) == 0) {
@@ -280,7 +280,7 @@ Method::Method(Class *c, BytesReader &r) {
 
     determine_ret_type();
 
-    if (access_flags.is_native()) {
+    if (access_flags.isNative()) {
         gen_native_method_info();
     }
 }
@@ -301,7 +301,7 @@ Method::Method(Class *c, const utf8_t *name0, const utf8_t *descriptor0, int acc
 
 jint Method::get_line_number(int pc) const {
     // native函数没有字节码
-    if (access_flags.is_native()) {
+    if (access_flags.isNative()) {
         return -2;
     }
 
@@ -370,8 +370,8 @@ pair<const utf8_t *, const utf8_t *> Method::find_local_variable(u2 pc, u2 index
 string Method::toString() const {
     ostringstream oss;
     oss << "method" 
-        << (access_flags.is_native() ? "(native)" : "")
-        << (access_flags.is_static() ? "(static)" : "(nonstatic)")
+        << (access_flags.isNative() ? "(native)" : "")
+        << (access_flags.isStatic() ? "(static)" : "(nonstatic)")
         << ": " 
         << clazz->name << "~" << name <<  "~" << descriptor;
     return oss.str();
@@ -383,7 +383,7 @@ string Method::get_bytecode_string() const {
     BytesReader r(code, code_len, std::endian::big);
     ConstantPool *cp = clazz->cp;
 
-    while (r.has_more()) {
+    while (r.hasMore()) {
         auto c = r.readu1();
         const char *n = opcode_names[c];
         oss << n;

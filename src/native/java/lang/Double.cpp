@@ -15,8 +15,8 @@ void doubleToRawLongBits(Frame *f) {
     auto value = slot::get<jdouble>(args);
 
     uint8_t bytes[sizeof(value)];
-    double_to_bytes(value, bytes, std::endian::native);
-    jlong x = bytes_to_int64(bytes, std::endian::native);
+    doubleToBytes(value, bytes, std::endian::native);
+    jlong x = bytesToInt64(bytes, std::endian::native);
     f->pushl(x);
 }
 
@@ -27,8 +27,8 @@ void longBitsToDouble(Frame *f) {
     auto bits = slot::get<jlong>(args);
 
     uint8_t bytes[sizeof(bits)];
-    int64_to_bytes(bits, bytes, std::endian::native);
-    jdouble x = bytes_to_double(bytes, std::endian::native);
+    int64ToBytes(bits, bytes, std::endian::native);
+    jdouble x = bytesToDouble(bytes, std::endian::native);
     f->pushd(x);
 }
 

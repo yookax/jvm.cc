@@ -9,17 +9,17 @@ import sysinfo;
 
 // public native int availableProcessors();
 void availableProcessors(Frame *f) {
-    f->pushi(processor_number());
+    f->pushi(processorNumber());
 }
 
 // public native long freeMemory();
 void freeMemory(Frame *f) {
-    f->pushl(g_heap->count_free_memory());
+    f->pushl(g_heap->countFreeMemory());
 }
 
 // public native long totalMemory();
 void totalMemory(Frame *f) {
-    f->pushl(g_heap->get_size());
+    f->pushl(g_heap->getSize());
 }
 
 // public native long maxMemory();

@@ -6,19 +6,20 @@ export module slot;
 
 import std.core;
 
-// 一个slot_t类型必须可以容纳 jbool, jbyte, jchar, jshort，jint，jfloat, jref 称为类型一
-// jlong, jdouble 称为类型二，占两个slot
+// A type of slot_t must be able to hold jbool, jbyte, jchar, jshort,
+// jint, and jfloat — these are referred to as Type 1;
+// while jlong and jdouble are referred to as Type 2, which occupy two slots.
 export using slot_t = intptr_t;
 
-static_assert(sizeof(slot_t) >= sizeof(jbool), ""); // todo msg
-static_assert(sizeof(slot_t) >= sizeof(jbyte), "");
-static_assert(sizeof(slot_t) >= sizeof(jchar), "");
-static_assert(sizeof(slot_t) >= sizeof(jshort), "");
-static_assert(sizeof(slot_t) >= sizeof(jint), "");
-static_assert(sizeof(slot_t) >= sizeof(jfloat), "");
-static_assert(sizeof(slot_t) >= sizeof(jref), "");
-static_assert(2*sizeof(slot_t) >= sizeof(jlong), "");
-static_assert(2*sizeof(slot_t) >= sizeof(jdouble), "");
+static_assert(sizeof(slot_t) >= sizeof(jbool), "A slot must be able to hold a bool.");
+static_assert(sizeof(slot_t) >= sizeof(jbyte), "A slot must be able to hold a byte.");
+static_assert(sizeof(slot_t) >= sizeof(jchar), "A slot must be able to hold a char.");
+static_assert(sizeof(slot_t) >= sizeof(jshort), "A slot must be able to hold a short.");
+static_assert(sizeof(slot_t) >= sizeof(jint), "A slot must be able to hold a int.");
+static_assert(sizeof(slot_t) >= sizeof(jfloat), "A slot must be able to hold a float.");
+static_assert(sizeof(slot_t) >= sizeof(jref), "A slot must be able to hold a reference.");
+static_assert(2*sizeof(slot_t) >= sizeof(jlong), "2 slots must be able to hold a long.");
+static_assert(2*sizeof(slot_t) >= sizeof(jdouble), "2 slots must be able to hold a double.");
 
 export namespace slot {
     /* setter */

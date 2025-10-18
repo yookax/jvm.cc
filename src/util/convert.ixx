@@ -8,8 +8,8 @@ import std.core;
 using namespace std;
 
 //template <typename T>
-//T swap_endian(T value) {
-//    static_assert(std::is_integral_v<T>, "swap_endian only supports integral types");
+//T swapEndian(T value) {
+//    static_assert(std::is_integral_v<T>, "swapEndian only supports integral types");
 //    T result = 0;
 //    for (size_t i = 0; i < sizeof(T); ++i) {
 //        result |= ( static_cast<T>((((uint8_t*)(&value))[i]) << ((sizeof(T) - 1 - i) * 8)) );
@@ -17,7 +17,7 @@ using namespace std;
 //    return result;
 //}
 template <typename T>
-T swap_endian(T value) {
+T swapEndian(T value) {
     union {
         T value;
         unsigned char bytes[sizeof(T)];
@@ -32,7 +32,7 @@ T swap_endian(T value) {
 
 
 //// 交换 32 位整数的字节序
-//uint32_t swap_endian(uint32_t value) {
+//uint32_t swapEndian(uint32_t value) {
 //    return ((value & 0xFF) << 24) |
 //           ((value & 0xFF00) << 8) |
 //           ((value & 0xFF0000) >> 8) |
@@ -40,7 +40,7 @@ T swap_endian(T value) {
 //}
 //
 //// 交换 64 位整数的字节序
-//uint64_t swap_endian(uint64_t value) {
+//uint64_t swapEndian(uint64_t value) {
 //    return ((value & 0xFF) << 56) |
 //           ((value & 0xFF00) << 40) |
 //           ((value & 0xFF0000) << 24) |
@@ -52,15 +52,15 @@ T swap_endian(T value) {
 //}
 
 template <typename T>
-T bytes_to_int(const uint8_t *bytes, std::endian e) {
+T bytesToInt(const uint8_t *bytes, std::endian e) {
     T value = 0;
     std::memcpy(&value, bytes, sizeof(T));
     if (std::endian::native != e) {
-        value = swap_endian(value);
+        value = swapEndian(value);
     }
 //    else {
 //        // 进行字节序转换
-//        value = swap_endian(value);
+//        value = swapEndian(value);
 ////        for (std::size_t i = 0; i < sizeof(T); ++i) {
 ////            value <<= 8;
 ////            value |= static_cast<T>(bytes[i]);
@@ -69,23 +69,23 @@ T bytes_to_int(const uint8_t *bytes, std::endian e) {
     return value;
 }
 
-export int16_t bytes_to_int16(const uint8_t *bytes, std::endian e) {
-    return bytes_to_int<int16_t>(bytes, e);
+export int16_t bytesToInt16(const uint8_t *bytes, std::endian e) {
+    return bytesToInt<int16_t>(bytes, e);
 }
 
-export int32_t bytes_to_int32(const uint8_t *bytes, std::endian e) {
-    return bytes_to_int<int32_t>(bytes, e);
+export int32_t bytesToInt32(const uint8_t *bytes, std::endian e) {
+    return bytesToInt<int32_t>(bytes, e);
 }
 
-export int64_t bytes_to_int64(const uint8_t *bytes, std::endian e) {
-    return bytes_to_int<int64_t>(bytes, e);
+export int64_t bytesToInt64(const uint8_t *bytes, std::endian e) {
+    return bytesToInt<int64_t>(bytes, e);
 }
 
 // 将整数转换为大端字节数组
 template <typename T>
-void int_to_bytes(T value, uint8_t *bytes, std::endian e) {
+void intToBytes(T value, uint8_t *bytes, std::endian e) {
     if (std::endian::native != e) {
-        value = swap_endian(value);
+        value = swapEndian(value);
     }
     std::memcpy(bytes, &value, sizeof(T));
 
@@ -101,57 +101,57 @@ void int_to_bytes(T value, uint8_t *bytes, std::endian e) {
 //    }
 }
 
-export void int32_to_bytes(int32_t value, uint8_t *bytes, std::endian e) {
-    return int_to_bytes<int32_t>(value, bytes, e);
+export void int32ToBytes(int32_t value, uint8_t *bytes, std::endian e) {
+    return intToBytes<int32_t>(value, bytes, e);
 }
 
-export void int64_to_bytes(int64_t value, uint8_t *bytes, std::endian e) {
-    return int_to_bytes<int64_t>(value, bytes, e);
+export void int64ToBytes(int64_t value, uint8_t *bytes, std::endian e) {
+    return intToBytes<int64_t>(value, bytes, e);
 }
 
 // Convert a byte array to a floating-point number (either float or double)
 template <typename T>
-T bytes_to_floating_point_number(const uint8_t* bytes, std::endian target_endian) {
+T bytesToFloatingPointNumber(const uint8_t* bytes, std::endian target_endian) {
     static_assert(std::is_floating_point_v<T>, "only supports floating-point types");
     using IntType = typename std::conditional<sizeof(T) == 4, uint32_t, uint64_t>::type;
     IntType raw_value;
     std::memcpy(&raw_value, bytes, sizeof(T));
 
     if (std::endian::native != target_endian) {
-        raw_value = swap_endian(raw_value);
+        raw_value = swapEndian(raw_value);
     }
 
     return *reinterpret_cast<T*>(&raw_value);
 }
 
-export float bytes_to_float(const uint8_t* bytes, std::endian bytes_endian) {
-    return bytes_to_floating_point_number<float>(bytes, bytes_endian);
+export float bytesToFloat(const uint8_t* bytes, std::endian bytes_endian) {
+    return bytesToFloatingPointNumber<float>(bytes, bytes_endian);
 }
 
-export double bytes_to_double(const uint8_t* bytes, std::endian bytes_endian) {
-    return bytes_to_floating_point_number<double>(bytes, bytes_endian);
+export double bytesToDouble(const uint8_t* bytes, std::endian bytes_endian) {
+    return bytesToFloatingPointNumber<double>(bytes, bytes_endian);
 }
 
 // Convert a floating-point number (either float or double) to a byte array
 template <typename T>
-void floating_point_number_to_bytes(T num, uint8_t* bytes, std::endian bytes_endian) {
+void floatingPointNumberToBytes(T num, uint8_t* bytes, std::endian bytes_endian) {
     static_assert(std::is_floating_point_v<T>, "only supports floating-point types");
     using IntType = typename std::conditional<sizeof(T) == 4, uint32_t, uint64_t>::type;
     IntType raw_value = *reinterpret_cast<IntType*>(&num);
 
     if (std::endian::native != bytes_endian) {
-        raw_value = swap_endian(raw_value);
+        raw_value = swapEndian(raw_value);
     }
 
     std::memcpy(bytes, &raw_value, sizeof(T));
 }
 
-export void float_to_bytes(float num, uint8_t* bytes, std::endian bytes_endian) {
-    floating_point_number_to_bytes<float>(num, bytes, bytes_endian);
+export void floatToBytes(float num, uint8_t* bytes, std::endian bytes_endian) {
+    floatingPointNumberToBytes<float>(num, bytes, bytes_endian);
 }
 
-export void double_to_bytes(double num, uint8_t* bytes, std::endian bytes_endian) {
-    floating_point_number_to_bytes<double>(num, bytes, bytes_endian);
+export void doubleToBytes(double num, uint8_t* bytes, std::endian bytes_endian) {
+    floatingPointNumberToBytes<double>(num, bytes, bytes_endian);
 }
 //
 ///*
@@ -297,15 +297,15 @@ export TEST_CASE(test_convert_int)
     bool failed = false;
     uint8_t bytes[sizeof(int32_t)];
     for (auto i: ints) {
-        int32_to_bytes(i, bytes, endian::big);
-        int32_t x = bytes_to_int32(bytes, endian::big);
+        int32ToBytes(i, bytes, endian::big);
+        int32_t x = bytesToInt32(bytes, endian::big);
         if (i != x) {
             failed = true;
             printf("failed-1. %d, %d\n", i, x);
         }
 
-        int32_to_bytes(i, bytes, endian::little);
-        x = bytes_to_int32(bytes, endian::little);
+        int32ToBytes(i, bytes, endian::little);
+        x = bytesToInt32(bytes, endian::little);
         if (i != x) {
             failed = true;
             printf("failed-2. %d, %d\n", i, x);
@@ -327,15 +327,15 @@ export TEST_CASE(test_convert_long)
     bool failed = false;
     uint8_t bytes[sizeof(int64_t)];
     for (auto l: longs) {
-        int64_to_bytes(l, bytes, endian::big);
-        int64_t x = bytes_to_int64(bytes, endian::big);
+        int64ToBytes(l, bytes, endian::big);
+        int64_t x = bytesToInt64(bytes, endian::big);
         if (l != x) {
             failed = true;
             printf("failed-1. %lld, %lld\n", l, x);
         }
 
-        int64_to_bytes(l, bytes, endian::little);
-        x = bytes_to_int64(bytes, endian::little);
+        int64ToBytes(l, bytes, endian::little);
+        x = bytesToInt64(bytes, endian::little);
         if (l != x) {
             failed = true;
             printf("failed-1. %lld, %lld\n", l, x);
@@ -356,15 +356,15 @@ export TEST_CASE(test_convert_float)
     bool failed = false;
     uint8_t float_bytes[sizeof(float)];
     for (auto f: floats) {
-        float_to_bytes(f, float_bytes, endian::big);
-        float x = bytes_to_float(float_bytes, endian::big);
+        floatToBytes(f, float_bytes, endian::big);
+        float x = bytesToFloat(float_bytes, endian::big);
         if (f != x) {
             failed = true;
             cout << "failed-1. "<< setprecision(20) << f << ", " << x << endl;
         }
 
-        float_to_bytes(f, float_bytes, endian::little);
-        x = bytes_to_float(float_bytes, endian::little);
+        floatToBytes(f, float_bytes, endian::little);
+        x = bytesToFloat(float_bytes, endian::little);
         if (f != x) {
             failed = true;
             cout << "failed-2. "<< setprecision(20) << f << ", " << x << endl;
@@ -386,15 +386,15 @@ export TEST_CASE(test_convert_double)
     bool failed = false;
     uint8_t double_bytes[sizeof(double)];
     for (auto d: doubles) {
-        double_to_bytes(d, double_bytes, endian::big);
-        double x = bytes_to_double(double_bytes, endian::big);
+        doubleToBytes(d, double_bytes, endian::big);
+        double x = bytesToDouble(double_bytes, endian::big);
         if (d != x) {
             failed = true;
             cout << "failed-1. "<< setprecision(20) << d << ", " << x << endl;
         }
 
-        double_to_bytes(d, double_bytes, endian::little);
-        x = bytes_to_double(double_bytes, endian::little);
+        doubleToBytes(d, double_bytes, endian::little);
+        x = bytesToDouble(double_bytes, endian::little);
         if (d != x) {
             failed = true;
             cout << "failed-2. "<< setprecision(20) << d << ", " << x << endl;

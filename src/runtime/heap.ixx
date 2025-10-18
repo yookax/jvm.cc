@@ -23,16 +23,16 @@ export class Heap {
 
     /*mutable*/ std::recursive_mutex mutex;
 
-    address_t jump_freelist(address_t p);
+    address_t jumpFreelist(address_t p);
 
-    void *do_alloc(size_t len);
+    void *doAlloc(size_t len);
 
 public:
     explicit Heap(size_t heap_size);
     ~Heap();
 
-    void collect_garbage();
-    size_t get_size() const { return size; }
+    void collectGarbage();
+    size_t getSize() const { return size; }
 
     void lock() { mutex.lock(); }
     void unlock() { mutex.unlock(); }
@@ -40,13 +40,13 @@ public:
     void *alloc(size_t len);
     void recycle(address_t p, size_t len);
 
-    bool is_in(address_t p) const {
+    bool isIn(address_t p) const {
         bool b = (starting_address <= p) && (p < starting_address + size);
         return b;
     }
 
     // 堆还有多少剩余空间，以字节为单位。
-    size_t count_free_memory() const;
+    size_t countFreeMemory() const;
 
     bool find(Object *o);
     void traversal(void (*)(Object *));

@@ -63,7 +63,7 @@ static Object *convertDescElement2ClassObject(const char *&b, const char *e, jre
     if (*b == '[') { // array reference, 描述符形如 [B 或 [[Ljava/lang/String; 的形式
         const char *t = b;
         while (*(++t) == '[');
-        if (!PRIMITIVE::check_descriptor(*t)) {
+        if (!PRIMITIVE::checkDescriptor(*t)) {
             t = strchr(t, ';');
             if (t == nullptr || t >= e) {
                 goto error;
@@ -76,7 +76,7 @@ static Object *convertDescElement2ClassObject(const char *&b, const char *e, jre
         return c->java_mirror;
     }
 
-    if (PRIMITIVE::check_descriptor(*b)) { // prim type
+    if (PRIMITIVE::checkDescriptor(*b)) { // prim type
         const char *class_name = PRIMITIVE::d2c(*b);
         b++;
         return load_boot_class(class_name)->java_mirror;

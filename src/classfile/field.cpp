@@ -24,7 +24,7 @@ Field::Field(Class *c, BytesReader &r) {
     deprecated = false;
     signature = nullptr;
 
-    if (access_flags.is_static()) {
+    if (access_flags.isStatic()) {
         memset(&static_value, 0, sizeof(static_value));
     } else {
         id = -1;
@@ -46,7 +46,7 @@ Field::Field(Class *c, BytesReader &r) {
              * 非静态字段包含了ConstantValue属性，那么这个属性必须被虚拟机所忽略。
              */
             u2 index = r.readu2();
-            if (access_flags.is_static()) {
+            if (access_flags.isStatic()) {
                 utf8_t d = *descriptor;
                 if (d == 'Z') {
                     static_value.z = JINT_TO_JBOOL(cp.get_int(index));
@@ -69,7 +69,7 @@ Field::Field(Class *c, BytesReader &r) {
                 }
             }
         } else if (strcmp("Synthetic", attr_name) == 0) {
-            access_flags.set_synthetic();
+            access_flags.setSynthetic();
         } else if (strcmp("Signature", attr_name) == 0) {
             signature = cp.utf8(r.readu2());
         } else if (strcmp("RuntimeVisibleAnnotations", attr_name) == 0) {
@@ -99,7 +99,7 @@ Field::Field(Class *c, const utf8_t *name0, const utf8_t *descriptor0, int acces
     deprecated = false;
     signature = nullptr;
 
-    if (access_flags.is_static()) {
+    if (access_flags.isStatic()) {
         memset(&static_value, 0, sizeof(static_value));
     } else {
         id = -1;
@@ -133,7 +133,7 @@ bool Field::is_prim_field() const {
 
 string Field::toString() const {
     ostringstream oss;
-    oss << "field" << (access_flags.is_static() ? "(static)" : "(nonstatic)") << ": ";
+    oss << "field" << (access_flags.isStatic() ? "(static)" : "(nonstatic)") << ": ";
     oss << clazz->name << "~" << name << "~" << descriptor << "~" << id;
     return oss.str();
 }

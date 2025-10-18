@@ -19,7 +19,7 @@ import std.core;
 
 using namespace std;
 
-export int processor_number() {
+export int processorNumber() {
 #ifdef _WIN64
     SYSTEM_INFO sysInfo;
     GetSystemInfo(&sysInfo);
@@ -29,7 +29,7 @@ export int processor_number() {
 #endif
 }
 
-export int page_size() {
+export int pageSize() {
 #ifdef _WIN64
     SYSTEM_INFO sysInfo;
     GetSystemInfo(&sysInfo);
@@ -40,7 +40,7 @@ export int page_size() {
 }
 
 // 返回操作系统的名称。e.g. window 10
-export const char *os_name() {
+export const char *osName() {
 #ifdef _WIN64
     if (IsWindows10OrGreater()) {
         return "Windows 10 or later";
@@ -71,7 +71,7 @@ export const char *os_name() {
 }
 
 // 返回操作系统的架构。e.g. amd64
-export const char *os_arch() {
+export const char *osArch() {
 #ifdef _WIN64
     SYSTEM_INFO si;
     GetNativeSystemInfo(&si);
@@ -118,7 +118,7 @@ export const char *os_arch() {
 #endif
 }
 
-export string os_version() {
+export string osVersion() {
 #ifdef _WIN64
     OSVERSIONINFOEX x;
     ZeroMemory(&x, sizeof(OSVERSIONINFOEX));
@@ -138,7 +138,7 @@ export string os_version() {
 #endif
 }
 
-export const char *file_separator() {
+export const char *fileSeparator() {
 #ifdef _WIN64
     return "\\";
 #elifdef __linux__
@@ -146,7 +146,7 @@ export const char *file_separator() {
 #endif
 }
 
-export const char *path_separator() {
+export const char *pathSeparator() {
 #ifdef _WIN64
     return ";";
 #elifdef __linux__
@@ -154,7 +154,7 @@ export const char *path_separator() {
 #endif
 }
 
-export const char *line_separator() {
+export const char *lineSeparator() {
 #ifdef _WIN64
     return "\r\n";
 #elifdef __linux__
@@ -162,7 +162,7 @@ export const char *line_separator() {
 #endif
 }
 
-export string get_user_name() {
+export string getUserName() {
     std::string username;
 #ifdef _WIN64
     TCHAR buffer[MAX_PATH];
@@ -180,7 +180,7 @@ export string get_user_name() {
     return username;
 }
 
-export string get_user_home_dir() {
+export string getUserHomeDir() {
     string home_dir;
 #ifdef _WIN32
     TCHAR buffer[MAX_PATH];
@@ -196,7 +196,7 @@ export string get_user_home_dir() {
     return home_dir;
 }
 
-export char *get_current_working_directory() {
+export char *getCurrentWorkingDirectory() {
     char *cwd = nullptr;
     int size = 256;
 
@@ -215,7 +215,7 @@ export char *get_current_working_directory() {
     }
 }
 
-export streamsize get_file_size(const string &filename) {
+export streamsize getFileSize(const string &filename) {
     ifstream file(filename, std::ios::binary | std::ios::ate);
     if (file) {
         std::streamsize size = file.tellg();
@@ -310,9 +310,9 @@ export struct MemMapping {
 // ---------------------------------------------------------------------------------------
 
 export TEST_CASE(test_sys_info)
-    printf("processor number: %d\n", processor_number());
-    printf("page size: %d\n", page_size());
-    printf("os name: %s\n", os_name());
-    printf("os arch: %s\n", os_arch());
+    printf("processor number: %d\n", processorNumber());
+    printf("page size: %d\n", pageSize());
+    printf("os name: %s\n", osName());
+    printf("os arch: %s\n", osArch());
     printf("is big endian?: %d\n", std::endian::native == std::endian::big);
 }

@@ -74,18 +74,18 @@ export void init_properties() {
 
     // ------------------------------------------------------------------------
 
-    platform_properties[_os_name_NDX] = os_name();
-    platform_properties[_os_arch_NDX] = os_arch();
-    platform_properties[_os_version_NDX] = strdup(os_version().c_str());
-    platform_properties[_user_name_NDX] = strdup(get_user_name().c_str());
-    platform_properties[_user_home_NDX] = strdup(get_user_home_dir().c_str());
-    platform_properties[_user_dir_NDX] = get_current_working_directory();
-    platform_properties[_line_separator_NDX] = line_separator();
+    platform_properties[_os_name_NDX] = osName();
+    platform_properties[_os_arch_NDX] = osArch();
+    platform_properties[_os_version_NDX] = strdup(osVersion().c_str());
+    platform_properties[_user_name_NDX] = strdup(getUserName().c_str());
+    platform_properties[_user_home_NDX] = strdup(getUserHomeDir().c_str());
+    platform_properties[_user_dir_NDX] = getCurrentWorkingDirectory();
+    platform_properties[_line_separator_NDX] = lineSeparator();
     //platform_properties[_file_encoding_NDX] = "UTF-8";
     platform_properties[_native_encoding_NDX] = "UTF-8";
     platform_properties[_sun_jnu_encoding_NDX] = "UTF-8";
-    platform_properties[_file_separator_NDX] = file_separator();
-    platform_properties[_path_separator_NDX] = path_separator();
+    platform_properties[_file_separator_NDX] = fileSeparator();
+    platform_properties[_path_separator_NDX] = pathSeparator();
     platform_properties[_java_io_tmpdir_NDX] = ""; // todo
 }
 

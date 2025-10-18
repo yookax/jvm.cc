@@ -180,9 +180,9 @@ public:
             for (uint32_t i = 0; i < h.table_length; i++) {
                 attribute_offsets.push_back(r.readu4());
             }
-            locations = r.curr_pos();
+            locations = r.currPos();
             r.skip(h.locations_size);
-            strings = (char *) r.curr_pos();
+            strings = (char *) r.currPos();
             r.skip(h.strings_size);
         }
 
@@ -194,11 +194,11 @@ public:
     const uint8_t *resources;
 
     JImageFile(const char *jimage_file_path) try: mem_mapping(jimage_file_path) {
-        auto size = get_file_size(jimage_file_path);
+        auto size = getFileSize(jimage_file_path);
         reader = new BytesReader((const uint8_t *) mem_mapping.address, size, std::endian::native);
         header.read_from(*reader);
         index.read_from(*reader, header);
-        resources = reader->curr_pos();
+        resources = reader->currPos();
     } catch(...) {
         panic("ERROR: Failed to create a memory mapping.\n");
     }

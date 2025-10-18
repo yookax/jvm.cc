@@ -66,7 +66,7 @@ struct RawAttribute {
     explicit RawAttribute(BytesReader &r) {
         attribute_name_index = r.readu2();
         attribute_length = r.readu4();
-        info = r.curr_pos();
+        info = r.currPos();
         r.skip(attribute_length);
     }
 };
@@ -187,33 +187,33 @@ export struct RawClassfile {
                 }
                 case JVM_CONSTANT_Integer: {
                     uint8_t bytes[4];
-                    r.read_bytes(bytes, 4);
-                    constant_pool.emplace_back(tag, bytes_to_int32(bytes, endian::big));
+                    r.readBytes(bytes, 4);
+                    constant_pool.emplace_back(tag, bytesToInt32(bytes, endian::big));
                     break;
                 }
                 case JVM_CONSTANT_Float: {
                     uint8_t bytes[4];
-                    r.read_bytes(bytes, 4);
-                    constant_pool.emplace_back(tag, bytes_to_float(bytes, endian::big));
+                    r.readBytes(bytes, 4);
+                    constant_pool.emplace_back(tag, bytesToFloat(bytes, endian::big));
                     break;
                 }
                 case JVM_CONSTANT_Long: {
                     uint8_t bytes[8];
-                    r.read_bytes(bytes, 8);
-                    constant_pool.emplace_back(tag, bytes_to_int64(bytes, endian::big));
+                    r.readBytes(bytes, 8);
+                    constant_pool.emplace_back(tag, bytesToInt64(bytes, endian::big));
                     constant_pool.emplace_back(JVM_CONSTANT_Placeholder, 0);
                     break;
                 }
                 case JVM_CONSTANT_Double: {
                     uint8_t bytes[8];
-                    r.read_bytes(bytes, 8);
-                    constant_pool.emplace_back(tag, bytes_to_double(bytes, endian::big));
+                    r.readBytes(bytes, 8);
+                    constant_pool.emplace_back(tag, bytesToDouble(bytes, endian::big));
                     constant_pool.emplace_back(JVM_CONSTANT_Placeholder, 0);
                     break;
                 }
                 case JVM_CONSTANT_Utf8: {
                     auto utf8_len = r.readu2();
-                    constant_pool.emplace_back(tag, mutf8_to_new_utf8(r.curr_pos(), utf8_len));
+                    constant_pool.emplace_back(tag, mutf8_to_new_utf8(r.currPos(), utf8_len));
                     r.skip(utf8_len);
                     break;
                 }

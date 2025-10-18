@@ -29,20 +29,20 @@ const struct Primitive {
 };
 
 export struct PRIMITIVE {
-    static bool check_class_name(const char *class_name) {
+    static bool checkClassName(const char *class_name) {
         assert(class_name != nullptr);
         return ranges::any_of(prims, [=](auto &p){
             return strcmp(p.class_name, class_name) == 0;
         });
     }
 
-    static bool check_descriptor(char descriptor) {
+    static bool checkDescriptor(char descriptor) {
         return ranges::any_of(prims, [=](auto &p){
             return p.descriptor == descriptor;
         });
     }
 
-    static bool check_wrapper_class_name(const char *class_name) {
+    static bool checkWrapperClassName(const char *class_name) {
         assert(class_name != nullptr);
         return ranges::any_of(prims, [=](auto &p){
             return strcmp(p.wrapper_class_name, class_name) == 0;

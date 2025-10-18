@@ -32,7 +32,7 @@ static int get_prev_aload_opc_index(BytesReader &r) {
     // 其中（aload_0, aload_1, aload_2, aload_3）指令长度为1，
     // aload 指令长度为2，如果 aload 前面有 wide指令，这aload 指令长度为3
 
-    r.save_pc();
+    r.savePc();
     
     int index_in_lvars = -1;
     auto curr = r.pc;
@@ -61,7 +61,7 @@ static int get_prev_aload_opc_index(BytesReader &r) {
         }
     }
     
-    r.recover_pc();
+    r.recoverPc();
     return index_in_lvars;
 }
 
@@ -115,7 +115,7 @@ static slot_t *exec(jref &excep) {
     // slot_t *ostack = frame->ostack;
     slot_t *lvars = frame->lvars;
 
-    jref _this = frame->method->access_flags.is_static() ? (jref) clazz : slot::get<jref>(lvars);
+    jref _this = frame->method->access_flags.isStatic() ? (jref) clazz : slot::get<jref>(lvars);
 
 #define NULL_POINTER_CHECK(ref) \
 do { \
@@ -132,7 +132,7 @@ do { \
     cp = frame->method->clazz->cp; \
     /*ostack = frame->ostack; */ \
     lvars = frame->lvars; \
-    _this = frame->method->access_flags.is_static() ? (jref) clazz : slot::get<jref>(lvars); \
+    _this = frame->method->access_flags.isStatic() ? (jref) clazz : slot::get<jref>(lvars); \
     TRACE("executing frame: %s\n", frame->toString().c_str()); \
 } while(false)
 
@@ -845,7 +845,7 @@ do { \
                 frame->ostack -= ret_value_slots_count;
                 slot_t *ret_value = frame->ostack;
                 if (frame->vm_invoke || invoke_frame == nullptr) {
-                    if (frame->method->access_flags.is_synchronized()) {
+                    if (frame->method->access_flags.isSynchronized()) {
             //                        _this->unlock();
                     }
                     return ret_value;
@@ -854,7 +854,7 @@ do { \
                 for (int i = 0; i < ret_value_slots_count; i++) {
                     *invoke_frame->ostack++ = *ret_value++;
                 }
-                if (frame->method->access_flags.is_synchronized()) {
+                if (frame->method->access_flags.isSynchronized()) {
             //                    _this->unlock();
                 }
                 CHANGE_FRAME(invoke_frame);
@@ -863,7 +863,7 @@ do { \
             case JVM_OPC_getstatic: {
                 index = reader->readu2();
                 Field *field = cp->resolve_field(index);
-                if (!field->access_flags.is_static()) {
+                if (!field->access_flags.isStatic()) {
                     throw java_lang_IncompatibleClassChangeError(field->toString());
                 }
 
@@ -878,7 +878,7 @@ do { \
             case JVM_OPC_putstatic: {
                 index = reader->readu2();
                 Field *field = cp->resolve_field(index);
-                if (!field->access_flags.is_static()) {
+                if (!field->access_flags.isStatic()) {
                     throw java_lang_IncompatibleClassChangeError(field->toString());
                 }
 
@@ -897,7 +897,7 @@ do { \
             case JVM_OPC_getfield: {
                 index = reader->readu2();
                 Field *field = cp->resolve_field(index);
-                if (field->access_flags.is_static()) {
+                if (field->access_flags.isStatic()) {
                     throw java_lang_IncompatibleClassChangeError(field->toString());
                 }
 
@@ -919,12 +919,12 @@ do { \
             case JVM_OPC_putfield: {
                 index = reader->readu2();
                 Field *field = cp->resolve_field(index);
-                if (field->access_flags.is_static()) {
+                if (field->access_flags.isStatic()) {
                     throw java_lang_IncompatibleClassChangeError(field->toString());
                 }
 
                 // 如果是final字段，则只能在构造函数中初始化，否则抛出java.lang.IllegalAccessError。
-                if (field->access_flags.is_final()) {
+                if (field->access_flags.isFinal()) {
                     if (!clazz->equals(field->clazz) || !equals(frame->method->name, "<init>")) {
                         throw java_lang_IllegalAccessError(field->toString());
                     }
@@ -948,7 +948,7 @@ do { \
                 index = reader->readu2();
                 Method *m = cp->resolve_method(index);
 
-                if (m->access_flags.is_static()) {
+                if (m->access_flags.isStatic()) {
                     throw java_lang_IncompatibleClassChangeError(m->toString());
                 }
 
@@ -957,7 +957,7 @@ do { \
                 jref obj = slot::get<jref>(frame->ostack);
                 NULL_POINTER_CHECK(obj);
 
-                if (m->access_flags.is_private()) {
+                if (m->access_flags.isPrivate()) {
                     resolved_method = m;
                 } else {
                     // assert(m->vtable_index >= 0);
@@ -990,8 +990,8 @@ do { \
                  * 需要一个额外的过程查找最终要调用的方法；否则前面从方法符号引用中解析出来的方法就是要调用的方法。
                  * todo 详细说明
                  */
-                if (m->clazz->access_flags.is_super()
-                    && !m->access_flags.is_private()
+                if (m->clazz->access_flags.isSuper()
+                    && !m->access_flags.isPrivate()
                     && clazz->is_subclass_of(m->clazz) // todo
                     && !equals(m->name, "<init>")) {
                     m = clazz->super_class->lookup_method(m->name, m->descriptor);
@@ -1000,10 +1000,10 @@ do { \
                     }
                 }
 
-                if (m->access_flags.is_abstract()) {
+                if (m->access_flags.isAbstract()) {
                     throw java_lang_AbstractMethodError(m->toString());
                 }
-                if (m->access_flags.is_static()) {
+                if (m->access_flags.isStatic()) {
                     throw java_lang_IncompatibleClassChangeError(m->toString());
                 }
 
@@ -1021,10 +1021,10 @@ do { \
                 index = reader->readu2();
                 // 接口中也有 static 方法，所以下面用 resolveMethodOrInterfaceMethod 解析
                 Method *m = cp->resolve_method_or_interface_method(index);
-                if (m->access_flags.is_abstract()) {
+                if (m->access_flags.isAbstract()) {
                     throw java_lang_AbstractMethodError(m->toString());
                 }
-                if (!m->access_flags.is_static()) {
+                if (!m->access_flags.isStatic()) {
                     throw java_lang_IncompatibleClassChangeError(m->toString());
                 }
 
@@ -1051,7 +1051,7 @@ do { \
                 reader->readu1();
 
                 Method *m = cp->resolve_interface_method(index);
-                // assert(m->clazz->access_flags.is_interface());
+                // assert(m->clazz->access_flags.isInterface());
 
                 /* todo 本地方法 */
 
@@ -1064,11 +1064,11 @@ do { \
                 // assert(resolved_method != nullptr);
                 // assert(resolved_method == obj->clazz->lookupMethod(m->name, m->descriptor));
                 resolved_method = obj->clazz->lookup_method(m->name, m->descriptor);
-                if (resolved_method->access_flags.is_abstract()) {
+                if (resolved_method->access_flags.isAbstract()) {
                     throw java_lang_AbstractMethodError(resolved_method->toString());
                 }
 
-                if (!resolved_method->access_flags.is_public()) {
+                if (!resolved_method->access_flags.isPublic()) {
                     throw java_lang_IllegalAccessError(resolved_method->toString());
                 }
 
@@ -1101,7 +1101,7 @@ do { \
 
                 Method *m = frame->method;
                 assert(m != nullptr);
-                if (!m->access_flags.is_native()) {
+                if (!m->access_flags.isNative()) {
                     panic("The method is not native. %s~%s~%s\n",
                           m->clazz->name, m->name, m->descriptor);
                 }
@@ -1146,7 +1146,7 @@ do { \
                 new_frame->lvars = frame->ostack;
 
                 CHANGE_FRAME(new_frame);
-                if (resolved_method->access_flags.is_synchronized()) {
+                if (resolved_method->access_flags.isSynchronized()) {
             //        _this->unlock(); // todo why unlock 而不是 lock ............
                 }
                 break;
@@ -1157,7 +1157,7 @@ do { \
                 Class *c = cp->resolve_class(reader->readu2());
                 init_class(c);
 
-                if (c->access_flags.is_interface() || c->access_flags.is_abstract()) {
+                if (c->access_flags.isInterface() || c->access_flags.isAbstract()) {
                     throw java_lang_InstantiationException(c->name);
                 }
 
@@ -1448,10 +1448,10 @@ slot_t *execJava(Method *m, jref _this, jarrRef args) {
     // If m is static, this is NULL.
     if (args == nullptr) {
         if (_this != nullptr) {
-            assert(!m->access_flags.is_static());
+            assert(!m->access_flags.isStatic());
             return execJava(m, { rslot(_this) });
         } else {
-            assert(m->access_flags.is_static());
+            assert(m->access_flags.isStatic());
             return execJava(m, nullptr);
         } 
     }
@@ -1465,7 +1465,7 @@ slot_t *execJava(Method *m, jref _this, jarrRef args) {
     auto real_args = new slot_t[2*types->arr_len + 1];
     int k = 0;
     if (_this != nullptr) {
-        assert(!m->access_flags.is_static());
+        assert(!m->access_flags.isStatic());
         slot::set<jref>(real_args, _this);
         k++;
     }

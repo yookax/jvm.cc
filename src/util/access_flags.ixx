@@ -35,21 +35,21 @@ public:
     int get() { return flags; }
 
     // Java access flags
-    bool is_public      () const { return (flags & JVM_ACC_PUBLIC      ) != 0; }
-    bool is_private     () const { return (flags & JVM_ACC_PRIVATE     ) != 0; }
-    bool is_protected   () const { return (flags & JVM_ACC_PROTECTED   ) != 0; }
-    bool is_static      () const { return (flags & JVM_ACC_STATIC      ) != 0; }
-    bool is_final       () const { return (flags & JVM_ACC_FINAL       ) != 0; }
-    bool is_synchronized() const { return (flags & JVM_ACC_SYNCHRONIZED) != 0; }
-    bool is_super       () const { return (flags & JVM_ACC_SUPER       ) != 0; }
-    bool is_volatile    () const { return (flags & JVM_ACC_VOLATILE    ) != 0; }
-    bool is_transient   () const { return (flags & JVM_ACC_TRANSIENT   ) != 0; }
-    bool is_native      () const { return (flags & JVM_ACC_NATIVE      ) != 0; }
-    bool is_interface   () const { return (flags & JVM_ACC_INTERFACE   ) != 0; }
-    bool is_abstract    () const { return (flags & JVM_ACC_ABSTRACT    ) != 0; }
-    bool is_strict      () const { return (flags & JVM_ACC_STRICT      ) != 0; }
+    bool isPublic      () const { return (flags & JVM_ACC_PUBLIC      ) != 0; }
+    bool isPrivate     () const { return (flags & JVM_ACC_PRIVATE     ) != 0; }
+    bool isProtected   () const { return (flags & JVM_ACC_PROTECTED   ) != 0; }
+    bool isStatic      () const { return (flags & JVM_ACC_STATIC      ) != 0; }
+    bool isFinal       () const { return (flags & JVM_ACC_FINAL       ) != 0; }
+    bool isSynchronized() const { return (flags & JVM_ACC_SYNCHRONIZED) != 0; }
+    bool isSuper       () const { return (flags & JVM_ACC_SUPER       ) != 0; }
+    bool isVolatile    () const { return (flags & JVM_ACC_VOLATILE    ) != 0; }
+    bool isTransient   () const { return (flags & JVM_ACC_TRANSIENT   ) != 0; }
+    bool isNative      () const { return (flags & JVM_ACC_NATIVE      ) != 0; }
+    bool isInterface   () const { return (flags & JVM_ACC_INTERFACE   ) != 0; }
+    bool isAbstract    () const { return (flags & JVM_ACC_ABSTRACT    ) != 0; }
+    bool isStrict      () const { return (flags & JVM_ACC_STRICT      ) != 0; }
     // Attribute flags
-    bool is_synthetic   () const { return (flags & JVM_ACC_SYNTHETIC   ) != 0; }
+    bool isSynthetic   () const { return (flags & JVM_ACC_SYNTHETIC   ) != 0; }
 
-    void set_synthetic  () { flags |= JVM_ACC_SYNTHETIC; }
+    void setSynthetic  () { flags |= JVM_ACC_SYNTHETIC; }
 };
