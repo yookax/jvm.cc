@@ -498,7 +498,7 @@ Class::Class(jref class_loader, const u1 *bytecode, size_t len): loader(class_lo
 // 创建 primitive class，由虚拟机直接生成。
 Class::Class(const char *class_name): loader(BOOT_CLASS_LOADER), super_class(g_object_class) {
     assert(class_name != nullptr);
-    assert(PRIMITIVE::check_class_name(class_name));
+    assert(PRIMITIVE::checkClassName(class_name));
     assert(g_object_class != nullptr);
 
     name = utf8::dup(class_name); /* 形参class_name可能非持久，复制一份 */
