@@ -1,4 +1,5 @@
 ﻿module;
+#include <assert.h>
 #include "../../../vmdef.h"
 
 module native;

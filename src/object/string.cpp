@@ -1,5 +1,5 @@
 module;
-#include <cassert>
+#include <assert.h>
 #include "../vmdef.h"
 
 module object;
@@ -154,35 +154,35 @@ jstrRef java_lang_String::intern(jstrRef so) {
 
 // ---------------------------------------------------------------------------------------
 
-TEST_CASE(test_string)
-    for (auto& s: strings_for_testing) {
-        auto so = Allocator::string(s.s8);
-        auto u = jstring_to_u8string(so);
-        if (s.s8 != u) {
-            printf("%s\n%s\nfailed\n", (char *) s.s8.c_str(), (char *) u.c_str());
-        }
-    }
-}
-
-TEST_CASE(test_string_intern)
-    for (auto& s: strings_for_testing) {
-        auto so1 = Allocator::string(s.s8);
-        auto so2 = Allocator::string(s.s8);
-
-        auto intern1 = java_lang_String::intern(so1);
-        auto intern2 = java_lang_String::intern(so2);
-
-        if (intern1 != intern2)
-            printf("failed\n");
-    }
-}
-
-TEST_CASE(test_string_equals)
-    for (auto& s: strings_for_testing) {
-        auto so1 = Allocator::string(s.s8);
-        auto so2 = Allocator::string(s.s8);
-
-        if (!java_lang_String::equals(so1, so2))
-            printf("failed\n");
-    }
-}
+// TEST_CASE(test_string)
+//     for (auto& s: strings_for_testing) {
+//         auto so = Allocator::string(s.s8);
+//         auto u = jstring_to_u8string(so);
+//         if (s.s8 != u) {
+//             printf("%s\n%s\nfailed\n", (char *) s.s8.c_str(), (char *) u.c_str());
+//         }
+//     }
+// }
+//
+// TEST_CASE(test_string_intern)
+//     for (auto& s: strings_for_testing) {
+//         auto so1 = Allocator::string(s.s8);
+//         auto so2 = Allocator::string(s.s8);
+//
+//         auto intern1 = java_lang_String::intern(so1);
+//         auto intern2 = java_lang_String::intern(so2);
+//
+//         if (intern1 != intern2)
+//             printf("failed\n");
+//     }
+// }
+//
+// TEST_CASE(test_string_equals)
+//     for (auto& s: strings_for_testing) {
+//         auto so1 = Allocator::string(s.s8);
+//         auto so2 = Allocator::string(s.s8);
+//
+//         if (!java_lang_String::equals(so1, so2))
+//             printf("failed\n");
+//     }
+// }

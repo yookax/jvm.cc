@@ -100,5 +100,5 @@ export jref get_app_classloader();
 export std::unordered_map<const utf8_t *, Class *, utf8::Hash, utf8::Comparator> *getAllBootClasses();
 export const std::unordered_set<const Object *> &getAllClassLoaders();
 
-export void test_load_class();
-export void test_classloader();
+// export void test_load_class();
+// export void test_classloader();

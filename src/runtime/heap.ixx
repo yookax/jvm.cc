@@ -54,5 +54,5 @@ public:
     void display();
 };
 
-export void test_alloc_continuously();
-export void test_heap();
+// export void test_alloc_continuously();
+// export void test_heap();

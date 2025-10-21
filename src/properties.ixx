@@ -9,6 +9,8 @@ import class_loader;
 
 using namespace std;
 
+//extern std::string g_java_home;
+
 // jdk/internal/util/SystemProps.java
 
 enum {
@@ -68,6 +70,8 @@ export vector<pair<const char *, const char *>>& get_vm_properties() {
     return vm_properties;
 }
 
+//extern std::string g_java_home;
+
 export void init_properties() {
     vm_properties.emplace_back("java.home", g_java_home.c_str());
     vm_properties.emplace_back("java.class.path", get_classpath());
@@ -88,10 +92,3 @@ export void init_properties() {
     platform_properties[_path_separator_NDX] = pathSeparator();
     platform_properties[_java_io_tmpdir_NDX] = ""; // todo
 }
-
-// ---------------------------------------------------------------------------------------
-
-export TEST_CASE(test_properties)
-    // todo
-}
-

@@ -1,5 +1,5 @@
 module;
-#include <cassert>
+#include <assert.h>
 #include "../vmdef.h"
 
 export module runtime;

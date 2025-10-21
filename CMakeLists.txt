@@ -20,7 +20,7 @@ message(STATUS "C++ Compilation flags: " ${CMAKE_CXX_FLAGS})
 #endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8  /experimental:module ") # /W4
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /source-charset:utf-8 /reference \"std=C:/Users/admin/source/repos/STLModules/std.ifc\" /experimental:module ") # /W4
 endif()
 
 find_package(ZLIB)
@@ -42,8 +42,14 @@ file(GLOB_RECURSE
         src/*.ixx
 )
 
+file(GLOB_RECURSE
+        TEST_CXX_FILES
+        CONFIGURE_DEPENDS
+        test/*.cpp
+)
+
 # 生成可运行的虚拟机
-add_executable(jvmcc ${SOURCE_CXX_FILES})
+add_executable(jvmcc ${SOURCE_CXX_FILES} ${TEST_CXX_FILES})
 
 # 创建CXX_MODULES类型的FILE_SET
 target_sources(jvmcc

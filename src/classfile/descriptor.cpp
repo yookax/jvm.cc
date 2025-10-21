@@ -1,5 +1,5 @@
 module;
-#include <cassert>
+#include <assert.h>
 #include "../vmdef.h"
 
 module classfile;
@@ -214,30 +214,30 @@ static const char *method_descriptors[] = {
         "(ZZZZZZZZZZZZZZZZ)Z",
 };
 
-TEST_CASE(test_method_descriptor)
-    for (const char *d: method_descriptors) {
-        printf("%s\n\tparameters number: %d\n", d, numEltsInMethodDescriptor(d));
-        printf("\tparameter slots number: %d\n\tparameter types: ", numSlotsInMethodDescriptor(d));
-
-        auto p = parseMethodDescriptor(d, BOOT_CLASS_LOADER);
-/*ptypes*/
-        for (int i = 0; i < p.first->arr_len; i++) {
-            jref o = p.first->getElt<jref>(i);
-            printf("%s, ", o->jvm_mirror->name);
-        }
-        printf("\n\treturn type: %s\n", p.second->jvm_mirror->name); /*rtype*/
-        printf("\tunparse: %s\n\t-----\n\tparameter types: ", unparseMethodDescriptor(p.first, p.second).c_str());
-
-        jref mt = findMethodType(d, BOOT_CLASS_LOADER);
-        jarrRef ptypes = mt->get_field_value<jref>("ptypes", "[Ljava/lang/Class;");
-        for (int i = 0; i < ptypes->arr_len; i++) {
-            jref o = ptypes->getElt<jref>(i);
-            printf("%s, ", o->jvm_mirror->name);
-        }
-
-        printf("\n\tunparse: %s\n", unparseMethodDescriptor(mt).c_str());
-    }
-
-    printf("---\nunparse(NULL, NULL): %s\n", unparseMethodDescriptor(nullptr, nullptr).c_str());
-}
-
+// TEST_CASE(test_method_descriptor)
+//     for (const char *d: method_descriptors) {
+//         printf("%s\n\tparameters number: %d\n", d, numEltsInMethodDescriptor(d));
+//         printf("\tparameter slots number: %d\n\tparameter types: ", numSlotsInMethodDescriptor(d));
+//
+//         auto p = parseMethodDescriptor(d, BOOT_CLASS_LOADER);
+// /*ptypes*/
+//         for (int i = 0; i < p.first->arr_len; i++) {
+//             jref o = p.first->getElt<jref>(i);
+//             printf("%s, ", o->jvm_mirror->name);
+//         }
+//         printf("\n\treturn type: %s\n", p.second->jvm_mirror->name); /*rtype*/
+//         printf("\tunparse: %s\n\t-----\n\tparameter types: ", unparseMethodDescriptor(p.first, p.second).c_str());
+//
+//         jref mt = findMethodType(d, BOOT_CLASS_LOADER);
+//         jarrRef ptypes = mt->get_field_value<jref>("ptypes", "[Ljava/lang/Class;");
+//         for (int i = 0; i < ptypes->arr_len; i++) {
+//             jref o = ptypes->getElt<jref>(i);
+//             printf("%s, ", o->jvm_mirror->name);
+//         }
+//
+//         printf("\n\tunparse: %s\n", unparseMethodDescriptor(mt).c_str());
+//     }
+//
+//     printf("---\nunparse(NULL, NULL): %s\n", unparseMethodDescriptor(nullptr, nullptr).c_str());
+// }
+//

@@ -1,10 +1,10 @@
 module;
-#include <cassert>
+#include <assert.h>
 #include "../vmdef.h"
 
 module poly;
 
-import std.core;
+import std;
 import classfile;
 import encoding;
 import class_loader;

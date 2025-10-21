@@ -1,9 +1,9 @@
-﻿module;
-#include "../vmdef.h"
+﻿// module;
+// #include "../vmdef.h"
 
 export module jimage_strings;
 
-import std.core;
+import std;
 
 using namespace std;
 

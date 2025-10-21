@@ -1,5 +1,6 @@
 ﻿#ifdef _WIN64
 module;
+#include <assert.h>
 #include "../../../vmdef.h"
 #include <windows.h>
 

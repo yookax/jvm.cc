@@ -1,11 +1,11 @@
 #ifndef VMDEF_H
 #define VMDEF_H
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstdint>
-#include <climits>
-#include <cassert>
+// #include <cstdio>
+// #include <cstdlib>
+#include <stdint.h>
+// #include <climits>
+// #include <assert.h>
 #include <string>
 
 #ifndef PATH_MAX
@@ -93,7 +93,7 @@ class Heap;
 extern Heap *g_heap;
 
 extern std::string g_java_home;
-extern std::string g_java_version;
+//extern std::string g_java_version;
 
 extern u2 g_classfile_major_version;
 extern u2 g_classfile_manor_version;
@@ -222,26 +222,26 @@ do { \
 
 // -------------------------------------------------
 
-#define TEST_CASE(func_name) \
-    void func_name() { \
-        printf("----------- %s -----------\n", #func_name);
-
-static struct {
-    std::u8string s8;
-    std::u16string s16;
-} strings_for_testing[] = {
-        { u8"Hello, World!", u"Hello, World!" },
-        { u8"你好，世界！", u"你好，世界！" },
-        { u8"こんにちは、世界！", u"こんにちは、世界！" },
-        { u8"안녕하세요, 세상!", u"안녕하세요, 세상!" },
-        { u8"Привет, мир!", u"Привет, мир!" },
-        { u8"مرحبًا بالعالم!", u"مرحبًا بالعالم!" },
-        { u8"Olá, mundo!", u"Olá, mundo!" },
-        { u8"Hej, världen!", u"Hej, världen!" },
-        { u8"Xin chào, thế giới!", u"Xin chào, thế giới!" },
-        { u8"Hello, 你好😀", u"Hello, 你好😀" },
-        { u8"👋世界！", u"👋世界！" },
-};
+// #define TEST_CASE(func_name) \
+//     void func_name() { \
+//         printf("----------- %s -----------\n", #func_name);
+//
+// static struct {
+//     std::u8string s8;
+//     std::u16string s16;
+// } strings_for_testing[] = {
+//         { u8"Hello, World!", u"Hello, World!" },
+//         { u8"你好，世界！", u"你好，世界！" },
+//         { u8"こんにちは、世界！", u"こんにちは、世界！" },
+//         { u8"안녕하세요, 세상!", u"안녕하세요, 세상!" },
+//         { u8"Привет, мир!", u"Привет, мир!" },
+//         { u8"مرحبًا بالعالم!", u"مرحبًا بالعالم!" },
+//         { u8"Olá, mundo!", u"Olá, mundo!" },
+//         { u8"Hej, världen!", u"Hej, världen!" },
+//         { u8"Xin chào, thế giới!", u"Xin chào, thế giới!" },
+//         { u8"Hello, 你好😀", u"Hello, 你好😀" },
+//         { u8"👋世界！", u"👋世界！" },
+// };
 
 
 #endif //VMDEF_H

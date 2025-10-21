@@ -3,7 +3,7 @@ module;
 
 export module poly;
 
-import std.core;
+import std;
 
 export void init_polymorphic_method();
 

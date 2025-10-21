@@ -1,15 +1,17 @@
 export module vmstd;
 
-// import std.core;
-//
-// /*
-//  * Java虚拟机中的整型类型的取值范围如下：
-//  * 1. 对于byte类型， 取值范围[-2e7, 2e7 - 1]。
-//  * 2. 对于short类型，取值范围[-2e15, 2e15 - 1]。
-//  * 3. 对于int类型，  取值范围[-2e31, 2e31 - 1]。
-//  * 4. 对于long类型， 取值范围[-2e63, 2e63 - 1]。
-//  * 5. 对于char类型， 取值范围[0, 65535]。
-//  */
+import std;
+
+using namespace std;
+
+/*
+ * Java虚拟机中的整型类型的取值范围如下：
+ * 1. 对于byte类型， 取值范围[-2e7, 2e7 - 1]。
+ * 2. 对于short类型，取值范围[-2e15, 2e15 - 1]。
+ * 3. 对于int类型，  取值范围[-2e31, 2e31 - 1]。
+ * 4. 对于long类型， 取值范围[-2e63, 2e63 - 1]。
+ * 5. 对于char类型， 取值范围[0, 65535]。
+ */
 // export using jbyte    = int8_t;
 // export using jboolean = jbyte; // 本虚拟机实现，byte 和 boolean 用同一类型
 // export using jbool    = jboolean;
@@ -51,7 +53,7 @@ export module vmstd;
 //
 // export using utf8_t = char;
 // export using unicode_t = jchar;
-//
+
 // export template <typename T> concept
 // JavaValueType = std::is_same_v<T, jint>
 //                 || std::is_same_v<T, jbyte> || std::is_same_v<T, jbool>

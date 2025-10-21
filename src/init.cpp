@@ -1,5 +1,6 @@
-#include <cstdio>
-#include <cstdlib>
+// #include <cstdio>
+// #include <cstdlib>
+#include <assert.h>
 #include "vmdef.h"
 
 import std.core;

@@ -645,5 +645,5 @@ export std::string unparseMethodDescriptor(jarrRef ptypes /* ClassObject *[] */,
 // @method_type: Object of java.lang.invoke.MethodType
 export std::string unparseMethodDescriptor(jref method_type);
 
-export void test_method_descriptor();
-export void test_inject_field();
+// export void test_method_descriptor();
+// export void test_inject_field();

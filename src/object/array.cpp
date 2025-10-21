@@ -1,9 +1,10 @@
 module;
+#include <assert.h>
 #include "../vmdef.h"
 
 module object;
 
-import std.core;
+import std;
 import primitive;
 import exception;
 
@@ -96,71 +97,71 @@ const char *arr_class_name_2_elt_class_name(const utf8_t *arr_class_name) {
 
 // ---------------------------------------------------------------------------------------
 
-static void _init_int_array(jarrRef arr) {
-    jint len = arr->array_len();
-    jint dim = arr->array_dimension();
-
-    if (dim == 1) {
-        for (jint i = 0; i < len; i++)
-            arr->setIntElt(i, i + 1);
-        return;
-    }
-
-    for (jint i = 0; i < len; i++) {
-        _init_int_array(arr->getElt<jarrRef>(i));
-    }
-}
-
-TEST_CASE(test_new_array)
-    jarrRef arr = Allocator::array("[I", 10);
-    arr->display(); // should be all 0
-
-    printf("--------------------------------\n");
-    _init_int_array(arr);
-    arr->display();
-}
-
-TEST_CASE(test_multi_array1)
-    ArrayClass *ac = load_array_class(BOOT_CLASS_LOADER, "[[[I");
-    jint dim = 3;
-    jint lens[3];
-    lens[0] = 2;
-    lens[1] = 3;
-    lens[2] = 4;
-    jarrRef arr = Allocator::multi_array(ac, dim, lens);
-
-    arr->display(); // should be all 0
-    printf("--------------------------------\n");
-
-    _init_int_array(arr);
-    arr->display();
-}
-
-TEST_CASE(test_multi_array2)
-    printf("test_multi_array2 ---->\n");
-    ArrayClass *ac = load_array_class(BOOT_CLASS_LOADER, "[[[[[I");
-    jint dim = 5;
-    jint lens[5];
-    lens[0] = 2;
-    lens[1] = 3;
-    lens[2] = 4;
-    lens[3] = 3;
-    lens[4] = 2;
-    jarrRef arr = Allocator::multi_array(ac, dim, lens);
-
-    arr->display(); // should be all 0
-    printf("--------------------------------\n");
-
-    _init_int_array(arr);
-    arr->display();
-}
-
-TEST_CASE(test_string_array)
-    printf("test_string_array ---->\n");
-    auto array = Allocator::string_array(10);
-    array->display();  // should be all null
-
-    auto s = Allocator::string("aaa");
-    array->setRefElt(0, s);
-    array->display();
-}
+// static void _init_int_array(jarrRef arr) {
+//     jint len = arr->array_len();
+//     jint dim = arr->array_dimension();
+//
+//     if (dim == 1) {
+//         for (jint i = 0; i < len; i++)
+//             arr->setIntElt(i, i + 1);
+//         return;
+//     }
+//
+//     for (jint i = 0; i < len; i++) {
+//         _init_int_array(arr->getElt<jarrRef>(i));
+//     }
+// }
+//
+// TEST_CASE(test_new_array)
+//     jarrRef arr = Allocator::array("[I", 10);
+//     arr->display(); // should be all 0
+//
+//     printf("--------------------------------\n");
+//     _init_int_array(arr);
+//     arr->display();
+// }
+//
+// TEST_CASE(test_multi_array1)
+//     ArrayClass *ac = load_array_class(BOOT_CLASS_LOADER, "[[[I");
+//     jint dim = 3;
+//     jint lens[3];
+//     lens[0] = 2;
+//     lens[1] = 3;
+//     lens[2] = 4;
+//     jarrRef arr = Allocator::multi_array(ac, dim, lens);
+//
+//     arr->display(); // should be all 0
+//     printf("--------------------------------\n");
+//
+//     _init_int_array(arr);
+//     arr->display();
+// }
+//
+// TEST_CASE(test_multi_array2)
+//     printf("test_multi_array2 ---->\n");
+//     ArrayClass *ac = load_array_class(BOOT_CLASS_LOADER, "[[[[[I");
+//     jint dim = 5;
+//     jint lens[5];
+//     lens[0] = 2;
+//     lens[1] = 3;
+//     lens[2] = 4;
+//     lens[3] = 3;
+//     lens[4] = 2;
+//     jarrRef arr = Allocator::multi_array(ac, dim, lens);
+//
+//     arr->display(); // should be all 0
+//     printf("--------------------------------\n");
+//
+//     _init_int_array(arr);
+//     arr->display();
+// }
+//
+// TEST_CASE(test_string_array)
+//     printf("test_string_array ---->\n");
+//     auto array = Allocator::string_array(10);
+//     array->display();  // should be all null
+//
+//     auto s = Allocator::string("aaa");
+//     array->setRefElt(0, s);
+//     array->display();
+// }

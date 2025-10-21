@@ -3,7 +3,7 @@ module;
 
 module object;
 
-import std.core;
+import std;
 import interpreter;
 
 using namespace std;
@@ -76,22 +76,22 @@ jref double_box(jdouble x) {
 
 // ---------------------------------------------------------------------------------------
 
-TEST_CASE(test_box)
-    if (!std::holds_alternative<std::monostate>(void_box()->box_value())) {
-        std::cout << "failed" << std::endl;
-    }
-
-    auto v = int_box(100)->box_value();
-    if (std::holds_alternative<int>(v)) {
-        auto x = std::get<jint>(v);
-        if (x != 100)
-            std::cout << "failed" << std::endl;
-    }
-
-    v = double_box(100.67)->box_value();
-    if (std::holds_alternative<jdouble>(v)) {
-        auto x = std::get<jdouble>(v);
-        if (x != 100.67)
-            std::cout << "failed" << std::endl;
-    }
-}
+// TEST_CASE(test_box)
+//     if (!std::holds_alternative<std::monostate>(void_box()->box_value())) {
+//         std::cout << "failed" << std::endl;
+//     }
+//
+//     auto v = int_box(100)->box_value();
+//     if (std::holds_alternative<int>(v)) {
+//         auto x = std::get<jint>(v);
+//         if (x != 100)
+//             std::cout << "failed" << std::endl;
+//     }
+//
+//     v = double_box(100.67)->box_value();
+//     if (std::holds_alternative<jdouble>(v)) {
+//         auto x = std::get<jdouble>(v);
+//         if (x != 100.67)
+//             std::cout << "failed" << std::endl;
+//     }
+// }

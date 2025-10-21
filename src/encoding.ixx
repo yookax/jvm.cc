@@ -1,5 +1,5 @@
 module;
-#include <cassert>
+#include <assert.h>
 #include <cstdint>
 #include "vmdef.h"
 
@@ -111,37 +111,37 @@ export optional<string> utf8_to_latin1(const u8string& utf8_str);
 
 // ---------------------------------------------------------------------------------------
 
-export TEST_CASE(test_utf8_to_latin1)
-//    for (auto &a: strings_for_testing) {
-//        auto x = utf8_to_latin1(a.s8);
-//        if (x.has_value()) {
-//            std::cout << (char *) a.s8.c_str() << " <---> "<< x.value() << std::endl;
-//        }
-//    }
-}
-
-export TEST_CASE(test_utf8_to_utf16)
-    bool failed = false;
-    for (auto &a: strings_for_testing) {
-        if (utf8_to_utf16(a.s8) != a.s16) {
-            failed = true;
-            std::cerr << "failed. " << (const char *) a.s8.c_str() << std::endl;
-        }
-    }
-
-    if(!failed)
-        cout << "passed." << endl;
-}
-
-export TEST_CASE(test_utf16_to_utf8)
-    bool failed = false;
-    for (auto &a: strings_for_testing) {
-        if (utf16_to_utf8(a.s16) != a.s8) {
-            failed = true;
-            std::cerr << "failed. " << (const char *) a.s8.c_str() << std::endl;
-        }
-    }
-
-    if(!failed)
-        cout << "passed." << endl;
-}
+// export TEST_CASE(test_utf8_to_latin1)
+// //    for (auto &a: strings_for_testing) {
+// //        auto x = utf8_to_latin1(a.s8);
+// //        if (x.has_value()) {
+// //            std::cout << (char *) a.s8.c_str() << " <---> "<< x.value() << std::endl;
+// //        }
+// //    }
+// }
+//
+// export TEST_CASE(test_utf8_to_utf16)
+//     bool failed = false;
+//     for (auto &a: strings_for_testing) {
+//         if (utf8_to_utf16(a.s8) != a.s16) {
+//             failed = true;
+//             std::cerr << "failed. " << (const char *) a.s8.c_str() << std::endl;
+//         }
+//     }
+//
+//     if(!failed)
+//         cout << "passed." << endl;
+// }
+//
+// export TEST_CASE(test_utf16_to_utf8)
+//     bool failed = false;
+//     for (auto &a: strings_for_testing) {
+//         if (utf16_to_utf8(a.s16) != a.s8) {
+//             failed = true;
+//             std::cerr << "failed. " << (const char *) a.s8.c_str() << std::endl;
+//         }
+//     }
+//
+//     if(!failed)
+//         cout << "passed." << endl;
+// }

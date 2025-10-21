@@ -1,5 +1,5 @@
 ﻿module;
-#include <cassert>
+#include <assert.h>
 
 export module raw_classfile;
 

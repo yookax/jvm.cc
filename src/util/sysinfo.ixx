@@ -1,5 +1,5 @@
 module;
-#include <cassert>
+#include <assert.h>
 #include "../vmdef.h"
 #ifdef _WIN64
 #include <Windows.h>
@@ -309,10 +309,10 @@ export struct MemMapping {
 
 // ---------------------------------------------------------------------------------------
 
-export TEST_CASE(test_sys_info)
-    printf("processor number: %d\n", processorNumber());
-    printf("page size: %d\n", pageSize());
-    printf("os name: %s\n", osName());
-    printf("os arch: %s\n", osArch());
-    printf("is big endian?: %d\n", std::endian::native == std::endian::big);
-}
+// export TEST_CASE(test_sys_info)
+//     printf("processor number: %d\n", processorNumber());
+//     printf("page size: %d\n", pageSize());
+//     printf("os name: %s\n", osName());
+//     printf("os arch: %s\n", osArch());
+//     printf("is big endian?: %d\n", std::endian::native == std::endian::big);
+// }

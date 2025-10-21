@@ -139,48 +139,48 @@ int main(int argc, char* argv[]) {
     printf("\n--- Powered by jvm.cc(%.2fs) on Java-%s ---\n", duration / 1000.0, get_java_version().c_str());
     return ret;
 }
-
+#if 0
 void run_all_java_tests();
 
 void test() {
     init_jvm();
 
-    test_sys_info();
-    test_properties();
+    // test_sys_info();
+    // test_properties();
+    //
+    // test_convert_int();
+    // test_convert_long();
+    // test_convert_float();
+    // test_convert_double();
 
-    test_convert_int();
-    test_convert_long();
-    test_convert_float();
-    test_convert_double();
+    // test_utf8_to_latin1();
+    // test_utf8_to_utf16();
+    // test_utf16_to_utf8();
 
-    test_utf8_to_latin1();
-    test_utf8_to_utf16();
-    test_utf16_to_utf8();
+    // test_jimage_string();
+    // test_jimage();
+    // test_jimage1();
 
-    test_jimage_string();
-    test_jimage();
-    test_jimage1();
+    // test_alloc_continuously();
+    // test_heap();
 
-    test_alloc_continuously();
-    test_heap();
+    // test_load_class();
+    // test_classloader();
 
-    test_load_class();
-    test_classloader();
+    // test_method_descriptor();
 
-    test_method_descriptor();
+    // test_box();
 
-    test_box();
+    // test_string();
+    // test_string_intern();
+    // test_string_equals();
 
-    test_string();
-    test_string_intern();
-    test_string_equals();
+    // test_new_array();
+    // test_multi_array1();
+    // test_multi_array2();
+    // test_string_array();
 
-    test_new_array();
-    test_multi_array1();
-    test_multi_array2();
-    test_string_array();
-
-    test_inject_field();
+    // test_inject_field();
 
     run_all_java_tests();
 
@@ -245,3 +245,4 @@ static void run_all_java_tests() {
         std::system(s.c_str());
     }
 }
+#endif

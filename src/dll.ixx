@@ -1,5 +1,5 @@
 module;
-#include <cassert>
+#include <assert.h>
 #include "vmdef.h"
 
 #ifdef _WIN64
@@ -11,6 +11,8 @@ module;
 export module dll;
 
 //export void *g_libzip = nullptr;
+
+//extern std::string g_java_home;
 
 export void init_dll();
 

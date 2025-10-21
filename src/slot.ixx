@@ -1,10 +1,10 @@
 module;
-#include <cassert>
+#include <assert.h>
 #include "vmdef.h"
 
 export module slot;
 
-import std.core;
+import std;
 
 // A type of slot_t must be able to hold jbool, jbyte, jchar, jshort,
 // jint, and jfloat — these are referred to as Type 1;
