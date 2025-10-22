@@ -5,7 +5,7 @@ module;
 
 export module encoding;
 
-import std.core;
+import std;
 
 using namespace std;
 

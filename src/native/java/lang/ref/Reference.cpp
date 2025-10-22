@@ -3,7 +3,7 @@
 
 module native;
 
-import std.threading;
+import std;
 import slot;
 import runtime;
 import object;

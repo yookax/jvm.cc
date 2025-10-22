@@ -14,6 +14,9 @@ import encoding;
 import constants;
 import bytes_reader;
 
+class ArrayClass;
+class Field;
+
 /*
  * 提取 Class, Field 和 Method 的公共特征
  */

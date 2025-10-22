@@ -4,7 +4,7 @@
 
 module native;
 
-import std.core;
+import std;
 import slot;
 import classfile;
 import object;

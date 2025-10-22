@@ -3,7 +3,7 @@
 
 module native;
 
-import std.core;
+import std;
 import properties;
 import runtime;
 import object;

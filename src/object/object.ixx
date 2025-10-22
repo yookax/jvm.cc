@@ -4,8 +4,8 @@ module;
 
 export module object;
 
-import std.core;
-import std.threading;
+import std;
+// import std.threading;
 import slot;
 import classfile;
 import encoding;

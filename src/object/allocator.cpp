@@ -4,7 +4,7 @@ module;
 
 module object;
 
-import std.core;
+import std;
 import heap;
 
 using namespace std;

@@ -3,7 +3,7 @@ module;
 
 export module primitive;
 
-import std.core;
+import std;
 
 using namespace std;
 

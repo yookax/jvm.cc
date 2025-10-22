@@ -3,7 +3,7 @@ module;
 
 export module convert;
 
-import std.core;
+import std;
 
 using namespace std;
 

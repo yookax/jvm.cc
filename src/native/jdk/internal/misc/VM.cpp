@@ -4,8 +4,8 @@
 
 module native;
 
-import std.core;
-import std.threading;
+import std;
+// import std.threading;
 import slot;
 import object;
 import classfile;

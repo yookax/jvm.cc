@@ -75,10 +75,10 @@ using u8 = uint64_t;
 
 class Object;
 class Class;
-class ArrayClass;
+// class ArrayClass;
 class Method;
 class Field;
-class Annotation;
+// class Annotation;
 
 using jref       = Object*; // JVM 中的引用类型
 using jstrRef    = jref;    // java.lang.String 的引用

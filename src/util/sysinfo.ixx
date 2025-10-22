@@ -11,7 +11,6 @@ module;
 #include <pwd.h>
 #include <sys/time.h>
 #endif
-#include "../vmdef.h"
 
 export module sysinfo;
 

@@ -6,7 +6,7 @@ module;
 
 module native;
 
-import std.filesystem;
+//import std;
 import slot;
 import classfile;
 import object;

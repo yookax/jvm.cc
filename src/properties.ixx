@@ -3,7 +3,7 @@
 
 export module properties;
 
-import std.core;
+import std;
 import sysinfo;
 import class_loader;
 

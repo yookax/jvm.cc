@@ -4,7 +4,7 @@ module;
 
 module exception;
 
-import std.core;
+import std;
 import slot;
 import object;
 import class_loader;
