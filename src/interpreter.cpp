@@ -4,7 +4,7 @@ module;
 
 module interpreter;
 
-import std.core;
+import std;
 import slot;
 import runtime;
 import object;

@@ -4,7 +4,7 @@ module;
 
 export module interpreter;
 
-import std.core;
+// import std;
 import slot;
 
 // Java Function Return Type

@@ -6,7 +6,6 @@
 import std;
 // import std.filesystem;
 // import std.threading;
-import vmstd;
 import slot;
 import heap;
 import convert;
